@@ -24,10 +24,13 @@ public class ControleurProblem
 	public String nextStep()
 		{
 		//A chaque pas de l'animation
-		problem.nextStep();
-		return problem.getMatrix().toString();
+		return problem.nextStep();
 		}
-
+	public String previousStep()
+		{
+		//A chaque pas de l'animation
+		return problem.previousStep();
+		}
 	/*------------------------------*\
 	|*				Set				*|
 	\*------------------------------*/

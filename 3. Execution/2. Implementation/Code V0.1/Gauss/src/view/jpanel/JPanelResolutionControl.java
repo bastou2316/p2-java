@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 
 import view.jframe.ResolutionControl_I;
 
-public class JPanelResolutionControl extends JPanel
+public class JPanelResolutionControl extends JPanel implements ResolutionControl_I
 	{
 
 	/*------------------------------------------------------------------*\
@@ -45,17 +45,17 @@ public class JPanelResolutionControl extends JPanel
 	private void geometry()
 		{
 		// JComponent : Instanciation
-		boutonSuivant = new JButton("Start");
-		boutonPrecedent = new JButton("Stop");
+		boutonSuivant = new JButton("Suivant");
+		boutonPrecedent = new JButton("Précédent");
 
 		boutonSuivant.setSize(100, 40);
 		boutonPrecedent.setSize(100, 40);
 
-		boutonSuivant.setLocation(10, 100);
-		boutonPrecedent.setLocation(10, 300);
+		boutonSuivant.setLocation(10, 300);
+		boutonPrecedent.setLocation(10, 100);
 
 		boutonSuivant.setEnabled(true);
-		boutonPrecedent.setEnabled(false);
+		boutonPrecedent.setEnabled(true);
 
 			// Layout : Specification
 			{
@@ -66,8 +66,8 @@ public class JPanelResolutionControl extends JPanel
 			}
 
 		// JComponent : add
-		add(boutonSuivant);
 		add(boutonPrecedent);
+		add(boutonSuivant);
 
 		}
 
@@ -79,7 +79,7 @@ public class JPanelResolutionControl extends JPanel
 				@Override
 				public void actionPerformed(ActionEvent e)
 					{
-					switchEtatBouton();
+					//switchEtatBouton();
 					}
 			};
 
@@ -123,12 +123,14 @@ public class JPanelResolutionControl extends JPanel
 		switchEtatBouton(boutonPrecedent);
 		}
 
-	private void suivant()
+	@Override
+	public void suivant()
 		{
 		controlable.suivant();
 		}
 
-	private void precedent()
+	@Override
+	public void precedent()
 		{
 		controlable.precedent();
 		}
