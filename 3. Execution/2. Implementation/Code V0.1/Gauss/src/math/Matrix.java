@@ -8,7 +8,10 @@ public final class Matrix
 
 	// The values of the matrix stored in row-major order, with each element initially null
 	private double[][] values;
-	private int step;
+	private int rows;
+	private int cols;
+	private int currentStep;
+	private double [][][] hist;
 
 	/**
 	 * Constructs a blank matrix with the specified number of rows and columns. All the elements are initially {@code null}.
@@ -22,8 +25,21 @@ public final class Matrix
 		if (rows <= 0 || cols <= 0) { throw new IllegalArgumentException("Invalid number of rows or columns"); }
 
 		values = new double[rows][cols];
-		step = 0;
+		currentStep = 0;
+		hist=new double[20][rows][cols];
 		}
+
+	/** Construct a matrix quickly without checking arguments.
+	   @param A    Two-dimensional array of doubles.
+	   @param m    Number of rows.
+	   @param n    Number of colums.
+	   */
+
+	   public Matrix (int rows, int cols, double[][] values) {
+	      this.values = values;
+	      this.rows = rows;
+	      this.cols = cols;
+	   }
 
 	/**
 	 * Returns the number of rows in this matrix, which is positive.
@@ -43,6 +59,7 @@ public final class Matrix
 		return values[0].length;
 		}
 
+
 	/**
 	 * Returns the element at the specified location in this matrix.
 	 * @param row the row to read from (0-based indexing)
@@ -55,6 +72,54 @@ public final class Matrix
 		if (row < 0 || row >= values.length || col < 0 || col >= values[row].length) { throw new IndexOutOfBoundsException("Row or column index out of bounds"); }
 		return values[row][col];
 		}
+
+
+	/** Get a submatrix.
+	   @param i0   Initial row index
+	   @param i1   Final row index
+	   @param j0   Initial column index
+	   @param j1   Final column index
+	   @return     A(i0:i1,j0:j1)
+	   @exception  ArrayIndexOutOfBoundsException Submatrix indices
+	   */
+
+	   public Matrix getMatrix (int i0, int i1, int j0, int j1) {
+	      Matrix X = new Matrix(i1-i0+1,j1-j0+1);
+	      double[][] B = X.getValues();
+	      try {
+	         for (int i = i0; i <= i1; i++) {
+	            for (int j = j0; j <= j1; j++) {
+	               B[i-i0][j-j0] = values[i][j];
+	            }
+	         }
+	      } catch(ArrayIndexOutOfBoundsException e) {
+	         throw new ArrayIndexOutOfBoundsException("Submatrix indices");
+	      }
+	      return X;
+	   }
+
+	/** Access the internal two-dimensional array.
+	   @return     Pointer to the two-dimensional array of matrix elements.
+	   */
+	   public double[][] getValues () {
+	      return values;
+	   }
+
+	   /** Copy the internal two-dimensional array.
+	   @return     Two-dimensional array copy of matrix elements.
+	   */
+
+		public double[][] getValuesCopy () {
+		int rows = rowCount();
+		int cols = columnCount();
+	    double[][] C = new double[rows][cols];
+	    for (int i = 0; i < rows; i++) {
+	       for (int j = 0; j < cols; j++) {
+	          C[i][j] = this.values[i][j];
+	       }
+	    }
+	    return C;
+	 }
 
 	public void set(double[][] src)
 		{
@@ -177,6 +242,9 @@ public final class Matrix
 		{
 		int rows = rowCount();
 		int cols = columnCount();
+		currentStep=0;
+		hist[currentStep]=valuesClone();
+		currentStep++;
 
 		// Compute row echelon form (REF)
 		int numPivots = 0;
@@ -193,16 +261,27 @@ public final class Matrix
 				continue; // Cannot eliminate on this column
 				}
 			swapRows(numPivots, pivotRow);
+			if(!isEqual(hist[currentStep-1], values)) {
+			hist[currentStep]=valuesClone();
+			currentStep++;
+			}
 			pivotRow = numPivots;
 			numPivots++;
 
 			// Simplify the pivot row using the reciprocal
 			multiplyRow(pivotRow, 1 / get(pivotRow, j));
-
+			if(!isEqual(hist[currentStep-1], values)) {
+			hist[currentStep]=valuesClone();
+			currentStep++;
+			}
 			// Eliminate rows below by substraction
 			for(int i = pivotRow + 1; i < rows; i++)
 				{
 				addRows(pivotRow, i, -get(i, j));
+				if(!isEqual(hist[currentStep-1], values)) {
+				hist[currentStep]=valuesClone();
+				currentStep++;
+				}
 				}
 			}
 
@@ -224,16 +303,55 @@ public final class Matrix
 			for(int j = i - 1; j >= 0; j--)
 				{
 				addRows(i, j, -get(j, pivotCol));
+				if(!isEqual(hist[currentStep-1], values)) {
+				hist[currentStep]=valuesClone();
+				currentStep++;
+				}
 				}
 			}
+		currentStep=0;
 		}
 
-	public void solveNextStep()
+	public String getNextStep()
 		{
 		//Modification de la matrice jusqua la prochaine etape
-		++step;
-		//Todo
+		setCurrentStep(++currentStep);
+		return stepToString(currentStep);
 		}
+
+	public String getPreviousStep()
+		{
+		//Modification de la matrice jusqua la prochaine etape
+		setCurrentStep(--currentStep);
+		return stepToString(currentStep);
+		}
+
+	public void setCurrentStep(int step) {
+	currentStep=step;
+	}
+	public String stepToString(int step)
+	{
+	StringBuilder builder = new StringBuilder();
+		int rows = rowCount();
+		int cols = columnCount();
+		double[][] tabStep=getStep(step);
+		for(int i = 0; i < rows; i++)
+			{
+			for(int j = 0; j < cols; j++)
+				{
+				builder.append(tabStep[i][j]);
+				builder.append("  ");
+				}
+			builder.append(System.getProperty("line.separator"));
+			}
+		builder.append(System.getProperty("line.separator"));
+		return builder.toString();
+	}
+
+	public double[][] getStep(int step)
+	{
+		return hist[step];
+	}
 
 	@Override
 	public String toString()
@@ -274,4 +392,45 @@ public final class Matrix
 			}
 		System.out.println();
 		}
+
+	public double[][] valuesClone()
+		{
+		//Create similar structure
+		double[][] tabCopie = new double[values.length][];
+		for(int i = 1; i <= values.length; i++)
+			{
+			int mi = values[i - 1].length;
+			tabCopie[i - 1] = new double[mi];
+			}
+
+		//fill the structure
+		for(int i = 1; i <= values.length; i++)
+			{
+			int mi = values[i - 1].length;
+			for(int j = 1; j <= mi; j++)
+				{
+				tabCopie[i - 1][j - 1] = values[i - 1][j - 1];
+				}
+			}
+
+		return tabCopie;
+		}
+
+	public static boolean isEqual(double[][] tab1, double[][] tab2)
+		{
+			//If array shape is equals, then check the elements inside it
+			for(int i = 0; i < tab1.length; i++)
+				{
+				for(int j = 0; j < tab1[i].length; j++)
+					{
+					if (!tools.MathTools.isEquals(tab1[i][j], tab2[i][j])) { return false; }
+					}
+				}
+
+			//If each test has passed, then the arrays are equals
+			return true;
+		}
+
 	}
+
+

@@ -28,6 +28,7 @@ public class UseJFrameResolution
                 	{ 0, 3, 15 , 36}
               		};
 		matrix.set(in);
+		matrix.reducedRowEchelonForm();
 		Problem problem = new Problem(matrix, 1);
 		new JFrameResolution(problem);
 		}

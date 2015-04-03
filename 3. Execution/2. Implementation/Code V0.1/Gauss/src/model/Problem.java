@@ -29,8 +29,7 @@ public class Problem
 		{
 		if (matrix != null)
 			{
-			matrix.solveNextStep();
-			return matrix.toString();
+			return matrix.getNextStep();
 			}
 		else
 			{
@@ -38,6 +37,17 @@ public class Problem
 			}
 		}
 
+	public String previousStep()
+		{
+		if (matrix != null)
+			{
+			return matrix.getPreviousStep();
+			}
+		else
+			{
+			return "Error. No matrix founded";
+			}
+		}
 	/*------------------------------*\
 	|*				Set				*|
 	\*------------------------------*/
