@@ -60,7 +60,7 @@ public final class TestUnitMatrix
 		System.out.println("Initial matrix");
 		mat.print();
 
-		QRDecomposition matQR=new QRDecomposition(mat);
+		//QRDecomposition matQR=new QRDecomposition(mat);
 
 		for (int i = 0; i < out.length; i++) {
 			for (int j = 0; j < out[i].length; j++)
@@ -69,7 +69,7 @@ public final class TestUnitMatrix
 				}
 		}
 		System.out.println("Solution matrix");
-		matQR.print();
+		//matQR.print();
 		}
 	}
 
