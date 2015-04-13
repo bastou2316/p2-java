@@ -9,9 +9,10 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
 import view.jframe.Control_I;
+import view.jframe.ResolutionControl_I;
 import controleur.ControleurProblem;
 
-public class JPanelResolution extends JPanel implements Control_I
+public class JPanelResolution extends JPanel implements Control_I, ResolutionControl_I
 	{
 
 	/*------------------------------------------------------------------*\
@@ -39,28 +40,29 @@ public class JPanelResolution extends JPanel implements Control_I
 	@Override
 	public synchronized void start()
 		{
-		if (!isRunning)
-			{
-			isRunning = true;
-			thread = new Thread(new Runnable()
-				{
-
-					@Override
-					public void run()
-						{
+//		if (!isRunning)
+//			{
+//			isRunning = true;
+//			thread = new Thread(new Runnable()
+//				{
+//
+//					@Override
+//					public void run()
+//						{
 						String text;
-						while(!isFini)
-							{
+//						while(!isFini)
+//							{
 							text = nextStep();
-							textArea.append(text+"\n");
-							sleep(controleurProblem.getSpeed());
-							}
-						isFini = false;
-						isRunning = false;
-						}
-				});
-			thread.start();
-			}
+//							textArea.append(text+"\n");
+							textArea.setText(text);
+//							sleep(controleurProblem.getSpeed());
+//							}
+//						isFini = false;
+//						isRunning = false;
+//						}
+//				});
+//			thread.start();
+//			}
 		}
 
 	@Override
@@ -68,8 +70,25 @@ public class JPanelResolution extends JPanel implements Control_I
 		{
 		isFini = true;
 		thread = null;
+		textArea.setText("");
 		}
 
+	@Override
+	public void suivant()
+		{
+		String text;
+		text = nextStep();
+		textArea.setText(text);
+		}
+
+	@Override
+	public void precedent()
+		{
+		String text;
+		text = previousStep();
+		textArea.setText(text);
+
+		}
 	/*------------------------------*\
 	|*				Set				*|
 	\*------------------------------*/
@@ -85,6 +104,11 @@ public class JPanelResolution extends JPanel implements Control_I
 	private String nextStep()
 		{
 		return controleurProblem.nextStep();
+		}
+
+	private String previousStep()
+		{
+		return controleurProblem.previousStep();
 		}
 
 	private void sleep(long delayMS)
@@ -149,5 +173,6 @@ public class JPanelResolution extends JPanel implements Control_I
 
 	JTextArea textArea;
 	ControleurProblem controleurProblem;
+
 
 	}

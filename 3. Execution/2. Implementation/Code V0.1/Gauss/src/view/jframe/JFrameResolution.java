@@ -13,7 +13,6 @@ import controleur.ControleurProblem;
 
 public class JFrameResolution extends JFrame
 	{
-y
 	/*------------------------------------------------------------------*\
 	|*							Constructeurs							*|
 	\*------------------------------------------------------------------*/
@@ -48,7 +47,7 @@ y
 		// JComponent : Instanciation
 		jPanelResolution = new JPanelResolution(controleurProblem);
 		jPanelControl = new JPanelControl(jPanelResolution);
-		//jPanelResolutionControlable= new JPanelResolutionControl(jPanelResolutionControl);
+		jPanelResolutionControl = new JPanelResolutionControl(jPanelResolution);
 			// Layout : Specification
 			{
 			BorderLayout borderLayout = new BorderLayout();
@@ -61,7 +60,7 @@ y
 		// JComponent : add
 		add(jPanelResolution, BorderLayout.CENTER);
 		add(jPanelControl, BorderLayout.NORTH);
-		//add(jPanelResolutionControl, BorderLayout.NORTH);
+		add(jPanelResolutionControl, BorderLayout.SOUTH);
 		}
 
 	private void control()
@@ -83,7 +82,7 @@ y
 	// Tools
 	JPanelResolution jPanelResolution;
 	JPanelControl jPanelControl;
-	JPanelResolutionControl jPanelResolutionControlable;
+	JPanelResolutionControl jPanelResolutionControl;
 	ControleurProblem controleurProblem;
 
 
