@@ -86,16 +86,19 @@ public class JFrameMain extends JFrame
 				{
 				case MENU:
 					setSize(600, 400);
+					setLocationRelativeTo(null);
 					this.setContentPane(jPanelMenu);//					
 					revalidate();
 					break;
 				case SET_EQUATION:					
-					this.setSize(1000, 300);
+					this.setSize(1100, 400);
+					setLocationRelativeTo(null);
 					this.setContentPane(jPanelSetEquation);					
 					revalidate();
 					break;
 				case RESULT:
 					this.setSize(600, 600);
+					setLocationRelativeTo(null);
 					this.setTitle("Résolution directe");
 					jPanelResultDirect = new JPanelResultDirect(this, controllerEquation);
 					

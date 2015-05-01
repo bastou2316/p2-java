@@ -3,7 +3,9 @@ package ch.hearc.p2.java.view.jpanel;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Paint;
 import java.awt.PaintContext;
 import java.awt.Rectangle;
@@ -12,16 +14,21 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
+import java.io.File;
+import java.io.IOException;
 import java.util.Enumeration;
 
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderStrokeStyle;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.InputVerifier;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -83,13 +90,6 @@ public class JPanelSetEquation extends JSplitPane {
 	\*------------------------------------------------------------------*/
 
 	private void geometry() {
-		
-		// Icône
-		// icon = new JLabel(new ImageIcon("images/icone.jpg"));
-		// JPanel panIcon = new JPanel();
-		// panIcon.setBackground(Color.white);
-		// panIcon.setLayout(new BorderLayout());
-		// panIcon.add(icon);
 
 		// Matrice
 		JPanel panMatrice = new JPanel();
@@ -117,7 +117,7 @@ public class JPanelSetEquation extends JSplitPane {
 		varStyle = new JComboBox<String>();
 		varStyle.addItem("x1, x2, x3, x4, ...");
 		varStyle.addItem("a, b, c, d, e, ...");
-		varStyle.addItem("x, y, z (max 3 variables)");
+		varStyle.addItem("x, y, z (max 3)");
 		varStyleLabel = new JLabel("Style des variables :");
 		panMatrice.add(varStyleLabel);
 		panMatrice.add(varStyle);
@@ -135,7 +135,7 @@ public class JPanelSetEquation extends JSplitPane {
 		panReso.add(methodStep);
 		panReso.add(methodDirect);
 
-		JPanel control = new JPanel();
+		JPanel control = new JPanel(new FlowLayout());
 
 		backButton = new JButton("BACK");
 		okBouton = new JButton("OK");
@@ -145,7 +145,6 @@ public class JPanelSetEquation extends JSplitPane {
 
 		leftContainerBox = Box.createVerticalBox();
 
-		// leftContainerBox.add(panIcon);
 		leftContainerBox.add(Box.createVerticalGlue());
 		leftContainerBox.add(panMatrice);
 		leftContainerBox.add(Box.createVerticalStrut(10));
@@ -154,8 +153,28 @@ public class JPanelSetEquation extends JSplitPane {
 		leftContainerBox.add(control);
 		leftContainerBox.add(Box.createVerticalGlue());
 
-		this.setLeftComponent(leftContainerBox);
+		// Background image
+		BufferedImage imgBuf = null;
+		try {
+			imgBuf = ImageIO.read(new File("ressources/matrix.jpg"));
 
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		BufferedImage imgBufOk = imgBuf.getSubimage(0, 0, 600, 1080);
+		ImageIcon img2 = new ImageIcon(imgBufOk.getScaledInstance(480, 800,
+				Image.SCALE_DEFAULT));
+		
+		JLabel leftContainer = new JLabel(img2);
+		leftContainer.setLayout(new BorderLayout());
+		leftContainer.add(leftContainerBox, BorderLayout.CENTER);
+
+		
+		this.setLeftComponent(leftContainer);
+
+		
+		
 		// RIGHT component
 
 		rightContainerPanel = new JPanel(new BorderLayout());
@@ -168,11 +187,8 @@ public class JPanelSetEquation extends JSplitPane {
 	}
 
 	private void control() {
-		
 
 		okBouton.addActionListener(new ActionListener() {
-
-			
 
 			// setter matrix en fonction de matrixTables
 
@@ -256,8 +272,8 @@ public class JPanelSetEquation extends JSplitPane {
 				for (int j = 0; j < nbVar; j++) {
 					if (j + 1 == nbVar)
 						addOrEqual = '=';
-					varsTables[j].setValueAt("  x" + j + "   "
-							+ addOrEqual, i, 0);
+					varsTables[j].setValueAt("  x" + j + "   " + addOrEqual, i,
+							0);
 				}
 			}
 			break;
@@ -315,14 +331,15 @@ public class JPanelSetEquation extends JSplitPane {
 		rightContainerPanel.revalidate();
 		rightContainerPanel.repaint();
 	}
-	
-	
+
 	/**
-	 * Controler les inputs dans la table, qu'ils soient bien des double (ou int)
+	 * Controler les inputs dans la table, qu'ils soient bien des double (ou
+	 * int)
+	 * 
 	 * @param val
 	 * @return
 	 */
-	private boolean checkInput(Object val){
+	private boolean checkInput(Object val) {
 		if (val != null) {
 			try {
 				Double.valueOf((String) val);
@@ -349,7 +366,7 @@ public class JPanelSetEquation extends JSplitPane {
 
 	// left (form)
 	private JLabel nameLabel, equationNumberLabel, varNumberLabel,
-			varStyleLabel, icon;
+			varStyleLabel;
 	private JRadioButton methodStep, methodDirect;
 	private JComboBox<String> varStyle;
 	private JSpinner equationNumber, varNumber;
