@@ -1,6 +1,8 @@
 
 package ch.hearc.p2.java.controller;
 
+import java.awt.Dimension;
+
 import ch.hearc.p2.java.model.Equation;
 import ch.hearc.p2.java.model.Matrix;
 
@@ -50,6 +52,10 @@ public class ControllerEquation
 		{
 		return equation.getSpeed();
 		}
+	
+	public Dimension getMatrixDimension(){
+		return equation.getMatrixDimension();
+	}
 
 	/*------------------------------------------------------------------*\
 	|*							Methodes Private						*|

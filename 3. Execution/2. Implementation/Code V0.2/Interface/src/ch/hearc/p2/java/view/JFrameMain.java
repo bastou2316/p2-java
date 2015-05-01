@@ -5,11 +5,14 @@ import java.awt.BorderLayout;
 
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import ch.hearc.p2.java.controller.ControllerEquation;
 import ch.hearc.p2.java.view.jpanel.JPanelControl;
 import ch.hearc.p2.java.view.jpanel.JPanelMenu;
-import ch.hearc.p2.java.view.jpanel.JPanelResult;
+import ch.hearc.p2.java.view.jpanel.JPanelResultDirect;
+import ch.hearc.p2.java.view.jpanel.JPanelResultStep;
+import ch.hearc.p2.java.view.jpanel.JPanelSetEquation;
 
 public class JFrameMain extends JFrame
 	{
@@ -46,13 +49,19 @@ public class JFrameMain extends JFrame
 
 	protected void geometry()
 		{
+		jPanelMenu = new JPanelMenu(this);
+		jPanelSetEquation = new JPanelSetEquation(this, controllerEquation);
+		
+		
+	
+		
 		// Layout : Specification
 		BorderLayout borderLayout = new BorderLayout();
 		setLayout(borderLayout);
 
 		// JComponent : Instanciation
-		//showView(PANEL.MENU);
-		showView(PANEL.RESULT);
+		add(jPanelMenu, BorderLayout.CENTER);
+		
 		}
 
 	protected void control()
@@ -76,23 +85,42 @@ public class JFrameMain extends JFrame
 			switch(panel)
 				{
 				case MENU:
-					add(new JPanelMenu(this), BorderLayout.CENTER);
+					setSize(600, 400);
+					this.setContentPane(jPanelMenu);//					
+					revalidate();
+					break;
+				case SET_EQUATION:					
+					this.setSize(1000, 300);
+					this.setContentPane(jPanelSetEquation);					
+					revalidate();
 					break;
 				case RESULT:
-					jPanelResolution = new JPanelResult(controllerEquation);
-					jPanelControl = new JPanelControl(jPanelResolution);
+					this.setSize(600, 600);
+					this.setTitle("Résolution directe");
+					jPanelResultDirect = new JPanelResultDirect(this, controllerEquation);
+					
+					this.setContentPane(jPanelResultDirect);					
+					revalidate();
+					
 
-					add(jPanelResolution, BorderLayout.CENTER);
-					add(jPanelControl, BorderLayout.SOUTH);
-
-					JDialog dialog = new JDialog(this, "Hello");
-					dialog.setLocationRelativeTo(this);
-					dialog.add(new JPanelControl(jPanelResolution));
-					dialog.pack();
-					dialog.setVisible(true);
-
+//					JDialog dialog = new JDialog(this, "Hello");
+//					dialog.setLocationRelativeTo(this);
+//					dialog.add(new JPanelControl(jPanelResolution));
+//					dialog.pack();
+//					dialog.setVisible(true);		
 					break;
 				case RESULT_STEP:
+					this.setSize(600, 600);
+					this.setTitle("Résolution étape par étape");
+					jPanelResultStep = new JPanelResultStep(controllerEquation);
+					jPanelControl = new JPanelControl(jPanelResultStep);
+					
+					JPanel mainPanel = new JPanel(new BorderLayout());
+					mainPanel.add(jPanelResultStep, BorderLayout.CENTER);
+					mainPanel.add(jPanelControl, BorderLayout.SOUTH);
+					this.setContentPane(mainPanel);					
+					revalidate();
+					
 					break;
 
 				default:
@@ -107,13 +135,17 @@ public class JFrameMain extends JFrame
 	\*------------------------------------------------------------------*/
 
 	// Tools
-	JPanelResult jPanelResolution;
-	JPanelControl jPanelControl;
-	ControllerEquation controllerEquation;
+	private JPanelMenu jPanelMenu;
+	private JPanelSetEquation jPanelSetEquation;
+	private JPanelResultDirect jPanelResultDirect;
+	private JPanelControl jPanelControl;
+	
+	private JPanelResultStep jPanelResultStep;
+	private ControllerEquation controllerEquation;
 
-	PANEL actualPanel;
+	private PANEL actualPanel;
 
-	enum PANEL
+	public enum PANEL
 		{
 		MENU, RESULT, RESULT_STEP, SET_EQUATION, SET_MATRIX
 		}

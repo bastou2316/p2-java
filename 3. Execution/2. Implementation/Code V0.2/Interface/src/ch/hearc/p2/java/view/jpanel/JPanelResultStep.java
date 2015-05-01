@@ -11,14 +11,13 @@ import javax.swing.JTextArea;
 import ch.hearc.p2.java.controller.ControllerEquation;
 import ch.hearc.p2.java.model.Matrix;
 
-public class JPanelResult extends JPanel implements Control_I
+public class JPanelResultStep extends JPanel implements Control_I
 	{
-
 	/*------------------------------------------------------------------*\
 	|*							Constructeurs							*|
 	\*------------------------------------------------------------------*/
 
-	public JPanelResult(ControllerEquation controllerEquation)
+	public JPanelResultStep(ControllerEquation controllerEquation)
 		{
 		this.controllerEquation = controllerEquation;
 
@@ -149,5 +148,5 @@ public class JPanelResult extends JPanel implements Control_I
 
 	JTextArea textArea;
 	ControllerEquation controllerEquation;
-
 	}
+
