@@ -2,6 +2,7 @@ package ch.hearc.p2.java.view.jpanel;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -19,10 +20,8 @@ import java.awt.image.ColorModel;
 import java.io.File;
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.EventObject;
 
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderStroke;
-import javafx.scene.layout.BorderStrokeStyle;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -42,9 +41,11 @@ import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.event.CellEditorListener;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.TableColumnModelListener;
+import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
@@ -135,24 +136,35 @@ public class JPanelSetEquation extends JSplitPane {
 		panReso.add(methodStep);
 		panReso.add(methodDirect);
 
-		JPanel control = new JPanel(new FlowLayout());
+		JPanel panControl = new JPanel(new FlowLayout());
+		panControl.setBackground(Color.white);
 
 		backButton = new JButton("BACK");
+		saveButton = new JButton("SAVE");
 		okBouton = new JButton("OK");
 
-		control.add(backButton);
-		control.add(okBouton);
+		panControl.add(backButton);
+		panControl.add(saveButton);
+		panControl.add(okBouton);
+		
+		Box controlBox = Box.createVerticalBox();
+		
+		controlBox.add(Box.createVerticalGlue());
+		controlBox.add(panControl);
+		controlBox.add(Box.createVerticalGlue());
 
 		leftContainerBox = Box.createVerticalBox();
 
 		leftContainerBox.add(Box.createVerticalGlue());
-		leftContainerBox.add(panMatrice);
-		leftContainerBox.add(Box.createVerticalStrut(10));
-		leftContainerBox.add(panReso);
-		leftContainerBox.add(Box.createVerticalStrut(10));
-		leftContainerBox.add(control);
 		leftContainerBox.add(Box.createVerticalGlue());
-
+		leftContainerBox.add(panMatrice);
+		leftContainerBox.add(Box.createVerticalGlue());
+		leftContainerBox.add(panReso);
+		leftContainerBox.add(Box.createVerticalGlue());
+		leftContainerBox.add(controlBox);
+		leftContainerBox.add(Box.createVerticalGlue());
+		leftContainerBox.add(Box.createVerticalGlue());
+		
 		// Background image
 		BufferedImage imgBuf = null;
 		try {
@@ -162,9 +174,9 @@ public class JPanelSetEquation extends JSplitPane {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		BufferedImage imgBufOk = imgBuf.getSubimage(0, 0, 600, 1080);
-		ImageIcon img2 = new ImageIcon(imgBufOk.getScaledInstance(480, 800,
-				Image.SCALE_DEFAULT));
+		BufferedImage imgBufOk = imgBuf.getSubimage(0, 400, 400, 680);
+		ImageIcon img2 = new ImageIcon(imgBufOk/*.getScaledInstance(400, 854,
+				Image.SCALE_DEFAULT)*/);
 		
 		JLabel leftContainer = new JLabel(img2);
 		leftContainer.setLayout(new BorderLayout());
@@ -182,7 +194,7 @@ public class JPanelSetEquation extends JSplitPane {
 		createMatrixTables();
 
 		rightContainerPanel.add(boxV, BorderLayout.CENTER);
-		JScrollPane jScrollPane = new JScrollPane(rightContainerPanel);
+		JScrollPane jScrollPane = new JScrollPane(boxV);
 		this.setRightComponent(jScrollPane);
 	}
 
@@ -194,8 +206,8 @@ public class JPanelSetEquation extends JSplitPane {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				int nbVar = (int) varNumber.getValue();
-				int nbEqu = (int) equationNumber.getValue();
+				int nbVar = (Integer) varNumber.getValue();
+				int nbEqu = (Integer) equationNumber.getValue();
 
 				Matrix matrix = new Matrix();
 				controllerEquation.setEquation(matrix, nbVar, nbEqu, true, 10);
@@ -243,8 +255,8 @@ public class JPanelSetEquation extends JSplitPane {
 	}
 
 	private void createMatrixTables() {
-		int nbVar = (int) varNumber.getValue();
-		int nbEqu = (int) equationNumber.getValue();
+		int nbVar = (Integer) varNumber.getValue();
+		int nbEqu = (Integer) equationNumber.getValue();
 
 		matrixTables = new JTable[nbVar + 1];
 		varsTables = new JTable[nbVar];
@@ -254,10 +266,12 @@ public class JPanelSetEquation extends JSplitPane {
 			matrixTables[j].setRowHeight(40);
 			matrixTables[j].setBackground(Color.YELLOW);
 			matrixTables[j].setCellSelectionEnabled(false);
+//			matrixTables[j].setLayout(new FlowLayout(FlowLayout.RIGHT));
 			varsTables[j] = new JTable(nbEqu, 1);
 			varsTables[j].setRowHeight(40);
 			varsTables[j].setShowVerticalLines(false);
 			varsTables[j].setEnabled(false);
+			varsTables[j].setBackground(leftComponent.getBackground());
 		}
 		matrixTables[nbVar] = new JTable(nbEqu, 1);
 		matrixTables[nbVar].setRowHeight(40);
@@ -371,7 +385,7 @@ public class JPanelSetEquation extends JSplitPane {
 	private JComboBox<String> varStyle;
 	private JSpinner equationNumber, varNumber;
 	private JTextField name;
-	private JButton okBouton, backButton;
+	private JButton okBouton, saveButton, backButton;
 
 	// right (table)
 	private JTable[] matrixTables;

@@ -2,6 +2,15 @@
 package ch.hearc.p2.java.view;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -35,6 +44,24 @@ public class JFrameMain extends JFrame
 	|*							Methodes Public							*|
 	\*------------------------------------------------------------------*/
 
+ 
+	 @Override
+     public void paint(Graphics g) {
+        Dimension d = getSize();
+        Dimension m = getMaximumSize();
+        boolean resize = d.width > m.width || d.height > m.height;
+        d.width = Math.min(m.width, d.width);
+        d.height = Math.min(m.height, d.height);
+        if (resize) {
+           Point p = getLocation();
+           setVisible(false);
+           setSize(d);
+           setLocation(p);
+           setVisible(true);
+        }
+        super.paint(g);
+     }
+	
 	/*------------------------------*\
 	|*				Set				*|
 	\*------------------------------*/
@@ -53,6 +80,11 @@ public class JFrameMain extends JFrame
 		jPanelSetEquation = new JPanelSetEquation(this, controllerEquation);
 		
 		
+		
+		//setMaximumSize(new Dimension(1900,680));
+		
+		setMinimumSize(new Dimension(300,300));
+		setResizable(true);
 	
 		
 		// Layout : Specification
@@ -67,6 +99,9 @@ public class JFrameMain extends JFrame
 	protected void control()
 		{
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		
+		
+		
 		}
 
 	protected void appearance()
@@ -87,13 +122,15 @@ public class JFrameMain extends JFrame
 				case MENU:
 					setSize(600, 400);
 					setLocationRelativeTo(null);
-					this.setContentPane(jPanelMenu);//					
+					setContentPane(jPanelMenu);//					
 					revalidate();
 					break;
 				case SET_EQUATION:					
-					this.setSize(1100, 400);
+					setSize(1100, 550);
+					setMaximumSize(new Dimension(1900,680));
 					setLocationRelativeTo(null);
-					this.setContentPane(jPanelSetEquation);					
+					setTitle("Matrix creation");
+					setContentPane(jPanelSetEquation);
 					revalidate();
 					break;
 				case RESULT:
@@ -147,6 +184,7 @@ public class JFrameMain extends JFrame
 	private ControllerEquation controllerEquation;
 
 	private PANEL actualPanel;
+	
 
 	public enum PANEL
 		{
