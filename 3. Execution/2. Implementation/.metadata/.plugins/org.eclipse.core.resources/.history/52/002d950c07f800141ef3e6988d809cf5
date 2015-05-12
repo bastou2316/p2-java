@@ -1,0 +1,176 @@
+Manifest-Version: 1.0
+Eclipse-AutoStart: true
+Specification-Title: Java 3D API Specification
+Created-By: 1.5.0_11-b03 (Sun Microsystems Inc.)
+Specification-Version: 1.5
+Implementation-Vendor-Id: com.sun
+Export-Package: javax.vecmath
+Bundle-Version: 1.5.1
+Bundle-Name: Vecmath Library
+Ant-Version: Apache Ant 1.6.5
+Bundle-Vendor: Sun Microsystems
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: javax.vecmath; singleton:=true
+Bundle-Localization: plugin
+Implementation-Title: Java 3D Vecmath Runtime Environment
+Specification-Vendor: Sun Microsystems, Inc.
+Extension-Name: javax.vecmath
+Implementation-Version: 1.5.1
+Implementation-Vendor: Sun Microsystems, Inc.
+
+Name: javax/vecmath/AxisAngle4f.class
+SHA1-Digest: 6Wv6QSssJCSRk6v5CPS2fnyrcds=
+
+Name: javax/vecmath/Point3d.class
+SHA1-Digest: tiia4pEkmgY6/f70bvs5mQ1o7ys=
+
+Name: javax/vecmath/TexCoord2f.class
+SHA1-Digest: b5krLzBMA6lirTWSIKdNyP5P5jw=
+
+Name: javax/vecmath/GVector.class
+SHA1-Digest: 5lhEzZAVfTu/hPMAF5mfNUvsQHk=
+
+Name: javax/vecmath/Vector3f.class
+SHA1-Digest: lG4ki0o/+WmEjHqqZc6IAr/8rhU=
+
+Name: javax/vecmath/Matrix4d.class
+SHA1-Digest: n+daU/lhkW83uNCSA4m76f37tO0=
+
+Name: javax/vecmath/Tuple2d.class
+SHA1-Digest: RqQjaTf99HEfcKMfCDUqp3MhnMc=
+
+Name: javax/LICENSE-JRL.txt
+SHA1-Digest: fDcWX96LqyT0Dqu7VPy7Aknkb7E=
+
+Name: javax/vecmath/Quat4d.class
+SHA1-Digest: S3znpquPVxFi+ysa5OhT4ZjmnNY=
+
+Name: javax/vecmath/Color4f.class
+SHA1-Digest: Q6fnc0g3pn1EfG07YkVRtnnehK4=
+
+Name: javax/vecmath/Tuple4d.class
+SHA1-Digest: 4UroyEO1Me9CcA6FE51sHybohEg=
+
+Name: javax/vecmath/Tuple4i.class
+SHA1-Digest: sEDV7kY0pfcc90yCO2N78p7p0dY=
+
+Name: javax/vecmath/Vector2f.class
+SHA1-Digest: JHKEVu74muHTqX3/1xFHIIzO2dI=
+
+Name: javax/vecmath/Color3b.class
+SHA1-Digest: 1TloaYvDkFKAzEHb1vyj11/YjdM=
+
+Name: javax/vecmath/TexCoord4f.class
+SHA1-Digest: LVhwUf1mTeiX7NJLJCY6fLJn/sY=
+
+Name: javax/vecmath/Tuple2f.class
+SHA1-Digest: UyDpaAVVNXicECnGymDylqVBlr4=
+
+Name: javax/vecmath/Point2d.class
+SHA1-Digest: A9qzIx2azX7NXT6LPd2Hw3RtNpk=
+
+Name: javax/vecmath/Matrix3f.class
+SHA1-Digest: uODh/EFo4VcrOYgI/Qta5NjB/ms=
+
+Name: javax/vecmath/Tuple3i.class
+SHA1-Digest: X45dSo4LyRm+uH9AyxvY5/dycj4=
+
+Name: javax/vecmath/Point4d.class
+SHA1-Digest: 54aOXZjYEbCjKN8zCVX21V3ANTs=
+
+Name: javax/vecmath/Matrix4f.class
+SHA1-Digest: 5eoHxNt45bgTJOCK9CeD8wpxrnY=
+
+Name: javax/vecmath/Point4i.class
+SHA1-Digest: aF6N3F1TSi8GS8EEkIYwAUo1nvQ=
+
+Name: javax/vecmath/Point4f.class
+SHA1-Digest: NJ6yZWZWiZP/Ze3ZKIAyvH83Rm8=
+
+Name: javax/vecmath/Tuple3b.class
+SHA1-Digest: uZqiCUSnSsxwXaj4AileXOwGmlI=
+
+Name: javax/vecmath/Tuple4f.class
+SHA1-Digest: F9crfzNbsHgaSpWg2I4XDK3gdDQ=
+
+Name: javax/vecmath/SingularMatrixException.class
+SHA1-Digest: IY0mKaFaT0aNCZjMvDTYWwiFnUY=
+
+Name: javax/vecmath/Vector3d.class
+SHA1-Digest: 93N4g4B/CKYEDr9UElLqjxXGgBw=
+
+Name: javax/vecmath/VecMathI18N.class
+SHA1-Digest: n3Joy7GurjozePiX3/WgEt4ZE6g=
+
+Name: javax/vecmath/Tuple3d.class
+SHA1-Digest: HyTf1ofFdM8I8HVbPkCEEGIRPvE=
+
+Name: javax/vecmath/MismatchedSizeException.class
+SHA1-Digest: AMJDrqb+EIbiR0oQE4vSwtrs5BQ=
+
+Name: javax/vecmath/Quat4f.class
+SHA1-Digest: 4kQA1QbG02BVKnmhyxLHRVjyDTw=
+
+Name: javax/vecmath/Vector4d.class
+SHA1-Digest: 8HSbq/XXS5UMME4D0/3TqrjlYoY=
+
+Name: javax/vecmath/Tuple2i.class
+SHA1-Digest: LY8WSqdPhVryNt1I/hXKc0l2STI=
+
+Name: javax/vecmath/GMatrix.class
+SHA1-Digest: u1D0y498NVX06r029+Uow4ipmFo=
+
+Name: javax/LICENSE-JDL.txt
+SHA1-Digest: qevBh269OzlX+tvOj+1R29BES5s=
+
+Name: javax/vecmath/Point2f.class
+SHA1-Digest: ES5A/CDsg8QrXCkfDX8ysj/HGCo=
+
+Name: javax/vecmath/Point3i.class
+SHA1-Digest: NfBcEmnJSyJj4h4+8wdCT35McUI=
+
+Name: javax/LICENSE.txt
+SHA1-Digest: jtZ6qs2PTmWlTVcrlgX5SWcMbYU=
+
+Name: javax/vecmath/Vector4f.class
+SHA1-Digest: vJj03amsRyIXgJf8RBGz4HBmLjc=
+
+Name: javax/vecmath/Matrix3d.class
+SHA1-Digest: 3m7+WJs2hZ4Vd5ASii/MqZOZE/s=
+
+Name: javax/vecmath/AxisAngle4d.class
+SHA1-Digest: gmm1NFK9QdGjtiU9PhKb5mK6Gv0=
+
+Name: javax/vecmath/Vector2d.class
+SHA1-Digest: JK+0qLobrjarRov6ROkCYhL3sVE=
+
+Name: javax/vecmath/Tuple4b.class
+SHA1-Digest: Z2+TsCv2cHUAfEn7DBkxphBl794=
+
+Name: javax/vecmath/VecMathUtil.class
+SHA1-Digest: sP3jOTMFXhASYjDldL3ak45C9EA=
+
+Name: javax/vecmath/Tuple3f.class
+SHA1-Digest: ia7FOCfLKwmFnM+Dzx/16vQomgU=
+
+Name: javax/vecmath/Point3f.class
+SHA1-Digest: kNU+zRqYhwvDgT+e1MYijqTB3Bc=
+
+Name: javax/vecmath/Color3f.class
+SHA1-Digest: n6sAp98czjuOHnE6oLOOImhq47E=
+
+Name: javax/vecmath/TexCoord3f.class
+SHA1-Digest: Kr4I+URypaDmkhLg73EP1ssdLxo=
+
+Name: javax/vecmath/ExceptionStrings.properties
+SHA1-Digest: +BT9pkPUthHv4d1+SQ6+5blAfzk=
+
+Name: javax/vecmath/Point2i.class
+SHA1-Digest: I8Z5P9/L5MFstCHkPUHO7xhc0As=
+
+Name: javax/COPYRIGHT.txt
+SHA1-Digest: KAbhwFLAvfiwB1R0F+lB88PV6u4=
+
+Name: javax/vecmath/Color4b.class
+SHA1-Digest: w+4lBnV6eU9W+4hMiTBJUDriLF0=
+

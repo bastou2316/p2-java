@@ -206,8 +206,8 @@ public class JPanelSetEquation extends JSplitPane {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				int nbVar = (Integer) varNumber.getValue();
-				int nbEqu = (Integer) equationNumber.getValue();
+				int nbVar = ((Integer) varNumber.getValue()).intValue();
+				int nbEqu = ((Integer) equationNumber.getValue()).intValue();
 
 				Matrix matrix = new Matrix();
 				controllerEquation.setEquation(matrix, nbVar, nbEqu, true, 10);
@@ -255,8 +255,8 @@ public class JPanelSetEquation extends JSplitPane {
 	}
 
 	private void createMatrixTables() {
-		int nbVar = (Integer) varNumber.getValue();
-		int nbEqu = (Integer) equationNumber.getValue();
+		int nbVar = ((Integer) varNumber.getValue()).intValue();
+		int nbEqu = ((Integer) equationNumber.getValue()).intValue();
 
 		matrixTables = new JTable[nbVar + 1];
 		varsTables = new JTable[nbVar];
@@ -266,7 +266,6 @@ public class JPanelSetEquation extends JSplitPane {
 			matrixTables[j].setRowHeight(40);
 			matrixTables[j].setBackground(Color.YELLOW);
 			matrixTables[j].setCellSelectionEnabled(false);
-//			matrixTables[j].setLayout(new FlowLayout(FlowLayout.RIGHT));
 			varsTables[j] = new JTable(nbEqu, 1);
 			varsTables[j].setRowHeight(40);
 			varsTables[j].setShowVerticalLines(false);
@@ -341,6 +340,7 @@ public class JPanelSetEquation extends JSplitPane {
 
 		createMatrixTables();
 
+		System.out.println("hi222");
 		rightContainerPanel.add(boxV);
 		rightContainerPanel.revalidate();
 		rightContainerPanel.repaint();

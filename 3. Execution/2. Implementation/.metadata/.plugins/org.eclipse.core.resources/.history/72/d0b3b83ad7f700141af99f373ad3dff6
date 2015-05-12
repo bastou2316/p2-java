@@ -1,0 +1,28 @@
+package ch.hearc.p2.java;
+
+import org.jzy3d.maths.Range;
+import org.jzy3d.plot3d.builder.Builder;
+import org.jzy3d.plot3d.builder.Mapper;
+import org.jzy3d.plot3d.builder.concrete.OrthonormalGrid;
+import org.jzy3d.plot3d.primitives.Shape;
+import org.jzy3d.plot3d.rendering.scene.Scene;
+
+public class test3d {
+	
+	public static void main(String[] args) {
+		OrthonormalGrid grid = new OrthonormalGrid(new Range(-10.0, 10.0), 1);
+		Mapper mapper = new Mapper() {
+			
+			@Override
+			public double f(double arg0, double arg1) {
+				
+				return arg0 +arg1;
+			}
+		};
+		Shape shape = Builder.buildRing(grid, mapper, 1.0, 2.0)  /*Builder.buildOrthonormal(grid, mapper);*/
+		Scene scene = new Scene();
+		scene.add(shape);
+		
+		
+	}
+}

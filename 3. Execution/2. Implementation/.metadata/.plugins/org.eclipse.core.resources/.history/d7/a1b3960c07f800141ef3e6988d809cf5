@@ -1,0 +1,161 @@
+Signature-Version: 1.0
+Created-By: 1.5.0_11 (Sun Microsystems Inc.)
+SHA1-Digest-Manifest-Main-Attributes: 7+rRlQrIXT8PInlnp601z1YlXBw=
+SHA1-Digest-Manifest: GnK6+5pr1/H9202li8xQXgBpp8s=
+
+Name: javax/vecmath/AxisAngle4f.class
+SHA1-Digest: ixnWOy7u4MULG+Mhx2A4xoBWS1s=
+
+Name: javax/vecmath/Point3d.class
+SHA1-Digest: oOnS9KOt/cnWp3mPHR/xVhpK1L8=
+
+Name: javax/vecmath/TexCoord2f.class
+SHA1-Digest: 7mTfJieId8x5Pypvk+IlJwG47QM=
+
+Name: javax/vecmath/GVector.class
+SHA1-Digest: fE4/bV7/XdUG5okMAXvB7aeJsJ0=
+
+Name: javax/vecmath/Vector3f.class
+SHA1-Digest: miQQdk1rVfsUtEfP7wjT7RcY7aM=
+
+Name: javax/vecmath/Matrix4d.class
+SHA1-Digest: 7MjFCgyU4Wy3iL8f4UG6MWi8fAs=
+
+Name: javax/vecmath/Tuple2d.class
+SHA1-Digest: dTfp5cGuEcpfAHlinZCBg0TcEik=
+
+Name: javax/LICENSE-JRL.txt
+SHA1-Digest: j6+PJl1wfewdvjxuXH9M4FblqWQ=
+
+Name: javax/vecmath/Quat4d.class
+SHA1-Digest: 8F1w/CDOw4H3GNf0VEz9BfX0m+U=
+
+Name: javax/vecmath/Color4f.class
+SHA1-Digest: 3NAeY4RRzNtm+e5Ws8+lU49R0As=
+
+Name: javax/vecmath/Tuple4d.class
+SHA1-Digest: osvcVApBTRVWeyuuwBn+vtCubRg=
+
+Name: javax/vecmath/Tuple4i.class
+SHA1-Digest: 4klJjWPWr4ICH2n+/GuMXVjaVCU=
+
+Name: javax/vecmath/Vector2f.class
+SHA1-Digest: CKFGy9oa3sDK7Bm8GJVMYMTJT9c=
+
+Name: javax/vecmath/TexCoord4f.class
+SHA1-Digest: 2bWLsZyyHvbM1pRZOpykCsEarEA=
+
+Name: javax/vecmath/Color3b.class
+SHA1-Digest: mOwqnzG6OcabMZDHBUxlQPb60b0=
+
+Name: javax/vecmath/Tuple2f.class
+SHA1-Digest: aiiVq3jFGNCjRyrwD/SqlkR//+I=
+
+Name: javax/vecmath/Point2d.class
+SHA1-Digest: aL6O89uq+dNp7jo83lqjeGfDoPA=
+
+Name: javax/vecmath/Matrix3f.class
+SHA1-Digest: FkwnntyjDkrVQOkB412lU+/q7EY=
+
+Name: javax/vecmath/Tuple3i.class
+SHA1-Digest: WdP4WGV8+SICdd7vr9e+O2LTt7U=
+
+Name: javax/vecmath/Point4d.class
+SHA1-Digest: IWmlzoEwOBW+BT8cwYvmVZGRDbk=
+
+Name: javax/vecmath/Matrix4f.class
+SHA1-Digest: NI33JdyxIAAlGq4gk7amMSDoPpg=
+
+Name: javax/vecmath/Point4i.class
+SHA1-Digest: dBQcVaJ8FCtGXU7qnpkKr5dzS3s=
+
+Name: javax/vecmath/Tuple3b.class
+SHA1-Digest: HaA5HsA+xcqcq3OFhe2UMn5OeLw=
+
+Name: javax/vecmath/Point4f.class
+SHA1-Digest: sVRa2k8ZNdahLEKDCVJJjBlK+Ak=
+
+Name: javax/vecmath/Tuple4f.class
+SHA1-Digest: YrNt1NRlCAZWH1wXI4yvydIh4cQ=
+
+Name: javax/vecmath/SingularMatrixException.class
+SHA1-Digest: uPzFbPPnI5069grXbo/Jvm6sxf0=
+
+Name: javax/vecmath/Vector3d.class
+SHA1-Digest: yfeg1myl33VeWpPV2IueAM84p4Q=
+
+Name: javax/vecmath/VecMathI18N.class
+SHA1-Digest: y2JhmX9ssizIlbQZ26rVoXrCxOY=
+
+Name: javax/vecmath/Tuple3d.class
+SHA1-Digest: 3AeA3j1TKGqKKhFZ9oc0JHp233U=
+
+Name: javax/vecmath/MismatchedSizeException.class
+SHA1-Digest: GZFQ7rAz3DUjM5vaxQnWPBiteos=
+
+Name: javax/vecmath/Quat4f.class
+SHA1-Digest: hspGUlSLrJBEbJf9BmeASHxYchA=
+
+Name: javax/vecmath/Vector4d.class
+SHA1-Digest: j58J37Wk1DZOBPSZrpbdykJuQ4s=
+
+Name: javax/vecmath/Tuple2i.class
+SHA1-Digest: iehnB2cdyZEXxnZbAyNfrpkA36M=
+
+Name: javax/vecmath/GMatrix.class
+SHA1-Digest: EBLgmQwNbsg0pZ/4DxEDZ0r7i1w=
+
+Name: javax/LICENSE-JDL.txt
+SHA1-Digest: EPRTaIWZCJYn0xB5THlvo6jwux4=
+
+Name: javax/vecmath/Point2f.class
+SHA1-Digest: cDfy0ui+oV3eNJ6Vtg1ReAHKf6s=
+
+Name: javax/vecmath/Point3i.class
+SHA1-Digest: aK19qd7QWsitT7fZKDHrDSnSsVQ=
+
+Name: javax/LICENSE.txt
+SHA1-Digest: ubIzCx5re+e54JEisP27ne5VZ5g=
+
+Name: javax/vecmath/Vector4f.class
+SHA1-Digest: 7TjmmxEkhid1Tp4ZDc7a7wabDEI=
+
+Name: javax/vecmath/Matrix3d.class
+SHA1-Digest: iqdGayXgov27yuXDsoI71YkQ+xA=
+
+Name: javax/vecmath/AxisAngle4d.class
+SHA1-Digest: lTrJTTWJ1T1CkEte44CNxPfVdfM=
+
+Name: javax/vecmath/Vector2d.class
+SHA1-Digest: E+21NHOJX/kjarMEtL8cGR6MWOU=
+
+Name: javax/vecmath/Tuple4b.class
+SHA1-Digest: oeJWFQRlKsYewsEGzPBj045jmAY=
+
+Name: javax/vecmath/VecMathUtil.class
+SHA1-Digest: YNkLxZQOwmVsXBL05zZsp9h3BsQ=
+
+Name: javax/vecmath/Tuple3f.class
+SHA1-Digest: nWfhdwQ3z3DsQi3uuFqBW/Mdjbo=
+
+Name: javax/vecmath/Point3f.class
+SHA1-Digest: fQgE38taiLNG1WZOSXejWJ4I+no=
+
+Name: javax/vecmath/Color3f.class
+SHA1-Digest: +VguJ2tdtPcFzr+I891g/Ex/x4Y=
+
+Name: javax/vecmath/TexCoord3f.class
+SHA1-Digest: uTE+AgzN3Nj/Yug+GoN+3+MabZA=
+
+Name: javax/vecmath/ExceptionStrings.properties
+SHA1-Digest: E9JAkx7RoONAwjHRLMESKT9nJ3Q=
+
+Name: javax/vecmath/Point2i.class
+SHA1-Digest: Tie/IiXCAvDO1rbih61dM/CNeck=
+
+Name: javax/vecmath/Color4b.class
+SHA1-Digest: k1byDP/+4Fh1PhxCUnVxKHVeRbw=
+
+Name: javax/COPYRIGHT.txt
+SHA1-Digest: OKUHIsjOSyTF+nnw6bhx4HclQkc=
+
