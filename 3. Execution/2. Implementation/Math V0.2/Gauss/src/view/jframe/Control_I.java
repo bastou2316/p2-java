@@ -1,10 +1,11 @@
 
-package ch.hearc.p2.java.view.jpanel;
+package view.jframe;
 
 public interface Control_I
 	{
 
 	public void start();
 	public void stop();
+
 
 	}

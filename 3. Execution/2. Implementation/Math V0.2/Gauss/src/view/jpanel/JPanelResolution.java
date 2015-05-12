@@ -1,5 +1,5 @@
 
-package ch.hearc.p2.java.view.jpanel;
+package view.jpanel;
 
 import java.awt.FlowLayout;
 import java.awt.event.ComponentAdapter;
@@ -8,18 +8,20 @@ import java.awt.event.ComponentEvent;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
-import ch.hearc.p2.java.controller.ControllerEquation;
-import ch.hearc.p2.java.model.Matrix;
+import view.jframe.Control_I;
+import view.jframe.ResolutionControl_I;
+import controleur.ControleurProblem;
 
-public class JPanelResultStep extends JPanel implements Control_I
+public class JPanelResolution extends JPanel implements Control_I, ResolutionControl_I
 	{
+
 	/*------------------------------------------------------------------*\
 	|*							Constructeurs							*|
 	\*------------------------------------------------------------------*/
 
-	public JPanelResultStep(ControllerEquation controllerEquation)
+	public JPanelResolution(ControleurProblem controleurProblem)
 		{
-		this.controllerEquation = controllerEquation;
+		this.controleurProblem = controleurProblem;
 
 		//Composition du panel
 		geometry();
@@ -38,28 +40,31 @@ public class JPanelResultStep extends JPanel implements Control_I
 	@Override
 	public synchronized void start()
 		{
-		if (!isRunning)
-			{
-			isRunning = true;
-			thread = new Thread(new Runnable()
-				{
+//		if (!isRunning)
+//			{
+//			isRunning = true;
+//			thread = new Thread(new Runnable()
+//				{
+//
+//					@Override
+//					public void run()
+//						{
+						String text;
+//						while(!isFini)
+//							{
 
-					@Override
-					public void run()
-						{
-						Matrix matrix;
-						while(!isFini)
-							{
-							matrix = nextStep();
-							textArea.setText(matrix.toString());
-							sleep(1 / controllerEquation.getSpeed());
-							}
-						isFini = false;
-						isRunning = false;
-						}
-				});
-			thread.start();
-			}
+							controleurProblem.start();
+							text = nextStep();
+//							textArea.append(text+"\n");
+							textArea.setText(text);
+//							sleep(controleurProblem.getSpeed());
+//							}
+//						isFini = false;
+//						isRunning = false;
+//						}
+//				});
+//			thread.start();
+//			}
 		}
 
 	@Override
@@ -67,8 +72,27 @@ public class JPanelResultStep extends JPanel implements Control_I
 		{
 		isFini = true;
 		thread = null;
+		textArea.setText("");
+		controleurProblem.stop();
+
 		}
 
+	@Override
+	public void suivant()
+		{
+		String text;
+		text = nextStep();
+		textArea.setText(text);
+		}
+
+	@Override
+	public void precedent()
+		{
+		String text;
+		text = previousStep();
+		textArea.setText(text);
+
+		}
 	/*------------------------------*\
 	|*				Set				*|
 	\*------------------------------*/
@@ -81,9 +105,14 @@ public class JPanelResultStep extends JPanel implements Control_I
 	|*							Methodes Private						*|
 	\*------------------------------------------------------------------*/
 
-	private Matrix nextStep()
+	private String nextStep()
 		{
-		return controllerEquation.getNextMatrix();
+		return controleurProblem.nextStep();
+		}
+
+	private String previousStep()
+		{
+		return controleurProblem.previousStep();
 		}
 
 	private void sleep(long delayMS)
@@ -147,6 +176,7 @@ public class JPanelResultStep extends JPanel implements Control_I
 	private boolean isFini;
 
 	JTextArea textArea;
-	ControllerEquation controllerEquation;
-	}
+	ControleurProblem controleurProblem;
 
+
+	}

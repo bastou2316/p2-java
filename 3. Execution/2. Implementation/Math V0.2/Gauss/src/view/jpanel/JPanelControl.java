@@ -1,12 +1,15 @@
 
-package ch.hearc.p2.java.view.jpanel;
+package view.jpanel;
 
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+
+import view.jframe.Control_I;
 
 public class JPanelControl extends JPanel
 	{
@@ -56,10 +59,9 @@ public class JPanelControl extends JPanel
 
 			// Layout : Specification
 			{
-			FlowLayout flowlayout = new FlowLayout(FlowLayout.CENTER);
-			setLayout(flowlayout);
+			setLayout(new FlowLayout(FlowLayout.CENTER));
 
-			flowlayout.setHgap(20);
+			//flowlayout.setHgap(20);
 			// flowlayout.setVgap(20);
 			}
 
@@ -108,7 +110,7 @@ public class JPanelControl extends JPanel
 
 	private void appearance()
 		{
-		// rien
+		setBorder(BorderFactory.createTitledBorder("Control"));
 		}
 
 	/*------------------------------------------------------------------*\

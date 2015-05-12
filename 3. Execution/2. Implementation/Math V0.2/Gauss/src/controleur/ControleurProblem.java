@@ -1,37 +1,49 @@
 
-package ch.hearc.p2.java.model;
+package controleur;
 
-public class Matrix
+import model.Equation;
+
+public class ControleurProblem
 	{
+
+	public ControleurProblem(Equation problem)
+		{
+		//Recup. de la matrice
+		this.problem = problem;
+		currentStep = 0;
+		}
 
 	/*------------------------------------------------------------------*\
 	|*							Constructeurs							*|
 	\*------------------------------------------------------------------*/
 
-	public Matrix()
-		{
-		step = 0;
-		}
-
 	/*------------------------------------------------------------------*\
 	|*							Methodes Public							*|
 	\*------------------------------------------------------------------*/
 
-	public void solveNextStep()
+	public void stop()
 		{
-		//Modification de la matrice jusqua la prochaine etape
-		++step;
-		//Todo
+		problem.clear();
 		}
 
-	@Override
-	public String toString()
+	public void start()
 		{
-		StringBuilder builder = new StringBuilder();
-		builder.append("Matrix [step=");
-		builder.append(this.step);
-		builder.append("]");
-		return builder.toString();
+		problem.solve();
+
+		}
+
+	public String nextStep()
+		{
+		//A chaque pas de l'animation
+		currentStep++;
+		return problem.getMatrix(currentStep).toString();
+		}
+
+	public String previousStep()
+		{
+		//A chaque pas de l'animation
+		currentStep--;
+		return problem.getMatrix(currentStep).toString();
 		}
 
 	/*------------------------------*\
@@ -42,6 +54,11 @@ public class Matrix
 	|*				Get				*|
 	\*------------------------------*/
 
+	public long getSpeed()
+		{
+		return problem.getSpeed();
+		}
+
 	/*------------------------------------------------------------------*\
 	|*							Methodes Private						*|
 	\*------------------------------------------------------------------*/
@@ -51,6 +68,7 @@ public class Matrix
 	\*------------------------------------------------------------------*/
 
 	//Tools
-	int step;
+	private Equation problem;
+	private int currentStep;
 
 	}
