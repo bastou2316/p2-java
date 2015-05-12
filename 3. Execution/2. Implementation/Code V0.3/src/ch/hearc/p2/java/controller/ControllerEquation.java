@@ -24,6 +24,31 @@ public class ControllerEquation
 	|*							Methodes Public							*|
 	\*------------------------------------------------------------------*/
 
+	/*------------------------------*\
+	|*				Set				*|
+	\*------------------------------*/
+
+	public void setEquation(Matrix matrix, int numberVar, int numberEquation, boolean modeStep, int speed)
+		{
+		equation = new Equation(matrix, numberVar, numberEquation, speed, modeStep);
+		equation.solve();
+		}
+
+	public void setEquation(Equation equation)
+		{
+		this.equation = equation;
+		this.equation.solve();
+		}
+
+	/*------------------------------*\
+	|*				Get				*|
+	\*------------------------------*/
+
+	public Equation getEquation()
+		{
+		return equation;
+		}
+
 	public Matrix getMatrix(int pos)
 		{
 		actualStep = pos;
@@ -42,10 +67,9 @@ public class ControllerEquation
 		return getMatrix(actualStep);
 		}
 
-	public void setEquation(Matrix matrix, int numberVar, int numberEquation, boolean modeStep, int speed)
+	public boolean getStepMode()
 		{
-		equation = new Equation(matrix, numberVar, numberEquation, speed, modeStep);
-		equation.solve();
+		return equation.isStepMode();
 		}
 
 	public long getSpeed()
@@ -57,10 +81,6 @@ public class ControllerEquation
 		{
 		return equation.getMatrixDimension();
 		}
-
-	/*------------------------------------------------------------------*\
-	|*							Methodes Private						*|
-	\*------------------------------------------------------------------*/
 
 	/*------------------------------------------------------------------*\
 	|*							Attributs Private						*|

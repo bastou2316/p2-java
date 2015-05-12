@@ -69,18 +69,12 @@ public class JFrameMain extends JFrame
 		revalidate();
 		}
 
-	/*------------------------------*\
-	|*				Get				*|
-	\*------------------------------*/
-
 	/*------------------------------------------------------------------*\
 	|*							Methodes Private						*|
 	\*------------------------------------------------------------------*/
 
 	protected void geometry()
 		{
-		//Objects init
-
 		//setMaximumSize(new Dimension(1900,680));
 		setMinimumSize(new Dimension(300, 300));
 		setResizable(true);
@@ -88,23 +82,18 @@ public class JFrameMain extends JFrame
 		// Layout : Specification
 		BorderLayout borderLayout = new BorderLayout();
 		setLayout(borderLayout);
-
-		// JComponent : Instanciation
-		//add(jPanelMenu, BorderLayout.CENTER);
-
 		}
 
 	protected void control()
 		{
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-
 		}
 
 	protected void appearance()
 		{
-		setSize(600, 400);
-		setLocationRelativeTo(null); // frame centrer
-		setVisible(true); // last!
+		//setSize(600, 400);
+		setLocationRelativeTo(null);
+		setVisible(true);
 		}
 
 	/*------------------------------------------------------------------*\

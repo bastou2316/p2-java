@@ -1,7 +1,9 @@
 
 package ch.hearc.p2.java.model;
 
-public class Matrix
+import java.io.Serializable;
+
+public class Matrix implements Serializable
 	{
 
 	/*------------------------------------------------------------------*\
@@ -21,7 +23,7 @@ public class Matrix
 		{
 		//Modification de la matrice jusqua la prochaine etape
 		++step;
-		//Todo
+		//TODO
 		}
 
 	@Override
@@ -33,18 +35,6 @@ public class Matrix
 		builder.append("]");
 		return builder.toString();
 		}
-
-	/*------------------------------*\
-	|*				Set				*|
-	\*------------------------------*/
-
-	/*------------------------------*\
-	|*				Get				*|
-	\*------------------------------*/
-
-	/*------------------------------------------------------------------*\
-	|*							Methodes Private						*|
-	\*------------------------------------------------------------------*/
 
 	/*------------------------------------------------------------------*\
 	|*							Attributs Private						*|

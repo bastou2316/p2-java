@@ -1,3 +1,4 @@
+
 package ch.hearc.p2.java.view.jpanel;
 
 import java.awt.FlowLayout;
@@ -5,7 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -13,19 +13,21 @@ import ch.hearc.p2.java.controller.ControllerMain;
 import ch.hearc.p2.java.controller.ControllerMain.PANEL;
 import ch.hearc.p2.java.view.strings.Strings;
 
-public class JPanelMenu extends JPanel {
+public class JPanelMenu extends JPanel
+	{
 
 	/*------------------------------------------------------------------*\
 	|*							Constructeurs							*|
 	\*------------------------------------------------------------------*/
 
-	public JPanelMenu(ControllerMain controllerMain) {
+	public JPanelMenu(ControllerMain controllerMain)
+		{
 		this.controllerMain = controllerMain;
 
 		geometry();
 		control();
 		appearance();
-	}
+		}
 
 	/*------------------------------------------------------------------*\
 	|*							Methodes Public							*|
@@ -35,7 +37,8 @@ public class JPanelMenu extends JPanel {
 	|*							Methodes Private						*|
 	\*------------------------------------------------------------------*/
 
-	private void geometry() {
+	private void geometry()
+		{
 		// JComponent : Instanciation
 		labelWelcome = new JLabel(Strings.WELCOME);
 		labelNew = new JLabel(Strings.LABEL_NEW);
@@ -43,14 +46,14 @@ public class JPanelMenu extends JPanel {
 		buttonNew = new JButton(Strings.BUTTON_NEW);
 		buttonLoad = new JButton(Strings.BUTTON_LOAD);
 
-		// Layout : Specification
-		{
+			// Layout : Specification
+			{
 			FlowLayout flowlayout = new FlowLayout(FlowLayout.CENTER);
 			setLayout(flowlayout);
 
 			// flowlayout.setHgap(20);
 			// flowlayout.setVgap(20);
-		}
+			}
 
 		// JComponent : add
 		add(labelWelcome);
@@ -59,41 +62,35 @@ public class JPanelMenu extends JPanel {
 		add(labelLoad);
 		add(buttonLoad);
 
-	}
+		}
 
-	private void control() {
-		buttonNew.addActionListener(new ActionListener() {
+	private void control()
+		{
+		buttonNew.addActionListener(new ActionListener()
+			{
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				controllerMain.changeView(PANEL.SET_EQUATION);
-			}
-		});
+				@Override
+				public void actionPerformed(ActionEvent e)
+					{
+					controllerMain.changeView(PANEL.SET_EQUATION);
+					}
+			});
 
-		buttonLoad.addActionListener(new ActionListener() {
+		buttonLoad.addActionListener(new ActionListener()
+			{
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				JFileChooser fileChooser = new JFileChooser();
+				@Override
+				public void actionPerformed(ActionEvent e)
+					{
+					controllerMain.load();
+					}
+			});
+		}
 
-				int returnVal = fileChooser.showOpenDialog(JPanelMenu.this);
-				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					System.out.println("You chose to open this file: "
-							+ fileChooser.getSelectedFile().getName());
-				}
-
-				//Utiliser une classe ProjectSettings (serealizable) pour sauver et charger les projets en format .bin
-
-//				jFrameMain.showView(PANEL.SET_EQUATION, loadedProjectSettings);
-//				redéfinir showView et faire un 2e constructeur dans JPanelSetEquation (qu'on pourrait appeler setProject)
-				//KV : a faire dans le controlleur via le controlleurIO
-			}
-		});
-	}
-
-	private void appearance() {
+	private void appearance()
+		{
 		// rien
-	}
+		}
 
 	/*------------------------------------------------------------------*\
 	|*							Attributs Private						*|
@@ -107,4 +104,4 @@ public class JPanelMenu extends JPanel {
 	JLabel labelLoad;
 	JButton buttonNew;
 	JButton buttonLoad;
-}
+	}
