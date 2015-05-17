@@ -50,7 +50,7 @@ public class UseTest3d {
                 list.add(z3);
                 
                 ArraySurfaceModel sm = new ArraySurfaceModel();
-                sm.setValues(0f,10f,0f,10f,max, list);
+                sm.setValues(0f,10f,0f,10f,40, list);
                 jsp.setModel(sm);
                 
                 // sm.doRotate();
