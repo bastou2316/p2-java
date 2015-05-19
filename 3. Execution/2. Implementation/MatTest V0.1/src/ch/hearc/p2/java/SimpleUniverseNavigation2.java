@@ -112,7 +112,7 @@ final public class SimpleUniverseNavigation2 {
 	private PickCanvas pickCanvas = null;
 
 	private Font font = null;
-	private Color bgColor = new Color(0.05f, 0.05f, 0.5f);
+	private Color bgColor = Color.WHITE;
 
 	private double defaultFoV = Math.PI / 4;
 	private JSlider jSliderFoV = null;
@@ -267,9 +267,10 @@ final public class SimpleUniverseNavigation2 {
 		orbitBehInterim.setClippingEnabled(true);
 
 		Transform3D homeTransform = new Transform3D();
-		homeTransform.setTranslation(new Vector3d(0.0, 0.75, 15.0));
+		homeTransform.setTranslation(new Vector3d(5.0, 5.75, 35.0));
+		homeTransform.rotY(Math.PI/4);
 		orbitBehInterim.setHomeTransform(homeTransform);
-		orbitBehInterim.setHomeRotationCenter(new Point3d(0.0, 0.0, 1.0));
+		orbitBehInterim.setHomeRotationCenter(new Point3d(0.0, 0.0, 0.0));
 
 		// VantagePointBehavior
 		vpExecutor = new VantagePointBehavior(orbitBehInterim);
@@ -303,38 +304,40 @@ final public class SimpleUniverseNavigation2 {
 		enviBranch.addChild(bg);
 
 		// SceneBranch
+		
+		float transparancy = 0.65f;
 
 		// on crée un groupe de transformation principal TG1
 		TransformGroup TG1 = new TransformGroup();
 
 		// ------------ début de création des axes ------------
 
-		LineAttributes lineAttr = new LineAttributes(3f, 0, true);
+		LineAttributes lineAttr = new LineAttributes(5f, 0, true);
 		Appearance lineApp = new Appearance();
 		lineApp.setLineAttributes(lineAttr);
 
 		// axe des X
 		LineArray axisX = new LineArray(2, LineArray.COORDINATES
 				| LineArray.COLOR_3);
-		axisX.setCoordinate(0, new Point3f(-2f, 0f, 0f));
-		axisX.setCoordinate(1, new Point3f(2f, 0f, 0f));
-		axisX.setColor(0, new Color3f(0.5f, 0.5f, 0.5f));
+		axisX.setCoordinate(0, new Point3f(0f, 0f, 0f));
+		axisX.setCoordinate(1, new Point3f(0f, 0f, 5f));
+		axisX.setColor(0, new Color3f(0.4f, 0.4f, 0.4f));
 		axisX.setColor(1, new Color3f(0f, 0f, 0f));
 
 		// axe des Y
 		LineArray axisY = new LineArray(2, LineArray.COORDINATES
 				| LineArray.COLOR_3);
-		axisY.setCoordinate(0, new Point3f(0f, 0f, -2f));
-		axisY.setCoordinate(1, new Point3f(0f, 0f, 2f));
-		axisY.setColor(0, new Color3f(0.5f, 0.5f, 0.5f));
+		axisY.setCoordinate(0, new Point3f(0f, 0f, 0f));
+		axisY.setCoordinate(1, new Point3f(5f, 0f, 0f));
+		axisY.setColor(0, new Color3f(0.4f, 0.4f, 0.4f));
 		axisY.setColor(1, new Color3f(0f, 0f, 0f));
 
 		// axe des Z
 		LineArray axisZ = new LineArray(2, LineArray.COORDINATES
 				| LineArray.COLOR_3);
-		axisZ.setCoordinate(0, new Point3f(0f, -2f, 0f));
-		axisZ.setCoordinate(1, new Point3f(0f, 2f, 0f));
-		axisZ.setColor(0, new Color3f(0.5f, 0.5f, 0.5f));
+		axisZ.setCoordinate(0, new Point3f(0f, 0f, 0f));
+		axisZ.setCoordinate(1, new Point3f(0f, 5f, 0f));
+		axisZ.setColor(0, new Color3f(0.4f, 0.4f, 0.4f));
 		axisZ.setColor(1, new Color3f(0f, 0f, 0f));
 
 		TG1.addChild(new Shape3D(axisX, lineApp));
@@ -343,10 +346,10 @@ final public class SimpleUniverseNavigation2 {
 
 		// création des labels des axes
 		// Axe X
-		Text2D textObject = new Text2D("X", new Color3f(1f, 0f, 0f), "Serif",
-				70, Font.ITALIC);
+		Text2D textObject = new Text2D("X", new Color3f(0f, 0f, 0f), "Serif",
+				110, Font.ITALIC);
 		Transform3D textTranslation = new Transform3D();
-		textTranslation.setTranslation(new Vector3f(2f, 0f, 0f));
+		textTranslation.setTranslation(new Vector3f(0f, 0f, 5f));
 		TransformGroup textTranslationGroup = new TransformGroup(
 				textTranslation);
 		textTranslationGroup.addChild(textObject);
@@ -362,24 +365,22 @@ final public class SimpleUniverseNavigation2 {
 			app.setPolygonAttributes(pa);
 
 		/* Axe Y */
-		textObject = new Text2D("Y", new Color3f(1f, 0f, 0f), "Serif", 70,
+		textObject = new Text2D("Y", new Color3f(0f, 0f, 0f), "Serif", 110,
 				Font.ITALIC);
 		textTranslation = new Transform3D();
-		textTranslation.setTranslation(new Vector3f(0f, 0f, 2f));
+		textTranslation.setTranslation(new Vector3f(5f, 0f, 0f));
 		textTranslationGroup = new TransformGroup(textTranslation);
 		textTranslationGroup.addChild(textObject);
 		TG1.addChild(textTranslationGroup);
 
 		/* Axe Z */
-		textObject = new Text2D("Z", new Color3f(1f, 0f, 0f), "Serif", 70,
+		textObject = new Text2D("Z", new Color3f(0f, 0f, 0f), "Serif", 110,
 				Font.ITALIC);
 		textTranslation = new Transform3D();
-		textTranslation.setTranslation(new Vector3f(0f, 2f, 0f));
+		textTranslation.setTranslation(new Vector3f(0f, 5f, 0f));
 		textTranslationGroup = new TransformGroup(textTranslation);
 		textTranslationGroup.addChild(textObject);
 		TG1.addChild(textTranslationGroup);
-
-		
 
 		// création de 3 plans
 
@@ -439,18 +440,27 @@ final public class SimpleUniverseNavigation2 {
 
 		// Test1
 
-		// scaleFactor = 3f; // (car la solution est : (1,2,3) (x,y,z)
-		// // plan1
-		// Appearance app1 = new Appearance();
-		// app1.setColoringAttributes(new ColoringAttributes(new Color3f(0.0f,
-		// 0.0f, 1.0f), ColoringAttributes.SHADE_GOURAUD));
-		// app1.setTransparencyAttributes(new TransparencyAttributes(
-		// TransparencyAttributes.NONE, 0.5f));
-		// app1.setPolygonAttributes(polyAttr);
-		// QuadArray quadArrTest = createPlan(3.0f, 1.0f, -2.0f, -1.0f);
-		// TG1.addChild(new Shape3D(quadArrTest, app1));
-		//
-		// // plan2
+		scaleFactor = 24f; // (car la solution est : (1,2,3) (x,y,z)
+		// plan1
+		Appearance app1 = new Appearance();
+		app1.setColoringAttributes(new ColoringAttributes(new Color3f(0.0f,
+				0.0f, 1.0f), ColoringAttributes.SHADE_GOURAUD));
+		app1.setTransparencyAttributes(new TransparencyAttributes(
+				TransparencyAttributes.NONE, 0.5f));
+		app1.setPolygonAttributes(polyAttr);
+		QuadArray quadArrTest1 = createPlan(3.0f, 1.0f, -2.0f, -1.0f);
+		TG1.addChild(new Shape3D(quadArrTest1, app1));
+
+		Appearance app1bis = new Appearance();
+		app1bis.setColoringAttributes(new ColoringAttributes(new Color3f(0.0f,
+				0.0f, 1.0f), ColoringAttributes.SHADE_GOURAUD));
+		app1bis.setTransparencyAttributes(new TransparencyAttributes(
+				TransparencyAttributes.NICEST, transparancy));
+		app1bis.setPolygonAttributes(polyAttr);
+		QuadArray quadArrTest1bis = createBigPlan(3.0f, 1.0f, -2.0f, -1.0f);
+		TG1.addChild(new Shape3D(quadArrTest1bis, app1bis));
+
+		// plan2
 		// Appearance app2 = new Appearance();
 		// app2.setColoringAttributes(new ColoringAttributes(new Color3f(0.0f,
 		// 1.0f, 0.0f), ColoringAttributes.SHADE_FLAT));
@@ -459,26 +469,44 @@ final public class SimpleUniverseNavigation2 {
 		// app2.setPolygonAttributes(polyAttr);
 		// QuadArray quadArrTest2 = createPlan(-4.0f, 3.0f, 1.0f, 5.0f);
 		// TG1.addChild(new Shape3D(quadArrTest2, app2));
-		//
-		// // plan3
-		// Appearance app3 = new Appearance();
-		// app3.setColoringAttributes(new ColoringAttributes(new Color3f(1.0f,
-		// 0.3f, 0.0f), ColoringAttributes.SHADE_GOURAUD));
-		// app3.setTransparencyAttributes(new TransparencyAttributes(
-		// TransparencyAttributes.NONE, 0.5f));
-		// app3.setPolygonAttributes(polyAttr);
-		// QuadArray quadArrTest3 = createPlan(2.0f, -2.0f, 3.0f, 7.0f);
-		// TG1.addChild(new Shape3D(quadArrTest3, app3));
-		//
-		// // plan4
-		// Appearance app4 = new Appearance();
-		// app4.setColoringAttributes(new ColoringAttributes(new Color3f(1.0f,
-		// 0.0f, 1.0f), ColoringAttributes.SHADE_GOURAUD));
-		// app4.setTransparencyAttributes(new TransparencyAttributes(
-		// TransparencyAttributes.NONE, 0.5f));
-		// app4.setPolygonAttributes(polyAttr);
-		// QuadArray quadArrTest4 = createPlan(1.0f, 0f, 0f, 1.0f);
-		// TG1.addChild(new Shape3D(quadArrTest4, app4));
+
+		// plan3
+		Appearance app3 = new Appearance();
+		app3.setColoringAttributes(new ColoringAttributes(new Color3f(1.0f,
+				0.0f, 0.0f), ColoringAttributes.SHADE_GOURAUD));
+		app3.setTransparencyAttributes(new TransparencyAttributes(
+				TransparencyAttributes.NONE, 0.5f));
+		app3.setPolygonAttributes(polyAttr);
+		QuadArray quadArrTest3 = createPlan(1.0f, -1.0f, 1.0f, 6.0f);
+		TG1.addChild(new Shape3D(quadArrTest3, app3));
+
+		Appearance app3bis = new Appearance();
+		app3bis.setColoringAttributes(new ColoringAttributes(new Color3f(1.0f,
+				0.3f, 0.0f), ColoringAttributes.SHADE_GOURAUD));
+		app3bis.setTransparencyAttributes(new TransparencyAttributes(
+				TransparencyAttributes.NICEST, transparancy));
+		app3bis.setPolygonAttributes(polyAttr);
+		QuadArray quadArrTest3bis = createBigPlan(1.0f, -1.0f, 1.0f, 6.0f);
+		TG1.addChild(new Shape3D(quadArrTest3bis, app3bis));
+
+		// plan4
+		Appearance app4 = new Appearance();
+		app4.setColoringAttributes(new ColoringAttributes(new Color3f(0.0f,
+				1.0f, 0.0f), ColoringAttributes.SHADE_GOURAUD));
+		app4.setTransparencyAttributes(new TransparencyAttributes(
+				TransparencyAttributes.NONE, 0.5f));
+		app4.setPolygonAttributes(polyAttr);
+		QuadArray quadArrTest4 = createPlan(0.0f, 1f, 0f, -0.5f);
+		TG1.addChild(new Shape3D(quadArrTest4, app4));
+		
+		Appearance app4bis = new Appearance();
+		app4bis.setColoringAttributes(new ColoringAttributes(new Color3f(0.0f,
+				1.0f, 0.0f), ColoringAttributes.SHADE_GOURAUD));
+		app4bis.setTransparencyAttributes(new TransparencyAttributes(
+				TransparencyAttributes.NICEST, transparancy));
+		app4bis.setPolygonAttributes(polyAttr);
+		QuadArray quadArrTest4bis = createBigPlan(0.0f, 1.0f, 0.0f, -0.5f);
+		TG1.addChild(new Shape3D(quadArrTest4bis, app4bis));
 
 		// //Test2
 		// scaleFactor = 2f; // pas de solutions, on le voit bien avec cette
@@ -547,105 +575,105 @@ final public class SimpleUniverseNavigation2 {
 		// TG1.addChild(new Shape3D(quadArrTest3, app3));
 
 		// Test4
-//		scaleFactor = 1f; // infinité de solutions
-//
-//		// plan1
-//		Appearance app1 = new Appearance();
-//		app1.setColoringAttributes(new ColoringAttributes(new Color3f(0.0f,
-//				0.0f, 1.0f), ColoringAttributes.SHADE_GOURAUD));
-//		app1.setTransparencyAttributes(new TransparencyAttributes(
-//				TransparencyAttributes.NONE, 0.5f));
-//		app1.setPolygonAttributes(polyAttr);
-//		QuadArray quadArrTest = createPlan(1.0f, 0.0f, -1.0f, 1.0f);
-//		TG1.addChild(new Shape3D(quadArrTest, app1));
-//
-//		// plan2
-//		Appearance app2 = new Appearance();
-//		app2.setColoringAttributes(new ColoringAttributes(new Color3f(0.0f,
-//				1.0f, 0.0f), ColoringAttributes.SHADE_FLAT));
-//		app2.setTransparencyAttributes(new TransparencyAttributes(
-//				TransparencyAttributes.NONE, 0.5f));
-//		app2.setPolygonAttributes(polyAttr);
-//		QuadArray quadArrTest2 = createPlan(0.0f, -1.0f, 1.0f, 0.0f);
-//		TG1.addChild(new Shape3D(quadArrTest2, app2));
-//
-//		// plan3
-//		Appearance app3 = new Appearance();
-//		app3.setColoringAttributes(new ColoringAttributes(new Color3f(1.0f,
-//				0.3f, 0.0f), ColoringAttributes.SHADE_GOURAUD));
-//		app3.setTransparencyAttributes(new TransparencyAttributes(
-//				TransparencyAttributes.NONE, 0.5f));
-//		app3.setPolygonAttributes(polyAttr);
-//		QuadArray quadArrTest3 = createPlan(1.0f, 1.0f, -2.0f, 1.0f);
-//		TG1.addChild(new Shape3D(quadArrTest3, app3));
+		// scaleFactor = 1f; // infinité de solutions
+		//
+		// // plan1
+		// Appearance app1 = new Appearance();
+		// app1.setColoringAttributes(new ColoringAttributes(new Color3f(0.0f,
+		// 0.0f, 1.0f), ColoringAttributes.SHADE_GOURAUD));
+		// app1.setTransparencyAttributes(new TransparencyAttributes(
+		// TransparencyAttributes.NONE, 0.5f));
+		// app1.setPolygonAttributes(polyAttr);
+		// QuadArray quadArrTest = createPlan(1.0f, 0.0f, -1.0f, 1.0f);
+		// TG1.addChild(new Shape3D(quadArrTest, app1));
+		//
+		// // plan2
+		// Appearance app2 = new Appearance();
+		// app2.setColoringAttributes(new ColoringAttributes(new Color3f(0.0f,
+		// 1.0f, 0.0f), ColoringAttributes.SHADE_FLAT));
+		// app2.setTransparencyAttributes(new TransparencyAttributes(
+		// TransparencyAttributes.NONE, 0.5f));
+		// app2.setPolygonAttributes(polyAttr);
+		// QuadArray quadArrTest2 = createPlan(0.0f, -1.0f, 1.0f, 0.0f);
+		// TG1.addChild(new Shape3D(quadArrTest2, app2));
+		//
+		// // plan3
+		// Appearance app3 = new Appearance();
+		// app3.setColoringAttributes(new ColoringAttributes(new Color3f(1.0f,
+		// 0.3f, 0.0f), ColoringAttributes.SHADE_GOURAUD));
+		// app3.setTransparencyAttributes(new TransparencyAttributes(
+		// TransparencyAttributes.NONE, 0.5f));
+		// app3.setPolygonAttributes(polyAttr);
+		// QuadArray quadArrTest3 = createPlan(1.0f, 1.0f, -2.0f, 1.0f);
+		// TG1.addChild(new Shape3D(quadArrTest3, app3));
 
-		// Test5 (S4)
-		scaleFactor = 10f; // car solution unique { x = -5, y = 3, z = 3 }. 
-		// si solution unique, prendre max(|x| , |y|) * 2  
+		// // Test5 (S4)
+		// scaleFactor = 10f; // car solution unique { x = -5, y = 3, z = 3 }.
+		// // si solution unique, prendre max(|x| , |y|) * 2
+		//
+		// // plan1
+		// Appearance app1 = new Appearance();
+		// app1.setColoringAttributes(new ColoringAttributes(new Color3f(0.0f,
+		// 0.0f, 1.0f), ColoringAttributes.SHADE_GOURAUD));
+		// app1.setTransparencyAttributes(new TransparencyAttributes(
+		// TransparencyAttributes.NONE, 0.5f));
+		// app1.setPolygonAttributes(polyAttr);
+		// QuadArray quadArrTest = createPlan(2.0f, 3.0f, -5.0f, -16.0f);
+		// TG1.addChild(new Shape3D(quadArrTest, app1));
+		//
+		// // plan2
+		// Appearance app2 = new Appearance();
+		// app2.setColoringAttributes(new ColoringAttributes(new Color3f(0.0f,
+		// 1.0f, 0.0f), ColoringAttributes.SHADE_FLAT));
+		// app2.setTransparencyAttributes(new TransparencyAttributes(
+		// TransparencyAttributes.NONE, 0.5f));
+		// app2.setPolygonAttributes(polyAttr);
+		// QuadArray quadArrTest2 = createPlan(4.0f, 13.0f, -8.0f, -5.0f);
+		// TG1.addChild(new Shape3D(quadArrTest2, app2));
+		//
+		// // plan3
+		// Appearance app3 = new Appearance();
+		// app3.setColoringAttributes(new ColoringAttributes(new Color3f(1.0f,
+		// 0.3f, 0.0f), ColoringAttributes.SHADE_GOURAUD));
+		// app3.setTransparencyAttributes(new TransparencyAttributes(
+		// TransparencyAttributes.NONE, 0.5f));
+		// app3.setPolygonAttributes(polyAttr);
+		// QuadArray quadArrTest3 = createPlan(1.0f, 2.0f, 7.0f, 22.0f);
+		// TG1.addChild(new Shape3D(quadArrTest3, app3));
 
-		// plan1
-		Appearance app1 = new Appearance();
-		app1.setColoringAttributes(new ColoringAttributes(new Color3f(0.0f,
-				0.0f, 1.0f), ColoringAttributes.SHADE_GOURAUD));
-		app1.setTransparencyAttributes(new TransparencyAttributes(
-				TransparencyAttributes.NONE, 0.5f));
-		app1.setPolygonAttributes(polyAttr);
-		QuadArray quadArrTest = createPlan(2.0f, 3.0f, -5.0f, -16.0f);
-		TG1.addChild(new Shape3D(quadArrTest, app1));
+		// Test6 (pour poster)
+		// scaleFactor = 4f; // pas de solutions
+		//
+		// // plan1
+		// Appearance app1 = new Appearance();
+		// app1.setColoringAttributes(new ColoringAttributes(new Color3f(0.0f,
+		// 0.0f, 1.0f), ColoringAttributes.SHADE_GOURAUD));
+		// app1.setTransparencyAttributes(new TransparencyAttributes(
+		// TransparencyAttributes.NONE, 0.5f));
+		// app1.setPolygonAttributes(polyAttr);
+		// QuadArray quadArrTest = createPlan(1.0f, 1.0f, 1.0f, 4.0f);
+		// TG1.addChild(new Shape3D(quadArrTest, app1));
+		//
+		// // plan2
+		// Appearance app2 = new Appearance();
+		// app2.setColoringAttributes(new ColoringAttributes(new Color3f(0.0f,
+		// 1.0f, 0.0f), ColoringAttributes.SHADE_FLAT));
+		// app2.setTransparencyAttributes(new TransparencyAttributes(
+		// TransparencyAttributes.NONE, 0.5f));
+		// app2.setPolygonAttributes(polyAttr);
+		// QuadArray quadArrTest2 = createPlan(1.0f, -2.5f, 1.0f, -0.6f);
+		// TG1.addChild(new Shape3D(quadArrTest2, app2));
+		//
+		// // plan3
+		// Appearance app3 = new Appearance();
+		// app3.setColoringAttributes(new ColoringAttributes(new Color3f(1.0f,
+		// 0.3f, 0.0f), ColoringAttributes.SHADE_GOURAUD));
+		// app3.setTransparencyAttributes(new TransparencyAttributes(
+		// TransparencyAttributes.NONE, 0.5f));
+		// app3.setPolygonAttributes(polyAttr);
+		// QuadArray quadArrTest3 = createPlan(0.0f, 1.0f, -0.5f, 0.0f);
+		// TG1.addChild(new Shape3D(quadArrTest3, app3));
 
-		// plan2
-		Appearance app2 = new Appearance();
-		app2.setColoringAttributes(new ColoringAttributes(new Color3f(0.0f,
-				1.0f, 0.0f), ColoringAttributes.SHADE_FLAT));
-		app2.setTransparencyAttributes(new TransparencyAttributes(
-				TransparencyAttributes.NONE, 0.5f));
-		app2.setPolygonAttributes(polyAttr);
-		QuadArray quadArrTest2 = createPlan(4.0f, 13.0f, -8.0f, -5.0f);
-		TG1.addChild(new Shape3D(quadArrTest2, app2));
-
-		// plan3
-		Appearance app3 = new Appearance();
-		app3.setColoringAttributes(new ColoringAttributes(new Color3f(1.0f,
-				0.3f, 0.0f), ColoringAttributes.SHADE_GOURAUD));
-		app3.setTransparencyAttributes(new TransparencyAttributes(
-				TransparencyAttributes.NONE, 0.5f));
-		app3.setPolygonAttributes(polyAttr);
-		QuadArray quadArrTest3 = createPlan(1.0f, 2.0f, 7.0f, 22.0f);
-		TG1.addChild(new Shape3D(quadArrTest3, app3));
-
-		// Test6 à faire (S5)
-//		scaleFactor = 1f; // pas de solutions
-//
-//		// plan1
-//		Appearance app1 = new Appearance();
-//		app1.setColoringAttributes(new ColoringAttributes(new Color3f(0.0f,
-//				0.0f, 1.0f), ColoringAttributes.SHADE_GOURAUD));
-//		app1.setTransparencyAttributes(new TransparencyAttributes(
-//				TransparencyAttributes.NONE, 0.5f));
-//		app1.setPolygonAttributes(polyAttr);
-//		QuadArray quadArrTest = createPlan(1.0f, -1.0f, 0.0f, 0.0f);
-//		TG1.addChild(new Shape3D(quadArrTest, app1));
-//
-//		// plan2
-//		Appearance app2 = new Appearance();
-//		app2.setColoringAttributes(new ColoringAttributes(new Color3f(0.0f,
-//				1.0f, 0.0f), ColoringAttributes.SHADE_FLAT));
-//		app2.setTransparencyAttributes(new TransparencyAttributes(
-//				TransparencyAttributes.NONE, 0.5f));
-//		app2.setPolygonAttributes(polyAttr);
-//		QuadArray quadArrTest2 = createPlan(0.0f, 1.0f, -1.0f, 1.0f);
-//		TG1.addChild(new Shape3D(quadArrTest2, app2));
-//
-//		// plan3
-//		Appearance app3 = new Appearance();
-//		app3.setColoringAttributes(new ColoringAttributes(new Color3f(1.0f,
-//				0.3f, 0.0f), ColoringAttributes.SHADE_GOURAUD));
-//		app3.setTransparencyAttributes(new TransparencyAttributes(
-//				TransparencyAttributes.NONE, 0.5f));
-//		app3.setPolygonAttributes(polyAttr);
-//		QuadArray quadArrTest3 = createPlan(-1.0f, 0.0f, 1.0f, 0.0f);
-//		TG1.addChild(new Shape3D(quadArrTest3, app3));
-		
 		// Ticks pour l'échelle
 
 		// Axe X
@@ -656,13 +684,12 @@ final public class SimpleUniverseNavigation2 {
 		tickX.setColor(0, new Color3f(0f, 0f, 0f));
 		tickX.setColor(1, new Color3f(0f, 1f, 0f));
 		TG1.addChild(new Shape3D(tickX));
-		
-		Text2D tickValue = new Text2D(scaleFactor+"", new Color3f(0f, 0f, 0f), "Serif",
-				70, Font.ITALIC);
+
+		Text2D tickValue = new Text2D(scaleFactor + "",
+				new Color3f(0f, 0f, 0f), "Serif", 70, Font.ITALIC);
 		textTranslation = new Transform3D();
 		textTranslation.setTranslation(new Vector3f(1f, 0f, 0f));
-		textTranslationGroup = new TransformGroup(
-				textTranslation);
+		textTranslationGroup = new TransformGroup(textTranslation);
 		textTranslationGroup.addChild(tickValue);
 		TG1.addChild(textTranslationGroup);
 
@@ -675,7 +702,6 @@ final public class SimpleUniverseNavigation2 {
 		if (appTick.getPolygonAttributes() == null)
 			appTick.setPolygonAttributes(paTick);
 
-		
 		/* Axe Y */
 		LineArray tickY = new LineArray(2, LineArray.COORDINATES
 				| LineArray.COLOR_3);
@@ -684,24 +710,23 @@ final public class SimpleUniverseNavigation2 {
 		tickY.setColor(0, new Color3f(0f, 0f, 0f));
 		tickY.setColor(1, new Color3f(0f, 1f, 0f));
 		TG1.addChild(new Shape3D(tickY));
-		
-		tickValue = new Text2D(scaleFactor+"", new Color3f(0f, 0f, 0f), "Serif", 70,
-				Font.ITALIC);
+
+		tickValue = new Text2D(scaleFactor + "", new Color3f(0f, 0f, 0f),
+				"Serif", 70, Font.ITALIC);
 		textTranslation = new Transform3D();
 		textTranslation.setTranslation(new Vector3f(0f, 0f, 1f));
 		textTranslationGroup = new TransformGroup(textTranslation);
 		textTranslationGroup.addChild(tickValue);
 		TG1.addChild(textTranslationGroup);
-		
-		
+
 		/* Axe Z */
-		tickValue = new Text2D(scaleFactor+"", new Color3f(0f, 0f, 0f), "Serif", 70,
-				Font.ITALIC);
+		tickValue = new Text2D(scaleFactor + "", new Color3f(0f, 0f, 0f),
+				"Serif", 70, Font.ITALIC);
 		textTranslation = new Transform3D();
 		textTranslation.setTranslation(new Vector3f(0f, 1f, 0f));
 		textTranslationGroup = new TransformGroup(textTranslation);
 		textTranslationGroup.addChild(tickValue);
-		TG1.addChild(textTranslationGroup);			
+		TG1.addChild(textTranslationGroup);
 
 		LineArray tickZ = new LineArray(2, LineArray.COORDINATES
 				| LineArray.COLOR_3);
@@ -718,41 +743,94 @@ final public class SimpleUniverseNavigation2 {
 		QuadArray quadArray = new QuadArray(4, GeometryArray.COORDINATES);
 		Point3f[] coords = new Point3f[4];
 
+		// Point3f(y,z,x)
 		if (c != 0) {
 			// On a : ax + by + cz = d
 			// Donc : z = (d - ax - by) / c
 			coords[0] = new Point3f(-1.0f, (d - a * -scaleFactor - b
 					* -scaleFactor)
 					/ (scaleFactor * c), -1.0f);
-			coords[1] = new Point3f(-1.0f, (d - a * -scaleFactor - b
-					* scaleFactor)
+			coords[1] = new Point3f(-1.0f, (d - a * scaleFactor - b
+					* -scaleFactor)
 					/ (scaleFactor * c), 1.0f);
 			coords[2] = new Point3f(1.0f, (d - a * scaleFactor - b
 					* scaleFactor)
 					/ (scaleFactor * c), 1.0f);
-			coords[3] = new Point3f(1.0f, (d - a * scaleFactor - b
-					* -scaleFactor)
+			coords[3] = new Point3f(1.0f, (d - a * -scaleFactor - b
+					* scaleFactor)
 					/ (scaleFactor * c), -1.0f);
 		} else if (b != 0) { // plan vertical
 			// On a : ax + by = d
 			// Donc : y = (d - ax) / b
 			// hauteur 10 (axe z) => (peut être à changer)
-			coords[0] = new Point3f(-1.0f, -10f, (d - a * -scaleFactor)
-					/ (scaleFactor * b));
-			coords[1] = new Point3f(-1.0f, 10f, (d - a * -scaleFactor)
-					/ (scaleFactor * b));
-			coords[2] = new Point3f(1.0f, 10f, (d - a * scaleFactor)
-					/ (scaleFactor * b));
-			coords[3] = new Point3f(1.0f, -10f, (d - a * scaleFactor)
-					/ (scaleFactor * b));
+			coords[0] = new Point3f((d - a * -scaleFactor) / (scaleFactor * b),
+					-2f, -1.0f);
+			coords[1] = new Point3f((d - a * -scaleFactor) / (scaleFactor * b),
+					2f, -1.0f);
+			coords[2] = new Point3f((d - a * scaleFactor) / (scaleFactor * b),
+					2f, 1.0f);
+			coords[3] = new Point3f((d - a * scaleFactor) / (scaleFactor * b),
+					-2f, 1.0f);
 		} else if (a != 0) { // plan vertical
 			// On a : ax = d
 			// Donc : x = d/a
 			// hauteur 10 (axe z) => (peut être à changer)
-			coords[0] = new Point3f(d / (a * scaleFactor), -10f, -1f);
-			coords[1] = new Point3f(d / (a * scaleFactor), -10f, 1f);
-			coords[2] = new Point3f(d / (a * scaleFactor), 10f, 1f);
-			coords[3] = new Point3f(d / (a * scaleFactor), 10f, -1f);
+			coords[0] = new Point3f(-1f, -10f, d / (a * scaleFactor));
+			coords[1] = new Point3f(1f, -10f, d / (a * scaleFactor));
+			coords[2] = new Point3f(1f, 10f, d / (a * scaleFactor));
+			coords[3] = new Point3f(-1f, 10f, d / (a * scaleFactor));
+		} else {
+			System.err
+					.println("equation error : cannot display this plan (0x + 0y + 0z = "
+							+ d + ")");
+		}
+
+		quadArray.setCoordinates(0, coords);
+
+		return quadArray;
+	}
+
+	private QuadArray createBigPlan(float a, float b, float c, float d) {
+		QuadArray quadArray = new QuadArray(4, GeometryArray.COORDINATES);
+		Point3f[] coords = new Point3f[4];
+
+		float scale = 10f;
+		// Point3f(y,z,x)
+		if (c != 0) {
+			// On a : ax + by + cz = d
+			// Donc : z = (d - ax - by) / c
+			coords[0] = new Point3f(-scale, (d - a * -scaleFactor * scale - b
+					* -scaleFactor * scale)
+					/ (scaleFactor * c), -scale);
+			coords[1] = new Point3f(-scale, (d - a * scaleFactor * scale - b
+					* -scaleFactor * scale)
+					/ (scaleFactor * c), scale);
+			coords[2] = new Point3f(scale, (d - a * scaleFactor*scale - b
+					* scaleFactor*scale)
+					/ (scaleFactor * c), scale);
+			coords[3] = new Point3f(scale, (d - a * -scaleFactor*scale - b
+					* scaleFactor*scale)
+					/ (scaleFactor * c), -scale);
+		} else if (b != 0) { // plan vertical
+			// On a : ax + by = d
+			// Donc : y = (d - ax) / b
+			// hauteur 10 (axe z) => (peut être à changer)
+			coords[0] = new Point3f((d - a * -scaleFactor*scale) / (scaleFactor * b),
+					-scale, -scale);
+			coords[1] = new Point3f((d - a * -scaleFactor*scale) / (scaleFactor * b),
+					scale, -scale);
+			coords[2] = new Point3f((d - a * scaleFactor*scale) / (scaleFactor * b),
+					scale, scale);
+			coords[3] = new Point3f((d - a * scaleFactor*scale) / (scaleFactor * b),
+					-scale, scale);
+		} else if (a != 0) { // plan vertical
+			// On a : ax = d
+			// Donc : x = d/a
+			// hauteur 10 (axe z) => (peut être à changer)
+			coords[0] = new Point3f(-scale, -scale, d / (a * scaleFactor));
+			coords[1] = new Point3f(scale, -scale, d / (a * scaleFactor));
+			coords[2] = new Point3f(scale, scale, d / (a * scaleFactor));
+			coords[3] = new Point3f(-scale, scale, d / (a * scaleFactor));
 		} else {
 			System.err
 					.println("equation error : cannot display this plan (0x + 0y + 0z = "
@@ -1214,7 +1292,7 @@ final public class SimpleUniverseNavigation2 {
 		jPanelBaseX.add(jPanelBaseYBorder);
 		jPanelBaseX.add(Box.createHorizontalGlue());
 
-		Dimension dim = new Dimension(screenDim.width - 20, screenDim.width / 3);
+		Dimension dim = new Dimension(screenDim.width - 20, screenDim.height -300);
 		canvas3D.setPreferredSize(dim);
 		canvas3D.setSize(dim);
 
