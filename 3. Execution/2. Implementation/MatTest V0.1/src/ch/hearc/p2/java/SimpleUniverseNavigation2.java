@@ -9,19 +9,11 @@ import java.awt.GraphicsConfiguration;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Set;
 
 import javax.media.j3d.Appearance;
 import javax.media.j3d.Background;
-import javax.media.j3d.Behavior;
 import javax.media.j3d.BoundingBox;
 import javax.media.j3d.BoundingSphere;
 import javax.media.j3d.Bounds;
@@ -41,29 +33,21 @@ import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
 import javax.media.j3d.TransparencyAttributes;
 import javax.media.j3d.View;
-import javax.media.j3d.WakeupOnBehaviorPost;
-import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.JSlider;
-import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
+import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
 import javax.vecmath.Point3f;
-import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 
 import com.sun.j3d.utils.geometry.Text2D;
@@ -113,16 +97,7 @@ final public class SimpleUniverseNavigation2 {
 
 	private Font font = null;
 	private Color bgColor = Color.WHITE;
-
-	private double defaultFoV = Math.PI / 4;
-	private JSlider jSliderFoV = null;
-	private ChangeListener fovSliderListener = null;
-	private JTextField jTextFoVDegree = null;
-	private JTextField jTextFoVRadians = null;
-
-	private VantagePointBehavior vpExecutor = null;
-
-	private LinkedHashMap<String, VantagePoint> vantagepointHM = new LinkedHashMap<String, VantagePoint>();
+	private Color titleColor = Color.BLUE.darker();
 
 	private float scaleFactor;
 
@@ -140,7 +115,6 @@ final public class SimpleUniverseNavigation2 {
 
 	SimpleUniverseNavigation2() {
 
-		createVantagePoints();
 
 		createUniverse();
 
@@ -152,10 +126,9 @@ final public class SimpleUniverseNavigation2 {
 		// Setup 'orbitBehInterim'
 		Bounds sphereBounds = sceneBranch.getBounds();
 		orbitBehInterim.setClippingBounds(sphereBounds);
-		orbitBehInterim.setProjectionMode(View.PARALLEL_PROJECTION);
+		orbitBehInterim.setProjectionMode(View.PERSPECTIVE_PROJECTION);
 		orbitBehInterim.setPureParallelEnabled(true);
 		orbitBehInterim.goHome(true);
-		orbitBehInterim.setReverseZoom(false);
 
 	}
 
@@ -249,7 +222,6 @@ final public class SimpleUniverseNavigation2 {
 		// View
 		//
 		view = su.getViewer().getView();
-		defaultFoV = view.getFieldOfView();
 
 		//
 		// BranchGraphs
@@ -263,18 +235,25 @@ final public class SimpleUniverseNavigation2 {
 
 		orbitBehInterim = new OrbitBehaviorInterim(canvas3D, viewTG, view,
 				OrbitBehaviorInterim.REVERSE_ALL);
+		orbitBehInterim.setReverseZoom(false);
 		orbitBehInterim.setSchedulingBounds(globalBounds);
 		orbitBehInterim.setClippingEnabled(true);
 
+		
+		//Setting home view
 		Transform3D homeTransform = new Transform3D();
-		homeTransform.setTranslation(new Vector3d(5.0, 5.75, 35.0));
-		homeTransform.rotY(Math.PI/4);
+		homeTransform.setRotation(new AxisAngle4d(-10.0f, 10.0f, 10.0f, Math
+				.toRadians(50)));
+		Transform3D t = new Transform3D();
+		t.setTranslation(new Vector3f(0f, 0f, 20f));
+		homeTransform.mul(t);
 		orbitBehInterim.setHomeTransform(homeTransform);
 		orbitBehInterim.setHomeRotationCenter(new Point3d(0.0, 0.0, 0.0));
 
+		
 		// VantagePointBehavior
-		vpExecutor = new VantagePointBehavior(orbitBehInterim);
-		vpExecutor.setSchedulingBounds(globalBounds);
+//		vpExecutor = new VantagePointBehavior(orbitBehInterim);
+//		vpExecutor.setSchedulingBounds(globalBounds);
 
 		// Headlight
 		DirectionalLight headLight = new DirectionalLight();
@@ -286,7 +265,7 @@ final public class SimpleUniverseNavigation2 {
 		viewTG.addChild(lightBG);
 
 		enviBranch.addChild(orbitBehInterim);
-		enviBranch.addChild(vpExecutor);
+//		enviBranch.addChild(vpExecutor);
 
 		// PickCanvas
 		pickCanvas = new PickCanvas(canvas3D, sceneBranch);
@@ -304,7 +283,7 @@ final public class SimpleUniverseNavigation2 {
 		enviBranch.addChild(bg);
 
 		// SceneBranch
-		
+
 		float transparancy = 0.65f;
 
 		// on crée un groupe de transformation principal TG1
@@ -312,7 +291,7 @@ final public class SimpleUniverseNavigation2 {
 
 		// ------------ début de création des axes ------------
 
-		LineAttributes lineAttr = new LineAttributes(5f, 0, true);
+		LineAttributes lineAttr = new LineAttributes(4f, 0, true);
 		Appearance lineApp = new Appearance();
 		lineApp.setLineAttributes(lineAttr);
 
@@ -320,25 +299,25 @@ final public class SimpleUniverseNavigation2 {
 		LineArray axisX = new LineArray(2, LineArray.COORDINATES
 				| LineArray.COLOR_3);
 		axisX.setCoordinate(0, new Point3f(0f, 0f, 0f));
-		axisX.setCoordinate(1, new Point3f(0f, 0f, 5f));
-		axisX.setColor(0, new Color3f(0.4f, 0.4f, 0.4f));
-		axisX.setColor(1, new Color3f(0f, 0f, 0f));
+		axisX.setCoordinate(1, new Point3f(0f, 0f, 4f));
+		axisX.setColor(0, new Color3f(0.2f, 0.2f, 0.2f));
+		axisX.setColor(1, new Color3f(0.2f, 0.2f, 0.2f));
 
 		// axe des Y
 		LineArray axisY = new LineArray(2, LineArray.COORDINATES
 				| LineArray.COLOR_3);
 		axisY.setCoordinate(0, new Point3f(0f, 0f, 0f));
-		axisY.setCoordinate(1, new Point3f(5f, 0f, 0f));
-		axisY.setColor(0, new Color3f(0.4f, 0.4f, 0.4f));
-		axisY.setColor(1, new Color3f(0f, 0f, 0f));
+		axisY.setCoordinate(1, new Point3f(4f, 0f, 0f));
+		axisY.setColor(0, new Color3f(0.2f, 0.2f, 0.2f));
+		axisY.setColor(1, new Color3f(0.2f, 0.2f, 0.2f));
 
 		// axe des Z
 		LineArray axisZ = new LineArray(2, LineArray.COORDINATES
 				| LineArray.COLOR_3);
 		axisZ.setCoordinate(0, new Point3f(0f, 0f, 0f));
-		axisZ.setCoordinate(1, new Point3f(0f, 5f, 0f));
-		axisZ.setColor(0, new Color3f(0.4f, 0.4f, 0.4f));
-		axisZ.setColor(1, new Color3f(0f, 0f, 0f));
+		axisZ.setCoordinate(1, new Point3f(0f, 4f, 0f));
+		axisZ.setColor(0, new Color3f(0.2f, 0.2f, 0.2f));
+		axisZ.setColor(1, new Color3f(0.2f, 0.2f, 0.2f));
 
 		TG1.addChild(new Shape3D(axisX, lineApp));
 		TG1.addChild(new Shape3D(axisY, lineApp));
@@ -346,10 +325,10 @@ final public class SimpleUniverseNavigation2 {
 
 		// création des labels des axes
 		// Axe X
-		Text2D textObject = new Text2D("X", new Color3f(0f, 0f, 0f), "Serif",
-				110, Font.ITALIC);
+		Text2D textObject = new Text2D("X", new Color3f(0.2f, 0.2f, 0.2f), "Serif",
+				90, Font.BOLD);
 		Transform3D textTranslation = new Transform3D();
-		textTranslation.setTranslation(new Vector3f(0f, 0f, 5f));
+		textTranslation.setTranslation(new Vector3f(-0.3f, 0f, 2.5f));
 		TransformGroup textTranslationGroup = new TransformGroup(
 				textTranslation);
 		textTranslationGroup.addChild(textObject);
@@ -365,22 +344,40 @@ final public class SimpleUniverseNavigation2 {
 			app.setPolygonAttributes(pa);
 
 		/* Axe Y */
-		textObject = new Text2D("Y", new Color3f(0f, 0f, 0f), "Serif", 110,
-				Font.ITALIC);
+		textObject = new Text2D("Y", new Color3f(0.2f, 0.2f, 0.2f), "Serif", 90,
+				Font.BOLD);
 		textTranslation = new Transform3D();
-		textTranslation.setTranslation(new Vector3f(5f, 0f, 0f));
+		textTranslation.setTranslation(new Vector3f(2.2f, 0f, 0f));
 		textTranslationGroup = new TransformGroup(textTranslation);
 		textTranslationGroup.addChild(textObject);
 		TG1.addChild(textTranslationGroup);
 
+		// Apparence (visible des 2 côtés)
+		app = textObject.getAppearance();
+		pa = app.getPolygonAttributes();
+		if (pa == null)
+			pa = new PolygonAttributes();
+		pa.setCullFace(PolygonAttributes.CULL_NONE);
+		if (app.getPolygonAttributes() == null)
+			app.setPolygonAttributes(pa);
+
 		/* Axe Z */
-		textObject = new Text2D("Z", new Color3f(0f, 0f, 0f), "Serif", 110,
-				Font.ITALIC);
+		textObject = new Text2D("Z", new Color3f(0.2f, 0.2f, 0.2f), "Serif", 90,
+				Font.BOLD);
 		textTranslation = new Transform3D();
-		textTranslation.setTranslation(new Vector3f(0f, 5f, 0f));
+		textTranslation.setTranslation(new Vector3f(-0.3f, 1.8f, 0f));
 		textTranslationGroup = new TransformGroup(textTranslation);
 		textTranslationGroup.addChild(textObject);
 		TG1.addChild(textTranslationGroup);
+
+		// Apparence (visible des 2 côtés)
+		app = textObject.getAppearance();
+		pa = app.getPolygonAttributes();
+		if (pa == null)
+			pa = new PolygonAttributes();
+		pa.setCullFace(PolygonAttributes.CULL_NONE);
+		if (app.getPolygonAttributes() == null)
+			app.setPolygonAttributes(pa);
 
 		// création de 3 plans
 
@@ -440,25 +437,25 @@ final public class SimpleUniverseNavigation2 {
 
 		// Test1
 
-		scaleFactor = 24f; // (car la solution est : (1,2,3) (x,y,z)
+		scaleFactor = 10f; // (car la solution est : (0.8, 1.6, 2.6) (x,y,z)
 		// plan1
 		Appearance app1 = new Appearance();
-		app1.setColoringAttributes(new ColoringAttributes(new Color3f(0.0f,
-				0.0f, 1.0f), ColoringAttributes.SHADE_GOURAUD));
+		app1.setColoringAttributes(new ColoringAttributes(new Color3f(0.1f,
+				0.15f, 0.9f), ColoringAttributes.SHADE_GOURAUD));
 		app1.setTransparencyAttributes(new TransparencyAttributes(
 				TransparencyAttributes.NONE, 0.5f));
 		app1.setPolygonAttributes(polyAttr);
-		QuadArray quadArrTest1 = createPlan(3.0f, 1.0f, -2.0f, -1.0f);
+		QuadArray quadArrTest1 = createPlan(1.0f, -1.0f, 3.0f, 5f);
 		TG1.addChild(new Shape3D(quadArrTest1, app1));
 
-		Appearance app1bis = new Appearance();
-		app1bis.setColoringAttributes(new ColoringAttributes(new Color3f(0.0f,
-				0.0f, 1.0f), ColoringAttributes.SHADE_GOURAUD));
-		app1bis.setTransparencyAttributes(new TransparencyAttributes(
-				TransparencyAttributes.NICEST, transparancy));
-		app1bis.setPolygonAttributes(polyAttr);
-		QuadArray quadArrTest1bis = createBigPlan(3.0f, 1.0f, -2.0f, -1.0f);
-		TG1.addChild(new Shape3D(quadArrTest1bis, app1bis));
+//		Appearance app1bis = new Appearance();
+//		app1bis.setColoringAttributes(new ColoringAttributes(new Color3f(0.0f,
+//				0.0f, 1.0f), ColoringAttributes.SHADE_GOURAUD));
+//		app1bis.setTransparencyAttributes(new TransparencyAttributes(
+//				TransparencyAttributes.NICEST, transparancy));
+//		app1bis.setPolygonAttributes(polyAttr);
+//		QuadArray quadArrTest1bis = createPlan(1.0f, -1.0f, 3.0f, 5f, 10f);
+//		TG1.addChild(new Shape3D(quadArrTest1bis, app1bis));
 
 		// plan2
 		// Appearance app2 = new Appearance();
@@ -472,41 +469,41 @@ final public class SimpleUniverseNavigation2 {
 
 		// plan3
 		Appearance app3 = new Appearance();
-		app3.setColoringAttributes(new ColoringAttributes(new Color3f(1.0f,
-				0.0f, 0.0f), ColoringAttributes.SHADE_GOURAUD));
+		app3.setColoringAttributes(new ColoringAttributes(new Color3f(0.95f,
+				0.05f, 0.05f), ColoringAttributes.SHADE_GOURAUD));
 		app3.setTransparencyAttributes(new TransparencyAttributes(
 				TransparencyAttributes.NONE, 0.5f));
 		app3.setPolygonAttributes(polyAttr);
-		QuadArray quadArrTest3 = createPlan(1.0f, -1.0f, 1.0f, 6.0f);
+		QuadArray quadArrTest3 = createPlan(1.0f, 1.0f, 1.0f, 5.0f);
 		TG1.addChild(new Shape3D(quadArrTest3, app3));
 
-		Appearance app3bis = new Appearance();
-		app3bis.setColoringAttributes(new ColoringAttributes(new Color3f(1.0f,
-				0.3f, 0.0f), ColoringAttributes.SHADE_GOURAUD));
-		app3bis.setTransparencyAttributes(new TransparencyAttributes(
-				TransparencyAttributes.NICEST, transparancy));
-		app3bis.setPolygonAttributes(polyAttr);
-		QuadArray quadArrTest3bis = createBigPlan(1.0f, -1.0f, 1.0f, 6.0f);
-		TG1.addChild(new Shape3D(quadArrTest3bis, app3bis));
+//		Appearance app3bis = new Appearance();
+//		app3bis.setColoringAttributes(new ColoringAttributes(new Color3f(1.0f,
+//				0.0f, 0.0f), ColoringAttributes.SHADE_GOURAUD));
+//		app3bis.setTransparencyAttributes(new TransparencyAttributes(
+//				TransparencyAttributes.NICEST, transparancy));
+//		app3bis.setPolygonAttributes(polyAttr);
+//		QuadArray quadArrTest3bis = createPlan(1.0f, 1.0f, 1.0f, 5.0f, 10f);
+//		TG1.addChild(new Shape3D(quadArrTest3bis, app3bis));
 
 		// plan4
 		Appearance app4 = new Appearance();
-		app4.setColoringAttributes(new ColoringAttributes(new Color3f(0.0f,
-				1.0f, 0.0f), ColoringAttributes.SHADE_GOURAUD));
+		app4.setColoringAttributes(new ColoringAttributes(new Color3f(0.1f,
+				1.0f, 0.1f), ColoringAttributes.SHADE_GOURAUD));
 		app4.setTransparencyAttributes(new TransparencyAttributes(
 				TransparencyAttributes.NONE, 0.5f));
 		app4.setPolygonAttributes(polyAttr);
-		QuadArray quadArrTest4 = createPlan(0.0f, 1f, 0f, -0.5f);
+		QuadArray quadArrTest4 = createPlan(-0.5f, 0f, 1.f, 0f);
 		TG1.addChild(new Shape3D(quadArrTest4, app4));
-		
-		Appearance app4bis = new Appearance();
-		app4bis.setColoringAttributes(new ColoringAttributes(new Color3f(0.0f,
-				1.0f, 0.0f), ColoringAttributes.SHADE_GOURAUD));
-		app4bis.setTransparencyAttributes(new TransparencyAttributes(
-				TransparencyAttributes.NICEST, transparancy));
-		app4bis.setPolygonAttributes(polyAttr);
-		QuadArray quadArrTest4bis = createBigPlan(0.0f, 1.0f, 0.0f, -0.5f);
-		TG1.addChild(new Shape3D(quadArrTest4bis, app4bis));
+
+//		Appearance app4bis = new Appearance();
+//		app4bis.setColoringAttributes(new ColoringAttributes(new Color3f(0.0f,
+//				1.0f, 0.0f), ColoringAttributes.SHADE_GOURAUD));
+//		app4bis.setTransparencyAttributes(new TransparencyAttributes(
+//				TransparencyAttributes.NICEST, transparancy));
+//		app4bis.setPolygonAttributes(polyAttr);
+//		QuadArray quadArrTest4bis = createPlan(-0.5f, 0.0f, 1f, 0f, 10f);
+//		TG1.addChild(new Shape3D(quadArrTest4bis, app4bis));
 
 		// //Test2
 		// scaleFactor = 2f; // pas de solutions, on le voit bien avec cette
@@ -679,14 +676,14 @@ final public class SimpleUniverseNavigation2 {
 		// Axe X
 		LineArray tickX = new LineArray(2, LineArray.COORDINATES
 				| LineArray.COLOR_3);
-		tickX.setCoordinate(0, new Point3f(1.0f, 0f, -0.05f));
-		tickX.setCoordinate(1, new Point3f(1.0f, 0f, 0.05f));
-		tickX.setColor(0, new Color3f(0f, 0f, 0f));
-		tickX.setColor(1, new Color3f(0f, 1f, 0f));
-		TG1.addChild(new Shape3D(tickX));
+		tickX.setCoordinate(0, new Point3f(1.0f, 0f, -0.08f));
+		tickX.setCoordinate(1, new Point3f(1.0f, 0f, 0.08f));
+		tickX.setColor(0, new Color3f(0.2f, 0.2f, 0.2f));
+		tickX.setColor(1, new Color3f(0.2f, 0.2f, 0.2f));
+		TG1.addChild(new Shape3D(tickX, lineApp));
 
 		Text2D tickValue = new Text2D(scaleFactor + "",
-				new Color3f(0f, 0f, 0f), "Serif", 70, Font.ITALIC);
+				new Color3f(0.2f, 0.2f, 0.2f), "Serif", 70, Font.ITALIC);
 		textTranslation = new Transform3D();
 		textTranslation.setTranslation(new Vector3f(1f, 0f, 0f));
 		textTranslationGroup = new TransformGroup(textTranslation);
@@ -705,13 +702,13 @@ final public class SimpleUniverseNavigation2 {
 		/* Axe Y */
 		LineArray tickY = new LineArray(2, LineArray.COORDINATES
 				| LineArray.COLOR_3);
-		tickY.setCoordinate(0, new Point3f(-0.05f, 0f, 1f));
-		tickY.setCoordinate(1, new Point3f(0.05f, 0f, 1f));
-		tickY.setColor(0, new Color3f(0f, 0f, 0f));
-		tickY.setColor(1, new Color3f(0f, 1f, 0f));
-		TG1.addChild(new Shape3D(tickY));
+		tickY.setCoordinate(0, new Point3f(-0.08f, 0f, 1f));
+		tickY.setCoordinate(1, new Point3f(0.08f, 0f, 1f));
+		tickY.setColor(0, new Color3f(0.2f, 0.2f, 0.2f));
+		tickY.setColor(1, new Color3f(0.2f, 0.2f, 0.2f));
+		TG1.addChild(new Shape3D(tickY, lineApp));
 
-		tickValue = new Text2D(scaleFactor + "", new Color3f(0f, 0f, 0f),
+		tickValue = new Text2D(scaleFactor + "", new Color3f(0.2f, 0.2f, 0.2f),
 				"Serif", 70, Font.ITALIC);
 		textTranslation = new Transform3D();
 		textTranslation.setTranslation(new Vector3f(0f, 0f, 1f));
@@ -720,7 +717,7 @@ final public class SimpleUniverseNavigation2 {
 		TG1.addChild(textTranslationGroup);
 
 		/* Axe Z */
-		tickValue = new Text2D(scaleFactor + "", new Color3f(0f, 0f, 0f),
+		tickValue = new Text2D(scaleFactor + "", new Color3f(0.2f, 0.2f, 0.2f),
 				"Serif", 70, Font.ITALIC);
 		textTranslation = new Transform3D();
 		textTranslation.setTranslation(new Vector3f(0f, 1f, 0f));
@@ -730,71 +727,72 @@ final public class SimpleUniverseNavigation2 {
 
 		LineArray tickZ = new LineArray(2, LineArray.COORDINATES
 				| LineArray.COLOR_3);
-		tickZ.setCoordinate(0, new Point3f(0f, 1f, -0.05f));
-		tickZ.setCoordinate(1, new Point3f(0f, 1f, 0.05f));
-		tickZ.setColor(0, new Color3f(0f, 0f, 0f));
-		tickZ.setColor(1, new Color3f(0f, 1f, 0f));
-		TG1.addChild(new Shape3D(tickZ));
+		tickZ.setCoordinate(0, new Point3f(0f, 1f, -0.08f));
+		tickZ.setCoordinate(1, new Point3f(0f, 1f, 0.08f));
+		tickZ.setColor(0, new Color3f(0.2f, 0.2f, 0.2f));
+		tickZ.setColor(1, new Color3f(0.2f, 0.2f, 0.2f));
+		TG1.addChild(new Shape3D(tickZ, lineApp));
 
+		
+		//Bounding cube
+		LineAttributes cubeAttr = new LineAttributes(2f, 0, true);
+		Appearance cubeApp = new Appearance();
+		cubeApp.setLineAttributes(cubeAttr);
+
+		LineArray cube = new LineArray(24, LineArray.COORDINATES
+				| LineArray.COLOR_3);
+		cube.setCoordinate(0, new Point3f(1f, 1f, 1f));
+		cube.setCoordinate(1, new Point3f(1f, 1f, -1f));
+		
+		cube.setCoordinate(2, new Point3f(1f, 1f, 1f));
+		cube.setCoordinate(3, new Point3f(1f, -1f, 1f));
+		
+		cube.setCoordinate(4, new Point3f(1f, 1f, 1f));
+		cube.setCoordinate(5, new Point3f(-1f, 1f, 1f));
+		
+		cube.setCoordinate(6, new Point3f(1f, 1f, -1f));
+		cube.setCoordinate(7, new Point3f(1f, -1f, -1f));
+		
+		cube.setCoordinate(8, new Point3f(1f, 1f, -1f));
+		cube.setCoordinate(9, new Point3f(-1f, 1f, -1f));
+		
+		cube.setCoordinate(10, new Point3f(1f, -1f, 1f));
+		cube.setCoordinate(11, new Point3f(1f, -1f, -1f));
+		
+		cube.setCoordinate(12, new Point3f(1f, -1f, 1f));
+		cube.setCoordinate(13, new Point3f(-1f, -1f, 1f));
+		
+		cube.setCoordinate(14, new Point3f(-1f, 1f, 1f));
+		cube.setCoordinate(15, new Point3f(-1f, -1f, 1f));
+		
+		cube.setCoordinate(16, new Point3f(-1f, 1f, 1f));
+		cube.setCoordinate(17, new Point3f(-1f, 1f, -1f));
+		
+		cube.setCoordinate(18, new Point3f(-1f, -1f, 1f));
+		cube.setCoordinate(19, new Point3f(-1f, -1f, -1f));
+		
+		cube.setCoordinate(20, new Point3f(-1f, 1f, -1f));
+		cube.setCoordinate(21, new Point3f(-1f, -1f, -1f));
+		
+		cube.setCoordinate(22, new Point3f(1f, -1f, -1f));
+		cube.setCoordinate(23, new Point3f(-1f, -1f, -1f));
+		
+		TG1.addChild(new Shape3D(cube, cubeApp));
+		
+		
+		
 		sceneBranch.addChild(TG1);
 	}
 
 	private QuadArray createPlan(float a, float b, float c, float d) {
-		QuadArray quadArray = new QuadArray(4, GeometryArray.COORDINATES);
-		Point3f[] coords = new Point3f[4];
-
-		// Point3f(y,z,x)
-		if (c != 0) {
-			// On a : ax + by + cz = d
-			// Donc : z = (d - ax - by) / c
-			coords[0] = new Point3f(-1.0f, (d - a * -scaleFactor - b
-					* -scaleFactor)
-					/ (scaleFactor * c), -1.0f);
-			coords[1] = new Point3f(-1.0f, (d - a * scaleFactor - b
-					* -scaleFactor)
-					/ (scaleFactor * c), 1.0f);
-			coords[2] = new Point3f(1.0f, (d - a * scaleFactor - b
-					* scaleFactor)
-					/ (scaleFactor * c), 1.0f);
-			coords[3] = new Point3f(1.0f, (d - a * -scaleFactor - b
-					* scaleFactor)
-					/ (scaleFactor * c), -1.0f);
-		} else if (b != 0) { // plan vertical
-			// On a : ax + by = d
-			// Donc : y = (d - ax) / b
-			// hauteur 10 (axe z) => (peut être à changer)
-			coords[0] = new Point3f((d - a * -scaleFactor) / (scaleFactor * b),
-					-2f, -1.0f);
-			coords[1] = new Point3f((d - a * -scaleFactor) / (scaleFactor * b),
-					2f, -1.0f);
-			coords[2] = new Point3f((d - a * scaleFactor) / (scaleFactor * b),
-					2f, 1.0f);
-			coords[3] = new Point3f((d - a * scaleFactor) / (scaleFactor * b),
-					-2f, 1.0f);
-		} else if (a != 0) { // plan vertical
-			// On a : ax = d
-			// Donc : x = d/a
-			// hauteur 10 (axe z) => (peut être à changer)
-			coords[0] = new Point3f(-1f, -10f, d / (a * scaleFactor));
-			coords[1] = new Point3f(1f, -10f, d / (a * scaleFactor));
-			coords[2] = new Point3f(1f, 10f, d / (a * scaleFactor));
-			coords[3] = new Point3f(-1f, 10f, d / (a * scaleFactor));
-		} else {
-			System.err
-					.println("equation error : cannot display this plan (0x + 0y + 0z = "
-							+ d + ")");
-		}
-
-		quadArray.setCoordinates(0, coords);
-
-		return quadArray;
+		return createPlan(a,b,c,d,1f);
 	}
 
-	private QuadArray createBigPlan(float a, float b, float c, float d) {
+	private QuadArray createPlan(float a, float b, float c, float d, float _scale) {
 		QuadArray quadArray = new QuadArray(4, GeometryArray.COORDINATES);
 		Point3f[] coords = new Point3f[4];
 
-		float scale = 10f;
+		float scale = _scale;
 		// Point3f(y,z,x)
 		if (c != 0) {
 			// On a : ax + by + cz = d
@@ -805,24 +803,24 @@ final public class SimpleUniverseNavigation2 {
 			coords[1] = new Point3f(-scale, (d - a * scaleFactor * scale - b
 					* -scaleFactor * scale)
 					/ (scaleFactor * c), scale);
-			coords[2] = new Point3f(scale, (d - a * scaleFactor*scale - b
-					* scaleFactor*scale)
+			coords[2] = new Point3f(scale, (d - a * scaleFactor * scale - b
+					* scaleFactor * scale)
 					/ (scaleFactor * c), scale);
-			coords[3] = new Point3f(scale, (d - a * -scaleFactor*scale - b
-					* scaleFactor*scale)
+			coords[3] = new Point3f(scale, (d - a * -scaleFactor * scale - b
+					* scaleFactor * scale)
 					/ (scaleFactor * c), -scale);
 		} else if (b != 0) { // plan vertical
 			// On a : ax + by = d
 			// Donc : y = (d - ax) / b
 			// hauteur 10 (axe z) => (peut être à changer)
-			coords[0] = new Point3f((d - a * -scaleFactor*scale) / (scaleFactor * b),
-					-scale, -scale);
-			coords[1] = new Point3f((d - a * -scaleFactor*scale) / (scaleFactor * b),
-					scale, -scale);
-			coords[2] = new Point3f((d - a * scaleFactor*scale) / (scaleFactor * b),
-					scale, scale);
-			coords[3] = new Point3f((d - a * scaleFactor*scale) / (scaleFactor * b),
-					-scale, scale);
+			coords[0] = new Point3f((d - a * -scaleFactor * scale)
+					/ (scaleFactor * b), -scale, -scale);
+			coords[1] = new Point3f((d - a * -scaleFactor * scale)
+					/ (scaleFactor * b), scale, -scale);
+			coords[2] = new Point3f((d - a * scaleFactor * scale)
+					/ (scaleFactor * b), scale, scale);
+			coords[3] = new Point3f((d - a * scaleFactor * scale)
+					/ (scaleFactor * b), -scale, scale);
 		} else if (a != 0) { // plan vertical
 			// On a : ax = d
 			// Donc : x = d/a
@@ -848,7 +846,9 @@ final public class SimpleUniverseNavigation2 {
 		Toolkit toolkit = Toolkit.getDefaultToolkit();
 		Dimension screenDim = toolkit.getScreenSize();
 
+		//
 		// GUI / User actions
+		//
 
 		int fontSize = 14;
 		if (screenDim.height < 1024)
@@ -859,12 +859,12 @@ final public class SimpleUniverseNavigation2 {
 		font = new Font("SansSerif", Font.BOLD, fontSize);
 
 		JPanel jPanelLine = new JPanel(new BorderLayout());
-		jPanelLine.setBackground(new Color(0.05f, 0.05f, 0.8f));
+		jPanelLine.setBackground(new Color(0.05f, 0.05f, 0.5f));
 		jPanelLine.setBorder(BorderFactory.createEmptyBorder(3, 0, 0, 0));
 
 		JPanel jPanelBaseX = new JPanel();
 		jPanelBaseX.setLayout(new BoxLayout(jPanelBaseX, BoxLayout.X_AXIS));
-		jPanelBaseX.setBackground(bgColor);
+//		jPanelBaseX.setBackground(bgColor);
 		jPanelBaseX.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
 
 		jPanelLine.add(jPanelBaseX, BorderLayout.CENTER);
@@ -884,7 +884,6 @@ final public class SimpleUniverseNavigation2 {
 
 		jPanelBaseYBorder.add(jPanelBaseY);
 
-		final JRadioButton jRadioNull = new JRadioButton();
 
 		//
 		// Actions
@@ -895,6 +894,8 @@ final public class SimpleUniverseNavigation2 {
 		jPanelActions.setBorder(BorderFactory.createEmptyBorder());
 		jPanelActions.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+		
+		
 		// Home Transform
 		JPanel jPanelActionHome = new JPanel();
 		BoxLayout boxLayoutHome = new BoxLayout(jPanelActionHome,
@@ -902,17 +903,17 @@ final public class SimpleUniverseNavigation2 {
 		jPanelActionHome.setLayout(boxLayoutHome);
 
 		TitledBorder tBorderHome = BorderFactory
-				.createTitledBorder(" Home Transform ");
+				.createTitledBorder(" Réinitialisation et centrage");
 		tBorderHome.setTitleFont(font);
-		tBorderHome.setTitleColor(bgColor);
-		tBorderHome.setBorder(BorderFactory.createLineBorder(bgColor));
+		tBorderHome.setTitleColor(titleColor);
+//		tBorderHome.setBorder(BorderFactory.createLineBorder(bgColor));
 
 		jPanelActionHome.setBorder(BorderFactory.createCompoundBorder(
 				BorderFactory.createRaisedBevelBorder(), tBorderHome));
 
-		JButton jButtonHomeTransform = new JButton("Go Home");
+		JButton jButtonHomeTransform = new JButton("Retour à la vue de départ");
 		jButtonHomeTransform.setFont(font);
-		jButtonHomeTransform.setForeground(bgColor);
+//		jButtonHomeTransform.setForeground(bgColor);
 		jButtonHomeTransform.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 		jButtonHomeTransform.addActionListener(new ActionListener() {
@@ -920,124 +921,14 @@ final public class SimpleUniverseNavigation2 {
 				// heavy-weight !!
 				view.stopView();
 				orbitBehInterim.goHome(isHomeRotCenter);
-				orbitBehInterim.setFieldOfView(defaultFoV);
 				view.startView();
-
-				setFoVSlider(defaultFoV);
-
-				// No vantage point selected
-				jRadioNull.setSelected(true);
+				
 			}
 		});
-
-		final JCheckBox jChecHomeRotCenter = new JCheckBox(
-				"Home Rotation Center");
-		jChecHomeRotCenter.setFont(font);
-		jChecHomeRotCenter.setForeground(bgColor);
-		jChecHomeRotCenter.setAlignmentX(Component.CENTER_ALIGNMENT);
-		jChecHomeRotCenter.setSelected(true);
-
-		jChecHomeRotCenter.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent event) {
-
-				isHomeRotCenter = jChecHomeRotCenter.isSelected();
-
-			}
-		});
-
-		jPanelActionHome.add(jButtonHomeTransform);
-		jPanelActionHome.add(jChecHomeRotCenter);
-
-		jPanelActions.add(jPanelActionHome);
-		jPanelActions.add(Box.createHorizontalStrut(10));
-
-		// Center picking
-		JPanel jPanelActionCenter = new JPanel();
-		jPanelActionCenter.setLayout(new BoxLayout(jPanelActionCenter,
-				BoxLayout.Y_AXIS));
-
-		TitledBorder tBorderCenter = BorderFactory
-				.createTitledBorder(" Center of Rotation Picking ");
-		tBorderCenter.setTitleFont(font);
-		tBorderCenter.setTitleColor(bgColor);
-		tBorderCenter.setBorder(BorderFactory.createLineBorder(bgColor));
-
-		jPanelActionCenter.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createRaisedBevelBorder(), tBorderCenter));
-
-		JPanel jPanelPickMode = new JPanel();
-		jPanelPickMode
-				.setLayout(new BoxLayout(jPanelPickMode, BoxLayout.X_AXIS));
-		jPanelPickMode.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-		final JRadioButton jRadioPickVertex = new JRadioButton("Pick Vertex");
-		final JRadioButton jRadioPickShape = new JRadioButton("Pick Shape");
-
-		jRadioPickVertex.setFont(font);
-		jRadioPickShape.setFont(font);
-
-		jRadioPickVertex.setForeground(bgColor);
-		jRadioPickShape.setForeground(bgColor);
-
-		ButtonGroup bGroup = new ButtonGroup();
-		bGroup.add(jRadioPickVertex);
-		bGroup.add(jRadioPickShape);
-
-		jRadioPickVertex.setSelected(true);
-
-		ItemListener pickModeListener = new ItemListener() {
-			public void itemStateChanged(ItemEvent event) {
-
-				isPickVertex = jRadioPickVertex.isSelected();
-
-			}
-		};
-		jRadioPickVertex.addItemListener(pickModeListener);
-		jRadioPickShape.addItemListener(pickModeListener);
-
-		jPanelPickMode.add(jRadioPickVertex);
-		jPanelPickMode.add(Box.createHorizontalStrut(5));
-		jPanelPickMode.add(jRadioPickShape);
-
-		final JCheckBox jCheckLookAtCenter = new JCheckBox("Look at Center");
-		jCheckLookAtCenter.setFont(font);
-		jCheckLookAtCenter.setForeground(bgColor);
-		jCheckLookAtCenter.setAlignmentX(Component.CENTER_ALIGNMENT);
-		jCheckLookAtCenter.setSelected(true);
-
-		jCheckLookAtCenter.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent event) {
-
-				isLookAtRotCenter = jCheckLookAtCenter.isSelected();
-
-			}
-		});
-
-		jPanelActionCenter.add(jPanelPickMode);
-		jPanelActionCenter.add(jCheckLookAtCenter);
-
-		jPanelActions.add(jPanelActionCenter);
-		jPanelActions.add(Box.createHorizontalStrut(10));
-
-		// Look At Current Center
-		JPanel jPanelActionLookAt = new JPanel();
-		jPanelActionLookAt.setLayout(new BoxLayout(jPanelActionLookAt,
-				BoxLayout.Y_AXIS));
-
-		TitledBorder tBorderLookAt = BorderFactory
-				.createTitledBorder(" Center Transform ");
-		tBorderLookAt.setTitleFont(font);
-		tBorderLookAt.setTitleColor(bgColor);
-		tBorderLookAt.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createLineBorder(bgColor),
-				BorderFactory.createEmptyBorder(0, 4, 0, 4)));
-
-		jPanelActionLookAt.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createRaisedBevelBorder(), tBorderLookAt));
-
-		JButton jButtonLookAt = new JButton("Look at Center");
+		
+		JButton jButtonLookAt = new JButton("Centrer");
 		jButtonLookAt.setFont(font);
-		jButtonLookAt.setForeground(bgColor);
+//		jButtonLookAt.setForeground(bgColor);
 		jButtonLookAt.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 		jButtonLookAt.addActionListener(new ActionListener() {
@@ -1048,16 +939,17 @@ final public class SimpleUniverseNavigation2 {
 			}
 		});
 
-		JPanel spacePanel = new JPanel();
-		spacePanel.setMaximumSize(jButtonLookAt.getPreferredSize());
-		spacePanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+		jPanelActionHome.add(Box.createVerticalStrut(5));
+		jPanelActionHome.add(jButtonHomeTransform);
+		jPanelActionHome.add(Box.createVerticalStrut(10));
+		jPanelActionHome.add(jButtonLookAt);
 
-		jPanelActionLookAt.add(jButtonLookAt);
-		jPanelActionLookAt.add(spacePanel);
-
-		jPanelActions.add(jPanelActionLookAt);
+		jPanelActions.add(jPanelActionHome);
 		jPanelActions.add(Box.createHorizontalStrut(10));
-
+	
+		
+		
+		
 		// Projection
 		JPanel jPanelActionProjection = new JPanel();
 		jPanelActionProjection.setLayout(new BoxLayout(jPanelActionProjection,
@@ -1066,20 +958,20 @@ final public class SimpleUniverseNavigation2 {
 		TitledBorder tBorderProjection = BorderFactory
 				.createTitledBorder(" Projection ");
 		tBorderProjection.setTitleFont(font);
-		tBorderProjection.setTitleColor(bgColor);
-		tBorderProjection.setBorder(BorderFactory.createLineBorder(bgColor));
+		tBorderProjection.setTitleColor(titleColor);
+//		tBorderProjection.setBorder(BorderFactory.createLineBorder(bgColor));
 
 		jPanelActionProjection.setBorder(BorderFactory.createCompoundBorder(
 				BorderFactory.createRaisedBevelBorder(), tBorderProjection));
 
-		final JRadioButton jRadioParallel = new JRadioButton("Parallel");
+		final JRadioButton jRadioParallel = new JRadioButton("Parallèle");
 		final JRadioButton jRadioPerspective = new JRadioButton("Perspective");
-		jRadioParallel.setSelected(true);
+		jRadioPerspective.setSelected(true);
 
 		jRadioParallel.setFont(font);
 		jRadioPerspective.setFont(font);
-		jRadioParallel.setForeground(bgColor);
-		jRadioPerspective.setForeground(bgColor);
+//		jRadioParallel.setForeground(bgColor);
+//		jRadioPerspective.setForeground(bgColor);
 
 		jRadioPerspective.setAlignmentX(Component.LEFT_ALIGNMENT);
 
@@ -1099,191 +991,29 @@ final public class SimpleUniverseNavigation2 {
 
 		ButtonGroup projGroup = new ButtonGroup();
 		projGroup.add(jRadioParallel);
-		projGroup.add(jRadioPerspective);
-
-		final JCheckBox jCheckPureParallel = new JCheckBox("Pure");
-		jCheckPureParallel.setFont(font);
-		jCheckPureParallel.setForeground(bgColor);
-		jCheckPureParallel.setSelected(true);
-		jCheckPureParallel.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent event) {
-
-				orbitBehInterim.setPureParallelEnabled(jCheckPureParallel
-						.isSelected());
-
-			}
-		});
+		projGroup.add(jRadioPerspective);		
 
 		JPanel jPanelParProj = new JPanel();
 		jPanelParProj.setLayout(new BoxLayout(jPanelParProj, BoxLayout.X_AXIS));
 		jPanelParProj.setAlignmentX(Component.LEFT_ALIGNMENT);
 
 		jPanelParProj.add(jRadioParallel);
-		jPanelParProj.add(jCheckPureParallel);
 
 		jPanelActionProjection.add(jPanelParProj);
 		jPanelActionProjection.add(jRadioPerspective);
 
-		jPanelActions.add(jPanelActionProjection);
-		jPanelActions.add(Box.createHorizontalStrut(10));
-
-		// Field of View
-		JPanel jPanelActionFoV = new JPanel();
-		jPanelActionFoV.setLayout(new BoxLayout(jPanelActionFoV,
-				BoxLayout.Y_AXIS));
-
-		TitledBorder tBorderFoV = BorderFactory
-				.createTitledBorder(" Field of View ");
-		tBorderFoV.setTitleFont(font);
-		tBorderFoV.setTitleColor(bgColor);
-		tBorderFoV.setBorder(BorderFactory.createLineBorder(bgColor));
-
-		jPanelActionFoV.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createRaisedBevelBorder(), tBorderFoV));
-
-		JPanel jPanelFoVvalue = new JPanel();
-		jPanelFoVvalue
-				.setLayout(new BoxLayout(jPanelFoVvalue, BoxLayout.X_AXIS));
-		jPanelFoVvalue.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-		jTextFoVDegree = new JTextField();
-		jTextFoVDegree.setBorder(BorderFactory.createEmptyBorder());
-		jTextFoVDegree.setHorizontalAlignment(JTextField.RIGHT);
-		jTextFoVDegree.setFont(font);
-		jTextFoVDegree.setForeground(bgColor);
-		jTextFoVDegree.setSelectionColor(jPanelActionFoV.getBackground());
-		jTextFoVDegree.setEditable(false);
-		jTextFoVDegree.setText(Integer.toString(
-				(int) Math.round(view.getFieldOfView() / 3.141592 * 180.0))
-				.toString()
-				+ "°");
-
-		jTextFoVRadians = new JTextField();
-		jTextFoVRadians.setBorder(BorderFactory.createEmptyBorder());
-		jTextFoVRadians.setHorizontalAlignment(JTextField.LEFT);
-		jTextFoVRadians.setFont(font);
-		jTextFoVRadians.setForeground(bgColor);
-		jTextFoVRadians.setSelectionColor(jPanelActionFoV.getBackground());
-		jTextFoVRadians.setEditable(false);
-		jTextFoVRadians.setText(Float.toString((float) view.getFieldOfView()));
-
-		JLabel jLabelSlash = new JLabel(" /  ");
-		jLabelSlash.setFont(font);
-		jLabelSlash.setForeground(bgColor);
-
-		jPanelFoVvalue.add(jTextFoVDegree);
-		jPanelFoVvalue.add(jLabelSlash);
-		jPanelFoVvalue.add(jTextFoVRadians);
-
-		jPanelActionFoV.add(jPanelFoVvalue);
-
-		// Slider
-		Hashtable<Integer, JLabel> labelTableDegree = new Hashtable<Integer, JLabel>();
-		labelTableDegree.put(1, new JLabel("1°"));
-		labelTableDegree.put(45, new JLabel("45°"));
-		labelTableDegree.put(120, new JLabel("120°"));
-
-		jSliderFoV = new JSlider(1, 120);
-		jSliderFoV.setLabelTable(labelTableDegree);
-		jSliderFoV.setPaintTicks(false);
-		jSliderFoV.setPaintLabels(true);
-		jSliderFoV.setSnapToTicks(false);
-		jSliderFoV.setPaintTrack(true);
-		jSliderFoV
-				.setValue((int) Math.round(view.getFieldOfView() / 3.141592 * 180.0));
-		jSliderFoV.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-		fovSliderListener = new ChangeListener() {
-			public void stateChanged(ChangeEvent sliderEvent) {
-				int angleDegree = jSliderFoV.getValue();
-				double angleRadians = (angleDegree * 3.141592 / 180);
-
-				jTextFoVDegree.setText(Integer.toString(angleDegree) + "°");
-				jTextFoVRadians.setText(Float.toString((float) angleRadians));
-
-				orbitBehInterim.setFieldOfView(angleRadians);
-			}
-		};
-
-		jSliderFoV.addChangeListener(fovSliderListener);
-
-		jPanelActionFoV.add(jSliderFoV);
-
-		Dimension dimSl = jPanelActionHome.getPreferredSize();
-		jPanelActionFoV.setPreferredSize(dimSl);
-		jPanelActionFoV.setMaximumSize(dimSl);
-
-		jPanelActions.add(jPanelActionFoV);
+		jPanelActions.add(jPanelActionProjection);		
 
 		jPanelBaseY.add(jPanelActions);
-		jPanelBaseY.add(Box.createVerticalStrut(5));
+		jPanelBaseY.add(Box.createVerticalStrut(10));
 
-		//
-		// VantagePoints
-		//
-		JPanel jPanelVantagePoints = new JPanel();
-		jPanelVantagePoints.setLayout(new BoxLayout(jPanelVantagePoints,
-				BoxLayout.X_AXIS));
-		jPanelVantagePoints.setAlignmentX(Component.CENTER_ALIGNMENT);
-		TitledBorder tBorderVantage = BorderFactory
-				.createTitledBorder(" Vantage Points ");
-		tBorderVantage.setTitleFont(font);
-		tBorderVantage.setTitleColor(bgColor);
-		tBorderVantage.setBorder(BorderFactory.createLineBorder(bgColor));
-		jPanelVantagePoints.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createRaisedBevelBorder(), tBorderVantage));
-
-		final ButtonGroup vpGroup = new ButtonGroup();
-
-		ActionListener vpListener = new ActionListener() {
-			public void actionPerformed(ActionEvent event) {
-				Enumeration<AbstractButton> abstractButtons = vpGroup
-						.getElements();
-				while (abstractButtons.hasMoreElements()) {
-					JRadioButton jRadioButton = (JRadioButton) abstractButtons
-							.nextElement();
-					if (jRadioButton.isSelected()) {
-
-						vpExecutor.setVP(vantagepointHM.get(jRadioButton
-								.getText()));
-						vpExecutor.postId(VantagePointBehavior.APPLY_VP);
-
-						break;
-					}
-				}
-			}
-		};
-
-		jPanelVantagePoints.add(Box.createHorizontalGlue());
-		jPanelVantagePoints.add(Box.createHorizontalStrut(5));
-
-		Set<String> vpNames = vantagepointHM.keySet();
-		Iterator<String> vpIterator = vpNames.iterator();
-
-		String name = null;
-		while (vpIterator.hasNext()) {
-			name = vpIterator.next();
-			final JRadioButton jRadioVp = new JRadioButton(name);
-			jRadioVp.setFont(font);
-			jRadioVp.setForeground(bgColor);
-			jRadioVp.addActionListener(vpListener);
-
-			vpGroup.add(jRadioVp);
-			jPanelVantagePoints.add(jRadioVp);
-			jPanelVantagePoints.add(Box.createHorizontalStrut(5));
-		}
-
-		vpGroup.add(jRadioNull);
-		jRadioNull.setSelected(true);
-
-		jPanelVantagePoints.add(Box.createHorizontalGlue());
+	
+		
+		
+		
+		
 
 		Dimension dimVps = jPanelActions.getPreferredSize();
-		dimVps.height = jPanelVantagePoints.getPreferredSize().height;
-		jPanelVantagePoints.setPreferredSize(dimVps);
-		jPanelVantagePoints.setMaximumSize(dimVps);
-
-		jPanelBaseY.add(jPanelVantagePoints);
 		dimVps.height = jPanelBaseY.getPreferredSize().height;
 		jPanelBaseY.setPreferredSize(dimVps);
 		jPanelBaseY.setMaximumSize(dimVps);
@@ -1292,17 +1022,18 @@ final public class SimpleUniverseNavigation2 {
 		jPanelBaseX.add(jPanelBaseYBorder);
 		jPanelBaseX.add(Box.createHorizontalGlue());
 
-		Dimension dim = new Dimension(screenDim.width - 20, screenDim.height -300);
+		Dimension dim = new Dimension(screenDim.width - 20,
+				screenDim.height - 300);
 		canvas3D.setPreferredSize(dim);
 		canvas3D.setSize(dim);
-
+//
 		JPanel jPanel = new JPanel(new BorderLayout());
 		jPanel.add(canvas3D, BorderLayout.CENTER);
 		jPanel.add(jPanelLine, BorderLayout.SOUTH);
 
 		// JFrame
 		jFrame = new JFrame();
-		jFrame.setTitle("InteractiveMesh : SimpleUniverse Navigation 2");
+		jFrame.setTitle("Vue 3D du système d'équation linéaire à 3 inconnues");
 		jFrame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 		jFrame.add(jPanel);
 		jFrame.pack();
@@ -1312,111 +1043,5 @@ final public class SimpleUniverseNavigation2 {
 				(screenDim.height - jframeDim.height) / 2);
 
 		jFrame.setVisible(true);
-	}
-
-	private void setFoVSlider(double angleRadians) {
-		jSliderFoV.removeChangeListener(fovSliderListener);
-		int angleDegree = (int) Math.round(angleRadians / 3.141592 * 180.0);
-		jSliderFoV.setValue(angleDegree);
-		jTextFoVDegree.setText(Integer.toString(angleDegree) + "°");
-		jTextFoVRadians.setText(Float.toString((float) angleRadians));
-		jSliderFoV.addChangeListener(fovSliderListener);
-	}
-
-	private void createVantagePoints() {
-		// name - ViewPlatform's position - look at - up vector - center of
-		// rotation - fov angle
-		new VantagePoint("Home", new Point3d(0.0, 0.75, 15.0), new Point3d(0.0,
-				0.75, 0.0), new Vector3d(0.0, 1.0, 0.0), new Point3d(0.0, 0.0,
-				1.0), Math.toRadians(45));
-		new VantagePoint("Front", new Point3d(0.0, 3.0, 8.5), new Point3d(0.0,
-				0.0, 0.0), new Vector3d(0.0, 1.0, 0.0), new Point3d(0.0, 0.0,
-				2.5), Math.toRadians(65));
-		new VantagePoint("Back", new Point3d(0.0, 0.75, -13), new Point3d(0.0,
-				0.75, 0.0), new Vector3d(0.0, 1.0, 0.0), new Point3d(0.0, 0.0,
-				-0.5), Math.toRadians(40));
-		new VantagePoint("Top", new Point3d(0.0, 50.0, 1.0), new Point3d(0.0,
-				0.0, 1.0), new Vector3d(0.0, 0.0, -1.0), new Point3d(0.0, 0.0,
-				0.0), Math.toRadians(10));
-		new VantagePoint("Bottom", new Point3d(0.0, -5.0, 1.0), new Point3d(
-				0.0, 0.0, 1.0), new Vector3d(0.0, 0.0, 1.0), new Point3d(0.0,
-				0.0, 0.0), Math.toRadians(90));
-		new VantagePoint("Left", new Point3d(-14.0, 0.0, 1.0), new Point3d(0.0,
-				0.0, 1.0), new Vector3d(0.0, 0.0, -1.0), new Point3d(0.0, 0.0,
-				1.0), Math.toRadians(30));
-		new VantagePoint("Right", new Point3d(12.0, 0.0, 1.0), new Point3d(0.0,
-				0.0, 1.0), new Vector3d(0.0, 0.0, -1.0), new Point3d(0.0, 0.0,
-				1.0), Math.toRadians(30));
-	}
-
-	private final class VantagePoint {
-
-		private String name = "";
-
-		private Point3d eye = new Point3d();
-		private Point3d viewCenter = new Point3d();
-		private Vector3d up = new Vector3d();
-		private Point3d rotCenter = new Point3d();
-		private double fov = Math.PI / 4;
-
-		VantagePoint(String name, Point3d eye, Point3d viewCenter, Vector3d up,
-				Point3d rotationCenter, double fov) {
-
-			this.name = name;
-
-			this.eye.set(eye);
-			this.viewCenter.set(viewCenter);
-			this.up.set(up);
-			this.rotCenter.set(rotationCenter);
-			this.fov = fov;
-
-			vantagepointHM.put(name, this);
-		}
-
-		@Override
-		public String toString() {
-			return name;
-		}
-
-		void applyTo(OrbitBehaviorInterim navigator) {
-
-			navigator.setViewingTransform(eye, viewCenter, up, rotCenter);
-			navigator.setFieldOfView(fov);
-
-			setFoVSlider(fov);
-		}
-	}
-
-	// Sets vantage point in behavior scheduler
-	private final class VantagePointBehavior extends Behavior {
-
-		static final int APPLY_VP = 1;
-		private WakeupOnBehaviorPost post = new WakeupOnBehaviorPost(this,
-				APPLY_VP);
-
-		private OrbitBehaviorInterim orbitBeh = null;
-		private VantagePoint vantagePoint = null;
-
-		VantagePointBehavior(OrbitBehaviorInterim orbitBeh) {
-			this.orbitBeh = orbitBeh;
-		}
-
-		void setVP(VantagePoint vp) {
-			vantagePoint = vp;
-		}
-
-		@Override
-		public void initialize() {
-			wakeupOn(post);
-		}
-
-		@Override
-		public void processStimulus(Enumeration criteria) {
-			if (vantagePoint != null)
-				vantagePoint.applyTo(orbitBeh);
-			vantagePoint = null;
-
-			wakeupOn(post);
-		}
 	}
 }
