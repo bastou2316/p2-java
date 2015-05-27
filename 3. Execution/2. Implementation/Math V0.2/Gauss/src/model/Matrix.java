@@ -1,8 +1,8 @@
 
 package model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import tools.MathTools;
 
@@ -295,33 +295,36 @@ public final class Matrix
 					}
 				}
 			}
-
-		// Compute reduced row echelon form (RREF)
-		for(int i = rows - 1; i >= 0; i--)
+		if (hasSolution())
 			{
-			// Find pivot
-			int pivotCol = 0;
-			while(pivotCol < cols && isEqual(get(i, pivotCol), 0))
-				{
-				pivotCol++;
-				}
-			if (pivotCol == cols)
-				{
-				continue; // Skip this all-zero row
-				}
 
-			// Eliminate rows above
-			for(int j = i - 1; j >= 0; j--)
+			// Compute reduced row echelon form (RREF)
+			for(int i = rows - 1; i >= 0; i--)
 				{
-				addRows(i, j, -get(j, pivotCol));
-				if (!isEqual(hist[currentStep - 1], values))
+				// Find pivot
+				int pivotCol = 0;
+				while(pivotCol < cols && isEqual(get(i, pivotCol), 0))
 					{
-					hist[currentStep] = valuesClone();
-					currentStep++;
+					pivotCol++;
+					}
+				if (pivotCol == cols)
+					{
+					continue; // Skip this all-zero row
+					}
+
+				// Eliminate rows above
+				for(int j = i - 1; j >= 0; j--)
+					{
+					addRows(i, j, -get(j, pivotCol));
+					if (!isEqual(hist[currentStep - 1], values))
+						{
+						hist[currentStep] = valuesClone();
+						currentStep++;
+						}
 					}
 				}
+			currentStep = 0;
 			}
-		currentStep = 0;
 		}
 
 	public String getNextStep()
@@ -456,115 +459,177 @@ public final class Matrix
 		StringBuilder stringBuilder = new StringBuilder();
 		int rows = rowCount();
 		int cols = columnCount() - 1;
-		List<String> listVariableName = new ArrayList<String>();
-		String token;
-		int tokenIndex = 97;
+		Map<Integer, String> mapIndexVariableName = new TreeMap<Integer, String>();
 		int currentCol;
-		int currentRow;
+		int currentRow = 0;
+		int currentVariableCol;
+		boolean isFirst;
+
+		int tokenStartIndex = 97;
 
 		if (hasSolution())
 			{
-			//Fill the list of name for the variable. For exemple a,b,c
-			for(int i = 1; i < cols; ++i)
-				{
-				token = Character.toString((char)tokenIndex);
-				listVariableName.add(token);
-				}
+			findDependentVariables(mapIndexVariableName, tokenStartIndex);
+			System.out.println(mapIndexVariableName);
+			//vulgarisation de la matrice
 
-			//Case of isometric matrix
-			if (rows == cols)
+			for(currentVariableCol = 0; currentVariableCol < cols; ++currentVariableCol)//commence en haut de la matrice
 				{
-				// check every row
-				for(currentRow = rows - 1; currentRow <= 0; currentRow--)
+				stringBuilder.append((char)(tokenStartIndex + currentVariableCol));
+				stringBuilder.append(" = ");
+				isFirst = true; //permet de savoir si le prochain nombre affiché nécéssite l'ajout du caractère '+';
+				if (mapIndexVariableName.get(currentVariableCol).equals( Integer.toString(currentVariableCol + tokenStartIndex))) //si c'est une collonne pivot...
 					{
-
-					//Case of non-pivot column
-					int freeVariableNumber = 1;
-					if (values[currentRow][currentRow] == 0)
+					for(int i = 0; i < rows; ++i)
 						{
-						listVariableName.set(currentRow, "u" + freeVariableNumber);
-						freeVariableNumber++;
-						}
-					else
-						{
-						//Case of pivot column
-						stringBuilder.append(listVariableName.get(currentRow));
-						stringBuilder.append("=");
-						stringBuilder.append(values[currentRow][cols + 1]);
-						for(currentCol = currentRow + 1; currentCol < cols; ++currentCol)
+						if (values[i][currentVariableCol] == 1)
 							{
-							if (values[currentRow][currentRow] > 0)
-								{
-								stringBuilder.append("+");
-								stringBuilder.append(values[currentRow][currentRow]);
-								}
-							else if (values[currentRow][currentRow] < 0)
-								{
-								stringBuilder.append(values[currentRow][currentRow]);
-								}
-							stringBuilder.append(listVariableName.get(currentCol));
+							currentRow = i;
 							}
 						}
-
-					}
-				}
-			// Case where there is more variables than equations
-			if (rows < cols)
-				{
-				//TODO if rows=1 and rows =2
-
-				//Set the free variables
-				int freeVariableNumber = 1;
-				//Search for non-pivot column
-				for(currentCol = 0; currentCol < columnCount(); ++currentCol)
-					{
-					if (values[0][currentCol] != 0 && values[1][currentCol] != 0)// free variable column
+					for(currentCol = currentRow + 1; currentCol < cols; ++currentCol) //parcours la ligne de la matrice augmentée depuis le pivot jusqu'à la fin
 						{
-						listVariableName.set(currentCol, "u" + freeVariableNumber);
-						freeVariableNumber++;
-						}
-					}
 
-				// check every row
-				for(currentRow = rows - 1; currentRow <= 0; --currentRow)
-					{
-					//Search for pivot column
-					for(currentCol = cols - 1; currentCol <= 0; --currentCol)
-						{
-						if (values[currentRow][currentCol] != 0 && values[currentRow - 1][currentCol] == 0)// pivot column
+						//soustraction des variables dépendante à la variable indépendante actuelle.
+						if ((int)values[currentRow][currentCol] > 0)
 							{
-
+							if (isFirst == false)
+								{
+								stringBuilder.append(" ");
+								}
+							stringBuilder.append(-(int)values[currentRow][currentCol]);
+							stringBuilder.append(mapIndexVariableName.get(currentCol));
+							isFirst = false;
 							}
-						//non-pivot row (dependant row) can be skiped since all free variables have already been found
+						else if ((int)values[currentRow][currentCol] < 0)
+							{
+							if (isFirst == false)
+								{
+								stringBuilder.append(" + ");
+								}
+							if ((int)values[currentRow][currentCol] != -1)
+								{
+								stringBuilder.append(-(int)values[currentRow][currentCol]);
+								}
+							stringBuilder.append(mapIndexVariableName.get(currentCol));
+							isFirst = false;
+							}
 						}
-
+					//addition de la valeur du vecteur
+					if ((int)values[currentRow][cols] > 0)
+						{
+						if (isFirst == false)
+							{
+							stringBuilder.append(" +");
+							}
+						stringBuilder.append((int)values[currentRow][cols]);
+						}
+					else if ((int)values[currentRow][cols] < 0)
+						{
+						if (isFirst == false)
+							{
+							stringBuilder.append(" ");
+							}
+						stringBuilder.append((int)values[currentRow][cols]);
+						}
+					if (values[currentRow][cols] == 0 && isFirst)
+						{
+						stringBuilder.append('0');
+						}
 					}
+				else
+					//si c'est pas une collone pivot...
+					{
+					stringBuilder.append(mapIndexVariableName.get(currentVariableCol));
+					}
+				stringBuilder.append("\n");
 				}
-
 			}
 		else
 			{
-			stringBuilder.append("Impossible");
+			stringBuilder.append("Le système n'a pas de solution.\n");
 			}
 		return stringBuilder.toString();
 		}
 
+	private void findDependentVariables(Map<Integer, String> mapIndexVariableName, int tokenStartIndex)
+		{
+		int freeVariableNumber = 0;
+		boolean isOne;
+		boolean isPivot;
+		int rows = rowCount();
+		int cols = columnCount() - 1;
+		int currentCol;
+		int currentRow;
+
+		//Fill the list of name for the variable. For exemple a,b,c
+		for(int i = 0; i < cols; ++i)
+			{
+			mapIndexVariableName.put(i, Integer.toString(tokenStartIndex + i));
+			}
+
+		//Recherche des variables dépendantes
+		for(currentCol = cols - 1; currentCol > 0; --currentCol)//commence à droite de la matrice. Parcours les colonnes.
+			{
+			isOne = false;
+			isPivot = false;
+			for(currentRow = rows - 1; currentRow > 0; --currentRow)//parcours les lignes
+				{
+				if ((int)values[currentRow][currentCol] == 1)
+					{
+					//vérifie qu'il y ait un pivot dans la colonne
+					if (isOne == false)
+						{
+						isOne = true;
+						isPivot = true;
+						}
+					//si il y deux pivots alors ce n'est pas une colonne pivot.
+					else
+						{
+						isPivot = false;
+						break;
+						}
+					}
+				}
+			//vérifie si il n'y a pas de pivot à gauche du pivot candidat
+			if (isPivot == true)
+				{
+				for(int i = currentCol; i > 0; --i)
+					{
+					if ((int)values[currentRow][i] != 0)
+						{
+						isPivot = false;
+						}
+					}
+				}
+			if (isPivot == false)
+				{
+				mapIndexVariableName.replace(currentCol, "u" + freeVariableNumber);
+				freeVariableNumber++;
+				}
+
+			}
+		}
+
+	//return vrai si le sytème est consistant
 	private boolean hasSolution()
 		{
 		int zeroCount = 0;
-		for(int i = 0; i < rowCount(); ++i)
+		for(int i = 0; i < rowCount(); ++i)// pour chaque ligne
+
 			{
-			if (values[i][columnCount() - 1] != 0)
+			if (!MathTools.isEquals(values[i][columnCount() - 1], 0))//Si la valeur du vecteur b à la ligne actuelle est non-null
 				{
-				for(int j = 0; j < columnCount() - 1; ++i)
+				zeroCount = 0;
+				for(int j = 0; j < columnCount() - 1; ++j) //parcours la ligne de la matrice
 					{
-					if (values[i][j] != 0)
+					if (!MathTools.isEquals(values[i][j], 0)) //si on trouve une valeur non-null alors la ligne est consistante.
 						{
-						continue;
+						break;
 						}
 					zeroCount++;
 					}
-				if (zeroCount == columnCount() - 1) { return false; }
+				if (zeroCount == columnCount() - 1) { return false; } //si la ligne ne contient pas de valeur non-nul, la ligne est inconsistante.
 				}
 			}
 		return true;
