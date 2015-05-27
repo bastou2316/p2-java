@@ -6,22 +6,19 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
 import javax.swing.JPanel;
-import javax.swing.JTable;
 import javax.swing.JTextArea;
 
 import ch.hearc.p2.java.controller.ControllerEquation;
-import ch.hearc.p2.java.controller.ControllerMain;
+import ch.hearc.p2.java.model.Matrix;
 
-public class JPanelResultDirect extends JPanel
+public class JPanelResultStep extends JPanel implements Control_I
 	{
-
 	/*------------------------------------------------------------------*\
 	|*							Constructeurs							*|
 	\*------------------------------------------------------------------*/
 
-	public JPanelResultDirect(ControllerMain controllerMain, ControllerEquation controllerEquation)
+	public JPanelResultStep(ControllerEquation controllerEquation)
 		{
-		this.controllerMain = controllerMain;
 		this.controllerEquation = controllerEquation;
 
 		//Composition du panel
@@ -29,12 +26,48 @@ public class JPanelResultDirect extends JPanel
 		control();
 		appearance();
 
+		//Instanciation des threads
+		isFini = false;
+		isRunning = false;
 		}
 
 	/*------------------------------------------------------------------*\
 	|*							Methodes Public							*|
 	\*------------------------------------------------------------------*/
 
+	@Override
+	public synchronized void start()
+		{
+		if (!isRunning)
+			{
+			isRunning = true;
+			thread = new Thread(new Runnable()
+				{
+
+					@Override
+					public void run()
+						{
+						Matrix matrix;
+						while(!isFini)
+							{
+							matrix = nextStep();
+							textArea.setText(matrix.toString());
+							sleep(controllerEquation.getSpeed());
+							}
+						isFini = false;
+						isRunning = false;
+						}
+				});
+			thread.start();
+			}
+		}
+
+	@Override
+	public synchronized void stop()
+		{
+		isFini = true;
+		thread = null;
+		}
 
 	/*------------------------------*\
 	|*				Set				*|
@@ -48,15 +81,30 @@ public class JPanelResultDirect extends JPanel
 	|*							Methodes Private						*|
 	\*------------------------------------------------------------------*/
 
+	private Matrix nextStep()
+		{
+		return controllerEquation.getNextMatrix();
+		}
+
+	private void sleep(long delayMS)
+		{
+		try
+			{
+			Thread.sleep(delayMS);
+			}
+		catch (InterruptedException e)
+			{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			}
+		}
 
 	private void geometry()
 		{
 		// JComponent : Instanciation
-		tableRes = new JTable(controllerEquation.getNumberVar(), controllerEquation.getNumberEquation());
-		interpretationTextArea = new JTextArea("test");
-		interpretationTextArea.setEditable(false);
-
-		panelDefaultControl = new JPanelDefaultControl(controllerMain, controllerEquation);
+		textArea = new JTextArea("Debut\n");
+		//textArea.setBounds(new Rectangle(getBounds()));
+		textArea.setLineWrap(true);
 
 			// Layout : Specification
 			{
@@ -68,9 +116,7 @@ public class JPanelResultDirect extends JPanel
 			}
 
 		// JComponent : add
-		add(tableRes);
-		add(interpretationTextArea);
-		add(panelDefaultControl);
+		add(textArea);
 		}
 
 	private void control()
@@ -88,24 +134,19 @@ public class JPanelResultDirect extends JPanel
 
 	private void appearance()
 		{
-
+		// rien
 		}
-
-
 
 	/*------------------------------------------------------------------*\
 	|*							Attributs Private						*|
 	\*------------------------------------------------------------------*/
 
-	//Inputs
-	private ControllerMain controllerMain;
-	private ControllerEquation controllerEquation;
-
 	// Tools
-	private JTable tableRes;
-	private JTextArea interpretationTextArea;
+	private Thread thread;
+	private boolean isRunning;
+	private boolean isFini;
 
-	private JPanelDefaultControl panelDefaultControl;
-
-
+	JTextArea textArea;
+	ControllerEquation controllerEquation;
 	}
+
