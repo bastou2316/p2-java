@@ -15,7 +15,7 @@ public class Equation implements Serializable
 	public Equation(String name, int numberVar, int numberEquation, int speed, boolean modeStep)
 		{
 		listMatrix = new ArrayList<Matrix>();
-
+		listOperation = new ArrayList<String>();
 		this.name = name;
 		this.numberVar = numberVar;
 		this.numberEquation = numberEquation;
@@ -28,7 +28,20 @@ public class Equation implements Serializable
 	\*------------------------------------------------------------------*/
 	public void solve()
 		{
-		//tcheker methode solve
+		Matrix matrix = listMatrix.get(0);
+		if (modeStep)
+			{
+			matrix.reducedRowEchelonForm();
+			for(int i = 0; i < matrix.getHistLength(); ++i)
+				{
+				listMatrix.set(i, new Matrix(matrix.getStep(i)));
+				listOperation.set(i, matrix.getOperation(i));
+				}
+			}
+		else
+			{
+			listMatrix.set(1, new QRDecomposition(matrix.getMatrix(0, matrix.rowCount() - 1, 0, matrix.columnCount() - 2)).solve(matrix.getMatrix(0, matrix.rowCount() - 1, matrix.columnCount() - 1, matrix.columnCount() - 1)));
+			}
 		}
 
 	/*------------------------------*\
@@ -67,6 +80,17 @@ public class Equation implements Serializable
 			}
 		}
 
+	public String getOperation(int pos)
+		{
+		if (!listOperation.isEmpty())
+			{
+			return listOperation.get(pos);
+			}
+		else
+			{
+			return null;
+			}
+		}
 	/*------------------------------*\
 	|*				Set				*|
 	\*------------------------------*/
@@ -92,6 +116,7 @@ public class Equation implements Serializable
 	// Tools
 	String name;
 	List<Matrix> listMatrix;
+	List<String> listOperation;
 	int numberVar;
 	int numberEquation;
 	int speed;
