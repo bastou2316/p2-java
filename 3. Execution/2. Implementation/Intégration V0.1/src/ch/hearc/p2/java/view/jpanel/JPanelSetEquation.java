@@ -111,7 +111,7 @@ public class JPanelSetEquation extends JPanel
 				@Override
 				public void actionPerformed(ActionEvent e)
 					{
-					controllerEquation.setEquation(textFieldName.getText(), (Integer)numberVar.getValue(), (Integer)numberEquation.getValue(), methodStep.isSelected(), 1);
+					controllerEquation.setEquation(textFieldName.getText(), (Integer)numberVar.getValue(), (Integer)numberEquation.getValue(), methodStep.isSelected(), 1000);
 					controllerMain.showDialog(DIALOG.SET_MATRIX);
 					}
 			});

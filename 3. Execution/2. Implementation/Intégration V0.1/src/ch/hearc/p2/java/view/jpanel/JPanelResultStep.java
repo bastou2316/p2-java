@@ -13,6 +13,7 @@ import ch.hearc.p2.java.model.Matrix;
 
 public class JPanelResultStep extends JPanel implements Control_I
 	{
+
 	/*------------------------------------------------------------------*\
 	|*							Constructeurs							*|
 	\*------------------------------------------------------------------*/
@@ -47,12 +48,15 @@ public class JPanelResultStep extends JPanel implements Control_I
 					@Override
 					public void run()
 						{
-						Matrix matrix;
+						Matrix matrix = null;
 						while(!isFini)
 							{
-							matrix = nextStep();
-							textArea.setText(matrix.toString());
-							sleep(controllerEquation.getSpeed());
+							if (controllerEquation.hasNextMatrix())
+								{
+								matrix = controllerEquation.getNextMatrix();
+								textArea.setText(matrix.toString());
+								sleep(controllerEquation.getSpeed());
+								}
 							}
 						isFini = false;
 						isRunning = false;
@@ -80,11 +84,6 @@ public class JPanelResultStep extends JPanel implements Control_I
 	/*------------------------------------------------------------------*\
 	|*							Methodes Private						*|
 	\*------------------------------------------------------------------*/
-
-	private Matrix nextStep()
-		{
-		return controllerEquation.getNextMatrix();
-		}
 
 	private void sleep(long delayMS)
 		{
@@ -149,4 +148,3 @@ public class JPanelResultStep extends JPanel implements Control_I
 	JTextArea textArea;
 	ControllerEquation controllerEquation;
 	}
-

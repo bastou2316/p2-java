@@ -102,6 +102,15 @@ public class ControllerEquation
 		return equation.getSpeed();
 		}
 
+	/*------------------------------*\
+	|*				Is				*|
+	\*------------------------------*/
+
+	public boolean hasNextMatrix()
+		{
+		return equation.hasMatrixIndex(actualStep+1);
+		}
+
 	/*------------------------------------------------------------------*\
 	|*							Attributs Private						*|
 	\*------------------------------------------------------------------*/

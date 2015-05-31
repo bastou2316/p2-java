@@ -34,8 +34,8 @@ public class Equation implements Serializable
 			matrix.reducedRowEchelonForm();
 			for(int i = 0; i < matrix.getHistLength(); ++i)
 				{
-				listMatrix.set(i, new Matrix(matrix.getStep(i)));
-				listOperation.set(i, matrix.getOperation(i));
+				listMatrix.add(i, new Matrix(matrix.getStep(i)));
+				listOperation.add(i, matrix.getOperation(i));
 				}
 			}
 		else
@@ -70,14 +70,10 @@ public class Equation implements Serializable
 
 	public Matrix getMatrix(int pos)
 		{
-		if (!listMatrix.isEmpty())
-			{
-			return listMatrix.get(pos);
-			}
-		else
-			{
-			return null;
-			}
+		if (listMatrix.isEmpty()) { return null; }
+
+		return listMatrix.get(pos);
+
 		}
 
 	public String getOperation(int pos)
@@ -91,6 +87,7 @@ public class Equation implements Serializable
 			return null;
 			}
 		}
+
 	/*------------------------------*\
 	|*				Set				*|
 	\*------------------------------*/
@@ -98,12 +95,17 @@ public class Equation implements Serializable
 	public void setMatrix(Matrix matrix)
 		{
 		listMatrix.clear();
-		listMatrix.add(matrix);
+		listMatrix.add(0, matrix);
 		}
 
 	/*------------------------------*\
 	|*				Is				*|
 	\*------------------------------*/
+
+	public boolean hasMatrixIndex(int index)
+		{
+		return index < listMatrix.size();
+		}
 
 	public boolean isStepMode()
 		{
