@@ -11,3 +11,4 @@ org.eclipse.jdt.core.compiler.compliance=1.8
 org.eclipse.jdt.core.compiler.problem.assertIdentifier=error
 org.eclipse.jdt.core.compiler.problem.enumIdentifier=error
 org.eclipse.jdt.core.compiler.source=1.8
+org.eclipse.jdt.core.userLibrary.Java3DLib=<?xml version\="1.0" encoding\="UTF-8"?>\r\n<userlibrary systemlibrary\="false" version\="2">\r\n\t<archive path\="/MatTest V0.1/ext/j3dcore.jar"/>\r\n\t<archive path\="/MatTest V0.1/ext/j3dutils.jar"/>\r\n\t<archive path\="/MatTest V0.1/ext/vecmath.jar"/>\r\n</userlibrary>\r\n
