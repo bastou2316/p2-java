@@ -1,6 +1,7 @@
 
 package ch.hearc.p2.java.model;
 
+import java.text.DecimalFormat;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -17,9 +18,9 @@ public final class Matrix
 	private int histLength;
 
 	/**
-	 * Constructs a blank matrix with the specified number of rows and columns. All the elements are initially {@code null}.
-	 * @param rows the number of rows in this matrix
-	 * @param cols the number of columns in this matrix
+	 * Construit une matrice vide avec le nombre de ligne et de colonne spécifié.
+	 * @param rows le nombre de ligne
+	 * @param cols le nombre de colonne
 	 * @throws IllegalArgumentException if {@code rows} &le; 0 or {@code cols} &le; 0
 	 * @throws NullPointerException if {@code f} is {@code null}
 	 */
@@ -241,27 +242,18 @@ public final class Matrix
 		}
 
 	/**
-	 * Check if two double are equals.
-	 * @param a the first double
-	 * @param b the second double
-	 * @return true if a and b are equals.
-	 */
-	public boolean isEqual(double a, double b)
-		{
-		return MathTools.isEquals(a, b, 1 * 10^(-5));
-		}
-
-	/**
-	 * Converts this matrix to reduced row echelon form (RREF) using Gauss elimination.
+	 * Echelonne et réduit la matrice.
 	 */
 	public void reducedRowEchelonForm()
 		{
+		double factorBackup;
 		StringBuilder stringBuilder = new StringBuilder();
 		int rows = rowCount();
 		int cols = columnCount();
 		currentStep = 0;
 		hist[currentStep] = valuesClone();
 		currentStep++;
+		DecimalFormat formatter = new DecimalFormat("0.##");
 
 		// Compute row echelon form (REF)
 		int numPivots = 0;
@@ -269,7 +261,7 @@ public final class Matrix
 			{ // For each column
 				// Find a pivot row for this column
 			int pivotRow = numPivots;
-			while(pivotRow < rows && isEqual(get(pivotRow, j), 0))
+			while(pivotRow < rows && MathTools.isEquals(get(pivotRow, j), 0))
 				{
 				pivotRow++;
 				}
@@ -278,12 +270,13 @@ public final class Matrix
 				continue; // Cannot eliminate on this column
 				}
 			swapRows(numPivots, pivotRow);
+
 			if (!isEqual(hist[currentStep - 1], values))
 				{
 				stringBuilder.append("L");
-				stringBuilder.append(numPivots);
-				stringBuilder.append("<=>L");
-				stringBuilder.append(pivotRow);
+				stringBuilder.append(numPivots + 1);
+				stringBuilder.append(" <=> L");
+				stringBuilder.append(pivotRow + 1);
 				tabOperations[currentStep] = stringBuilder.toString();
 				stringBuilder = new StringBuilder();
 				hist[currentStep] = valuesClone();
@@ -291,28 +284,24 @@ public final class Matrix
 				}
 			pivotRow = numPivots;
 			numPivots++;
-
 			// Simplify the pivot row using the reciprocal
+			factorBackup = 1 / get(pivotRow, j);
 			multiplyRow(pivotRow, 1 / get(pivotRow, j));
 			if (!isEqual(hist[currentStep - 1], values))
 				{
 				stringBuilder.append("L");
-				stringBuilder.append(pivotRow);
-				stringBuilder.append("=L");
-				stringBuilder.append(pivotRow);
-				if (1 / get(pivotRow, j) >= 1)
+				stringBuilder.append(pivotRow + 1);
+				stringBuilder.append(" = L");
+				stringBuilder.append(pivotRow + 1);
+				if (factorBackup >= 1)
 					{
-					stringBuilder.append("*");
-					stringBuilder.append(1 / get(pivotRow, j));
-					stringBuilder.append("L");
-					stringBuilder.append(pivotRow);
+					stringBuilder.append(" * ");
+					stringBuilder.append(formatter.format(factorBackup));
 					}
 				else
 					{
-					stringBuilder.append("/");
-					stringBuilder.append(get(pivotRow, j));
-					stringBuilder.append("L");
-					stringBuilder.append(pivotRow);
+					stringBuilder.append(" / ");
+					stringBuilder.append(formatter.format(1 / factorBackup));
 					}
 				tabOperations[currentStep] = stringBuilder.toString();
 				stringBuilder = new StringBuilder();
@@ -322,26 +311,33 @@ public final class Matrix
 			// Eliminate rows below by substraction
 			for(int i = pivotRow + 1; i < rows; i++)
 				{
+				factorBackup = -get(i, j);
 				addRows(pivotRow, i, -get(i, j));
 				if (!isEqual(hist[currentStep - 1], values))
 					{
 					stringBuilder.append("L");
-					stringBuilder.append(i);
-					stringBuilder.append("=L");
-					stringBuilder.append(i);
-					if (-get(i, j) > 0)
+					stringBuilder.append(i + 1);
+					stringBuilder.append(" = L");
+					stringBuilder.append(i + 1);
+					if (factorBackup > 0)
 						{
-						stringBuilder.append("+");
-						stringBuilder.append(-get(i, j));
+						stringBuilder.append(" + ");
+						if (!MathTools.isEquals(factorBackup, 1))
+							{
+							stringBuilder.append(formatter.format(factorBackup));
+							}
 						stringBuilder.append("L");
-						stringBuilder.append(pivotRow);
+						stringBuilder.append(pivotRow + 1);
 						}
 					else
 						{
-						stringBuilder.append("-");
-						stringBuilder.append(get(i, j));
+						stringBuilder.append(" - ");
+						if (!MathTools.isEquals(factorBackup, -1))
+							{
+							stringBuilder.append(formatter.format(-factorBackup));
+							}
 						stringBuilder.append("L");
-						stringBuilder.append(pivotRow);
+						stringBuilder.append(pivotRow + 1);
 						}
 					tabOperations[currentStep] = stringBuilder.toString();
 					stringBuilder = new StringBuilder();
@@ -358,7 +354,7 @@ public final class Matrix
 				{
 				// Find pivot
 				int pivotCol = 0;
-				while(pivotCol < cols && isEqual(get(i, pivotCol), 0))
+				while(pivotCol < cols && MathTools.isEquals(get(i, pivotCol), 0))
 					{
 					pivotCol++;
 					}
@@ -370,26 +366,33 @@ public final class Matrix
 				// Eliminate rows above
 				for(int j = i - 1; j >= 0; j--)
 					{
+					factorBackup = -get(j, pivotCol);
 					addRows(i, j, -get(j, pivotCol));
 					if (!isEqual(hist[currentStep - 1], values))
 						{
 						stringBuilder.append("L");
-						stringBuilder.append(j);
-						stringBuilder.append("=L");
-						stringBuilder.append(j);
-						if (-get(j, pivotCol) > 0)
+						stringBuilder.append(j + 1);
+						stringBuilder.append(" = L");
+						stringBuilder.append(j + 1);
+						if (factorBackup > 0)
 							{
-							stringBuilder.append("+");
-							stringBuilder.append(-get(j, pivotCol));
+							stringBuilder.append(" + ");
+							if (!MathTools.isEquals(factorBackup, 1))
+								{
+								stringBuilder.append(formatter.format(factorBackup));
+								}
 							stringBuilder.append("L");
-							stringBuilder.append(j);
+							stringBuilder.append(j + 1);
 							}
 						else
 							{
-							stringBuilder.append("-");
-							stringBuilder.append(get(j, pivotCol));
+							stringBuilder.append(" - ");
+							if (!MathTools.isEquals(factorBackup, -1))
+								{
+								stringBuilder.append(formatter.format(-factorBackup));
+								}
 							stringBuilder.append("L");
-							stringBuilder.append(j);
+							stringBuilder.append(j + 1);
 							}
 						tabOperations[currentStep] = stringBuilder.toString();
 						stringBuilder = new StringBuilder();
@@ -402,25 +405,6 @@ public final class Matrix
 			histLength = currentStep + 1;
 			currentStep = 0;
 			}
-		}
-
-	public String getNextStep()
-		{
-		//Modification de la matrice jusqua la prochaine etape
-		setCurrentStep(++currentStep);
-		return stepToString(currentStep) + "\n" + stepToString(currentStep);
-		}
-
-	public String getPreviousStep()
-		{
-		//Modification de la matrice jusqua la prochaine etape
-		setCurrentStep(--currentStep);
-		return stepToString(currentStep) + "\n" + stepToString(currentStep);
-		}
-
-	public void setCurrentStep(int step)
-		{
-		currentStep = step;
 		}
 
 	public String stepToString(int step)
@@ -484,17 +468,16 @@ public final class Matrix
 		{
 		int rows = rowCount();
 		int cols = columnCount();
-
+		DecimalFormat formatter = new DecimalFormat("0.##");
 		for(int i = 0; i < rows; i++)
 			{
 			for(int j = 0; j < cols; j++)
 				{
-				System.out.print(get(i, j));
+				System.out.print(formatter.format(get(i, j)));
 				System.out.print("\t");
 				}
 			System.out.println();
 			}
-		System.out.println();
 		}
 
 	public double[][] valuesClone()
@@ -516,7 +499,6 @@ public final class Matrix
 				tabCopie[i - 1][j - 1] = values[i - 1][j - 1];
 				}
 			}
-
 		return tabCopie;
 		}
 
@@ -546,13 +528,14 @@ public final class Matrix
 		int currentRow = 0;
 		int currentVariableCol;
 		boolean isFirst;
+		DecimalFormat formatter = new DecimalFormat("0.##");
 
 		int tokenStartIndex = 97;
 
 		if (hasSolution())
 			{
 			findDependentVariables(mapIndexVariableName, tokenStartIndex);
-			System.out.println(mapIndexVariableName);
+			//System.out.println(mapIndexVariableName);
 			//vulgarisation de la matrice
 
 			for(currentVariableCol = 0; currentVariableCol < cols; ++currentVariableCol)//commence en haut de la matrice
@@ -564,32 +547,31 @@ public final class Matrix
 					{
 					for(int i = 0; i < rows; ++i)
 						{
-						if (values[i][currentVariableCol] == 1)
+						if (MathTools.isEquals(values[i][currentVariableCol], 1))
 							{
 							currentRow = i;
 							}
 						}
 					for(currentCol = currentRow + 1; currentCol < cols; ++currentCol) //parcours la ligne de la matrice augmentée depuis le pivot jusqu'à la fin
 						{
-
 						//soustraction des variables dépendante à la variable indépendante actuelle.
-						if ((int)values[currentRow][currentCol] > 0)
+						if (values[currentRow][currentCol] > 0)
 							{
 							if (isFirst == false)
 								{
 								stringBuilder.append(" ");
 								}
-							stringBuilder.append(-(int)values[currentRow][currentCol]);
+							stringBuilder.append(formatter.format(-values[currentRow][currentCol]));
 							stringBuilder.append(mapIndexVariableName.get(currentCol));
 							isFirst = false;
 							}
-						else if ((int)values[currentRow][currentCol] < 0)
+						else if (values[currentRow][currentCol] < 0)
 							{
 							if (isFirst == false)
 								{
 								stringBuilder.append(" + ");
 								}
-							if ((int)values[currentRow][currentCol] != -1)
+							if (!MathTools.isEquals(values[currentRow][currentCol], -1))
 								{
 								stringBuilder.append(-(int)values[currentRow][currentCol]);
 								}
@@ -604,17 +586,17 @@ public final class Matrix
 							{
 							stringBuilder.append(" +");
 							}
-						stringBuilder.append((int)values[currentRow][cols]);
+						stringBuilder.append(formatter.format((int)values[currentRow][cols]));
 						}
-					else if ((int)values[currentRow][cols] < 0)
+					else if (values[currentRow][cols] < 0)
 						{
 						if (isFirst == false)
 							{
 							stringBuilder.append(" ");
 							}
-						stringBuilder.append((int)values[currentRow][cols]);
+						stringBuilder.append(formatter.format(values[currentRow][cols]));
 						}
-					if (values[currentRow][cols] == 0 && isFirst)
+					if (MathTools.isEquals(values[currentRow][cols], 0) && isFirst)
 						{
 						stringBuilder.append('0');
 						}
@@ -691,6 +673,21 @@ public final class Matrix
 				}
 
 			}
+		}
+
+	//Affiche les opérations dans la console pour le débug
+	public void showOperations()
+		{
+		new Matrix(hist[0]).print();
+		System.out.println();
+		for(int i = 1; i < histLength - 1; ++i)
+			{
+			System.out.println(tabOperations[i]);
+			System.out.println();
+			new Matrix(hist[i]).print();
+			System.out.println();
+			}
+
 		}
 
 	//return vrai si le sytème est consistant
