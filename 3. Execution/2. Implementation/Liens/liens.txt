@@ -1,0 +1,1 @@
+http://stackoverflow.com/questions/2956325/is-it-impossible-to-embed-java3d-in-a-way-that-i-dont-need-to-install-it
