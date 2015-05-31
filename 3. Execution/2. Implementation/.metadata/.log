@@ -777,3 +777,46 @@ user global configuration and to define the default location to store repositori
 not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
 EGit might behave differently since they see different configuration options.
 This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+!SESSION 2015-05-31 09:58:25.395 -----------------------------------------------
+eclipse.buildId=4.4.0.I20140606-1215
+java.version=1.8.0_20
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=fr_CH
+Framework arguments:  -product org.eclipse.epp.package.java.product C:\Users\matthieu.bandelie\Documents\HE_ARC\Cours2eSem2\3_ProjetP2\RepoGit\p2-java\3. Execution\2. Implementation\Code V0.4\.project
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product C:\Users\matthieu.bandelie\Documents\HE_ARC\Cours2eSem2\3_ProjetP2\RepoGit\p2-java\3. Execution\2. Implementation\Code V0.4\.project
+
+!ENTRY org.eclipse.egit.ui 2 0 2015-05-31 09:59:05.359
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\Mateli'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+
+!ENTRY org.eclipse.jdt.launching 4 150 2015-05-31 10:40:33.262
+!MESSAGE The archive: /MatTest V0.1/ext/j3dutils.jar which is referenced by the classpath, does not exist.
+
+!ENTRY org.eclipse.jdt.core 4 0 2015-05-31 10:40:33.873
+!MESSAGE Invalid ZIP archive: ext/vecmath.jar [in MatTest V0.1]
+
+!ENTRY org.eclipse.jdt.core 4 0 2015-05-31 10:41:42.139
+!MESSAGE Invalid ZIP archive: ext/j3dutils.jar [in MatTest V0.1]
+
+!ENTRY org.eclipse.jdt.core 4 0 2015-05-31 10:41:42.148
+!MESSAGE Invalid ZIP archive: ext/vecmath.jar [in MatTest V0.1]
+
+!ENTRY org.eclipse.jdt.launching 4 150 2015-05-31 10:41:43.312
+!MESSAGE The archive: /MatTest V0.1/ext/j3dutils.jar which is referenced by the classpath, does not exist.
+!SESSION 2015-05-31 11:03:14.825 -----------------------------------------------
+eclipse.buildId=4.4.0.I20140606-1215
+java.version=1.8.0_20
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=fr_CH
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product
+
+!ENTRY org.eclipse.egit.ui 2 0 2015-05-31 11:03:25.546
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\Mateli'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.

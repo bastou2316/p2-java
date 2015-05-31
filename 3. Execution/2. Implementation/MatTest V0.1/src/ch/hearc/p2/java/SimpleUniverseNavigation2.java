@@ -57,22 +57,12 @@ import com.sun.j3d.utils.universe.SimpleUniverse;
 /**
  * Mateli program based on the following sample program:
  * 
- * 'SimpleUniverseNavigation2' is built on a SimpleUniverse, renders into a
- * Canvas3D, provides navigation by OrbitBehaviorInterim (2.1) and a (simple)
- * viewpoint implementation as inner classes (VantagePoint and
- * VantagePointBehavior), and supports center of rotation picking by a double
- * clicked left mouse button based on the utility PickCanvas.
+ * http://interactivemesh.org/testspace/orbitbehavior.html
  *
  * Version: 2.0 Date: 2009/04/08
  *
  * Copyright (c) 2009 August Lammersdorf, InteractiveMesh e.K. Kolomanstrasse
- * 2a, 85737 Ismaning Germany / Munich Area www.InteractiveMesh.com/org
- * 
- * Please create your own implementation. This source code is provided "AS IS",
- * without warranty of any kind. You are allowed to copy and use all lines you
- * like of this source code without any copyright notice, but you may not
- * modify, compile, or distribute this 'SimpleUniverseNavigation2'.
- * 
+ * 2a, 85737 Ismaning Germany / Munich Area www.InteractiveMesh.com/org * 
  * 
  */
 final public class SimpleUniverseNavigation2 {
