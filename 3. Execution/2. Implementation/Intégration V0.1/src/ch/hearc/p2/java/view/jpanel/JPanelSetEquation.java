@@ -18,7 +18,6 @@ import javax.swing.JTextField;
 import ch.hearc.p2.java.controller.ControllerEquation;
 import ch.hearc.p2.java.controller.ControllerMain;
 import ch.hearc.p2.java.controller.ControllerMain.DIALOG;
-import ch.hearc.p2.java.controller.ControllerMain.PANEL;
 
 public class JPanelSetEquation extends JPanel
 	{
@@ -122,7 +121,8 @@ public class JPanelSetEquation extends JPanel
 				@Override
 				public void actionPerformed(ActionEvent e)
 					{
-					controllerMain.changeView(PANEL.MENU);
+					controllerMain.closeDialog();
+					//controllerMain.changeView(PANEL.MENU);//pas tjr vrai
 					}
 			});
 

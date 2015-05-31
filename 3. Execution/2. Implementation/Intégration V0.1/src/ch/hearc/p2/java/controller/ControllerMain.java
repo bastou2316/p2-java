@@ -7,6 +7,7 @@ import java.io.IOException;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.WindowConstants;
 
 import ch.hearc.p2.java.model.Equation;
 import ch.hearc.p2.java.view.JDialogMain;
@@ -31,8 +32,9 @@ public class ControllerMain
 		this.controllerEquation = new ControllerEquation();
 		this.controllerIO = new ControllerIO();
 
-		this.jFrameMain = new JFrameMain();
+		this.jFrameMain = new JFrameMain(this);
 		this.jDialogMain = new JDialogMain();
+		jDialogMain.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
 		changeView(PANEL.MENU);
 		}
@@ -47,23 +49,30 @@ public class ControllerMain
 
 		if (currentView != panel)//Empeche le double affichage
 			{
+			lastFrame = panel;
+
 			currentView = panel;
 			JPanel jpanel;
 
-			if(jDialogMain.isShowing()){
+			if (jDialogMain.isShowing())
+				{
 				jDialogMain.close();
-			}
+				}
 
 			switch(panel)
 				{
 				case MENU:
 					jpanel = new JPanelMenu(this);
 					jFrameMain.setPanel("Menu", jpanel);
+					jFrameMain.enableAlternativeMenu(false);
 					break;
 
 				case RESULT:
 					jpanel = new JPanelResultDirect(this, controllerEquation);
+
 					jFrameMain.setPanel("Résolution directe", jpanel, 600, 600);
+					jFrameMain.enableAlternativeMenu(true);
+
 					break;
 
 				case RESULT_STEP:
@@ -73,7 +82,10 @@ public class ControllerMain
 
 					jpanel.add(jpanelResultStep, BorderLayout.CENTER);
 					jpanel.add(jpanelControl, BorderLayout.SOUTH);
+
 					jFrameMain.setPanel("Résolution étape par étape", jpanel, 600, 600);
+					jFrameMain.enableAlternativeMenu(true);
+
 					break;
 
 				default:
@@ -99,7 +111,7 @@ public class ControllerMain
 
 				case SET_MATRIX:
 					jpanel = new JPanelSetMatrix(this, controllerEquation);
-					jDialogMain.setPanel("Remplissage de la matrice", jpanel, 300, 300);
+					jDialogMain.setPanel("Remplissage de la matrice", jpanel, 500, 300);
 					break;
 				}
 
@@ -108,6 +120,18 @@ public class ControllerMain
 				jDialogMain.setVisible(true);
 				}
 			}
+		}
+
+	public void closeDialog()
+		{
+		changeView(lastFrame);
+		}
+
+	public void newEquation()
+		{
+		//Re-Init de facon à avoir la matrice par défaut contenu dans le controlleur DRY
+		controllerEquation = new ControllerEquation();
+		showDialog(DIALOG.SET_EQUATION);
 		}
 
 	public void save()
@@ -164,6 +188,7 @@ public class ControllerMain
 	private JDialogMain jDialogMain;
 
 	private VIEW currentView;
+	private PANEL lastFrame;
 
 	private interface VIEW
 		{

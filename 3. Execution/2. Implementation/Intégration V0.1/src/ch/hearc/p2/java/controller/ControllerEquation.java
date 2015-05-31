@@ -111,6 +111,10 @@ public class ControllerEquation
 		return equation.hasMatrixIndex(actualStep+1);
 		}
 
+	public boolean isEquationSolved() {
+		return equation.isSolved();
+	}
+
 	/*------------------------------------------------------------------*\
 	|*							Attributs Private						*|
 	\*------------------------------------------------------------------*/
