@@ -97,7 +97,8 @@ public class Equation implements Serializable
 
 	public void setMatrix(Matrix matrix)
 		{
-		listMatrix.add(0, matrix);
+		listMatrix.clear();
+		listMatrix.add(matrix);
 		}
 
 	/*------------------------------*\

@@ -81,6 +81,7 @@ public class JPanelSetMatrix extends JPanel
 					//Remplissage de la matrice
 					Matrix matrix = new Matrix(controllerEquation.getNumberVar(), controllerEquation.getNumberEquation());
 					controllerEquation.setMatrix(matrix);
+					controllerEquation.solveEquation();
 
 					//Changement de fenêtre
 					if (controllerEquation.getStepMode())
