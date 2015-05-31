@@ -28,7 +28,7 @@ public class Equation implements Serializable
 	\*------------------------------------------------------------------*/
 	public void solve()
 		{
-		// Solve le toute
+		//tcheker methode solve
 		}
 
 	/*------------------------------*\
