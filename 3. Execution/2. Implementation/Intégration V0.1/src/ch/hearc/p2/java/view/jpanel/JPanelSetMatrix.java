@@ -79,8 +79,20 @@ public class JPanelSetMatrix extends JPanel
 				public void actionPerformed(ActionEvent e)
 					{
 					//Remplissage de la matrice
-					Matrix matrix = new Matrix(controllerEquation.getNumberVar(), controllerEquation.getNumberEquation());
+					Matrix matrix = new Matrix(controllerEquation.getNumberEquation(), controllerEquation.getNumberVar()+1);
+
+					for(int i = 0; i < controllerEquation.getNumberEquation(); i++)
+						{
+						for(int j = 0; j < controllerEquation.getNumberVar()+1; j++)
+							{
+							//System.out.println(matrixTables[i].getValueAt(j, 0));
+							//matrix.set(i, j, Double.parseDouble((String)matrixTables[i].getValueAt(j, 0)));
+							matrix.set(i, j, i*j);
+							}
+						}
+
 					controllerEquation.setMatrix(matrix);
+					controllerEquation.solveEquation();
 
 					//Changement de fenêtre
 					if (controllerEquation.getStepMode())
@@ -96,15 +108,15 @@ public class JPanelSetMatrix extends JPanel
 					}
 			});
 
-			previousButton.addActionListener(new ActionListener()
-				{
+		previousButton.addActionListener(new ActionListener()
+			{
 
-					@Override
-					public void actionPerformed(ActionEvent e)
-						{
-						controllerMain.showDialog(DIALOG.SET_EQUATION);
-						}
-				});
+				@Override
+				public void actionPerformed(ActionEvent e)
+					{
+					controllerMain.showDialog(DIALOG.SET_EQUATION);
+					}
+			});
 		}
 
 	private void appearance()
