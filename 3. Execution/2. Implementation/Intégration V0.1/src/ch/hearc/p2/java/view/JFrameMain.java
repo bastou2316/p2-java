@@ -3,18 +3,20 @@ package ch.hearc.p2.java.view;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Point;
 
-import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-public class JDialogMain extends JDialog
+public class JFrameMain extends JFrame
 	{
 
 	/*------------------------------------------------------------------*\
 	|*							Constructeurs							*|
 	\*------------------------------------------------------------------*/
 
-	public JDialogMain()
+	public JFrameMain()
 		{
 		super();
 
@@ -27,16 +29,31 @@ public class JDialogMain extends JDialog
 	|*							Methodes Public							*|
 	\*------------------------------------------------------------------*/
 
-	public void close() {
-		setVisible(false);
-		dispose();
-	}
+	@Override
+	public void paint(Graphics g)
+		{
+		Dimension d = getSize();
+		Dimension m = getMaximumSize();
+		boolean resize = d.width > m.width || d.height > m.height;
+		d.width = Math.min(m.width, d.width);
+		d.height = Math.min(m.height, d.height);
+
+		if (resize)
+			{
+			Point p = getLocation();
+			setVisible(false);
+			setSize(d);
+			setLocation(p);
+			setVisible(true);
+			}
+		super.paint(g);
+		}
 
 	/*------------------------------*\
 	|*				Set				*|
 	\*------------------------------*/
 
-	public void setPanelAndShow(String title, JPanel jpanel)
+	public void setPanel(String title, JPanel jpanel)
 		{
 		setPanel(title, jpanel, 600, 400);
 		}
@@ -48,6 +65,7 @@ public class JDialogMain extends JDialog
 		setLocationRelativeTo(null);
 
 		setContentPane(jpanel);
+
 		revalidate();
 		}
 
@@ -55,10 +73,9 @@ public class JDialogMain extends JDialog
 	|*							Methodes Private						*|
 	\*------------------------------------------------------------------*/
 
-	private void geometry()
+	protected void geometry()
 		{
-		setModal(true);
-
+		//setMaximumSize(new Dimension(1900,680));
 		setMinimumSize(new Dimension(300, 300));
 		setResizable(true);
 
@@ -67,14 +84,20 @@ public class JDialogMain extends JDialog
 		setLayout(borderLayout);
 		}
 
-	private void control()
+	protected void control()
 		{
-		setDefaultCloseOperation(HIDE_ON_CLOSE);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		}
 
-	private void appearance()
+	protected void appearance()
 		{
 		//setSize(600, 400);
 		setLocationRelativeTo(null);
+		setVisible(true);
 		}
+
+	/*------------------------------------------------------------------*\
+	|*							Attributs Private						*|
+	\*------------------------------------------------------------------*/
+
 	}
