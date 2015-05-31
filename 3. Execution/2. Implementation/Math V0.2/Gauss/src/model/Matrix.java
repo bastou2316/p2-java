@@ -13,6 +13,8 @@ public final class Matrix
 	private double[][] values;
 	private int currentStep;
 	private double[][][] hist;
+	private String[] tabOperations;
+	private int histLength;
 
 	/**
 	 * Constructs a blank matrix with the specified number of rows and columns. All the elements are initially {@code null}.
@@ -27,7 +29,9 @@ public final class Matrix
 
 		values = new double[rows][cols];
 		currentStep = 0;
-		hist = new double[20][rows][cols];
+		hist = new double[50][rows][cols];
+		tabOperations = new String[50];
+		histLength = 0;
 		}
 
 	/** Construct a matrix quickly without checking arguments.
@@ -39,6 +43,10 @@ public final class Matrix
 	public Matrix(double[][] values)
 		{
 		this.values = values;
+		currentStep = 0;
+		hist = new double[20][values.length][values[0].length];
+		tabOperations = new String[20];
+		histLength = 0;
 		}
 
 	/**
@@ -248,6 +256,7 @@ public final class Matrix
 	 */
 	public void reducedRowEchelonForm()
 		{
+		StringBuilder stringBuilder = new StringBuilder();
 		int rows = rowCount();
 		int cols = columnCount();
 		currentStep = 0;
@@ -271,6 +280,12 @@ public final class Matrix
 			swapRows(numPivots, pivotRow);
 			if (!isEqual(hist[currentStep - 1], values))
 				{
+				stringBuilder.append("L");
+				stringBuilder.append(numPivots);
+				stringBuilder.append("<=>L");
+				stringBuilder.append(pivotRow);
+				tabOperations[currentStep] = stringBuilder.toString();
+				stringBuilder = new StringBuilder();
 				hist[currentStep] = valuesClone();
 				currentStep++;
 				}
@@ -281,6 +296,26 @@ public final class Matrix
 			multiplyRow(pivotRow, 1 / get(pivotRow, j));
 			if (!isEqual(hist[currentStep - 1], values))
 				{
+				stringBuilder.append("L");
+				stringBuilder.append(pivotRow);
+				stringBuilder.append("=L");
+				stringBuilder.append(pivotRow);
+				if (1 / get(pivotRow, j) >= 1)
+					{
+					stringBuilder.append("*");
+					stringBuilder.append(1 / get(pivotRow, j));
+					stringBuilder.append("L");
+					stringBuilder.append(pivotRow);
+					}
+				else
+					{
+					stringBuilder.append("/");
+					stringBuilder.append(get(pivotRow, j));
+					stringBuilder.append("L");
+					stringBuilder.append(pivotRow);
+					}
+				tabOperations[currentStep] = stringBuilder.toString();
+				stringBuilder = new StringBuilder();
 				hist[currentStep] = valuesClone();
 				currentStep++;
 				}
@@ -290,6 +325,26 @@ public final class Matrix
 				addRows(pivotRow, i, -get(i, j));
 				if (!isEqual(hist[currentStep - 1], values))
 					{
+					stringBuilder.append("L");
+					stringBuilder.append(i);
+					stringBuilder.append("=L");
+					stringBuilder.append(i);
+					if (-get(i, j) > 0)
+						{
+						stringBuilder.append("+");
+						stringBuilder.append(-get(i, j));
+						stringBuilder.append("L");
+						stringBuilder.append(pivotRow);
+						}
+					else
+						{
+						stringBuilder.append("-");
+						stringBuilder.append(get(i, j));
+						stringBuilder.append("L");
+						stringBuilder.append(pivotRow);
+						}
+					tabOperations[currentStep] = stringBuilder.toString();
+					stringBuilder = new StringBuilder();
 					hist[currentStep] = valuesClone();
 					currentStep++;
 					}
@@ -318,11 +373,33 @@ public final class Matrix
 					addRows(i, j, -get(j, pivotCol));
 					if (!isEqual(hist[currentStep - 1], values))
 						{
+						stringBuilder.append("L");
+						stringBuilder.append(j);
+						stringBuilder.append("=L");
+						stringBuilder.append(j);
+						if (-get(j, pivotCol) > 0)
+							{
+							stringBuilder.append("+");
+							stringBuilder.append(-get(j, pivotCol));
+							stringBuilder.append("L");
+							stringBuilder.append(j);
+							}
+						else
+							{
+							stringBuilder.append("-");
+							stringBuilder.append(get(j, pivotCol));
+							stringBuilder.append("L");
+							stringBuilder.append(j);
+							}
+						tabOperations[currentStep] = stringBuilder.toString();
+						stringBuilder = new StringBuilder();
 						hist[currentStep] = valuesClone();
 						currentStep++;
 						}
 					}
 				}
+
+			histLength = currentStep + 1;
 			currentStep = 0;
 			}
 		}
@@ -331,14 +408,14 @@ public final class Matrix
 		{
 		//Modification de la matrice jusqua la prochaine etape
 		setCurrentStep(++currentStep);
-		return stepToString(currentStep);
+		return stepToString(currentStep) + "\n" + stepToString(currentStep);
 		}
 
 	public String getPreviousStep()
 		{
 		//Modification de la matrice jusqua la prochaine etape
 		setCurrentStep(--currentStep);
-		return stepToString(currentStep);
+		return stepToString(currentStep) + "\n" + stepToString(currentStep);
 		}
 
 	public void setCurrentStep(int step)
@@ -365,6 +442,11 @@ public final class Matrix
 		return builder.toString();
 		}
 
+	public String getOperation(int step)
+		{
+		return tabOperations[step];
+		}
+
 	public double[][] getStep(int step)
 		{
 		return hist[step];
@@ -372,7 +454,7 @@ public final class Matrix
 
 	public int getHistLength()
 		{
-		return hist.length;
+		return histLength;
 		}
 
 	@Override
@@ -478,7 +560,7 @@ public final class Matrix
 				stringBuilder.append((char)(tokenStartIndex + currentVariableCol));
 				stringBuilder.append(" = ");
 				isFirst = true; //permet de savoir si le prochain nombre affiché nécéssite l'ajout du caractère '+';
-				if (mapIndexVariableName.get(currentVariableCol).equals( Integer.toString(currentVariableCol + tokenStartIndex))) //si c'est une collonne pivot...
+				if (mapIndexVariableName.get(currentVariableCol).equals(Integer.toString(currentVariableCol + tokenStartIndex))) //si c'est une collonne pivot...
 					{
 					for(int i = 0; i < rows; ++i)
 						{
