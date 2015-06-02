@@ -12,6 +12,10 @@ public class Equation implements Serializable
 	|*							Constructeurs							*|
 	\*------------------------------------------------------------------*/
 
+	public Equation() {
+		this("Name", 3, 3, 10, true);
+	}
+
 	public Equation(String name, int numberVar, int numberEquation, int speed, boolean modeStep)
 		{
 		listMatrix = new ArrayList<Matrix>();
@@ -21,6 +25,7 @@ public class Equation implements Serializable
 		this.numberEquation = numberEquation;
 		this.speed = speed;
 		this.modeStep = modeStep;
+		this.saved = false;
 		}
 
 	/*------------------------------------------------------------------*\
@@ -28,7 +33,7 @@ public class Equation implements Serializable
 	\*------------------------------------------------------------------*/
 	public void solve()
 		{
-		Matrix matrix = listMatrix.get(0);
+		Matrix matrix = listMatrix.get(ORIGIN);
 		if (modeStep)
 			{
 			matrix.reducedRowEchelonForm();
@@ -42,6 +47,8 @@ public class Equation implements Serializable
 			{
 			listMatrix.set(1, new QRDecomposition(matrix.getMatrix(0, matrix.rowCount() - 1, 0, matrix.columnCount() - 2)).solve(matrix.getMatrix(0, matrix.rowCount() - 1, matrix.columnCount() - 1, matrix.columnCount() - 1)));
 			}
+
+		solved = true;
 		}
 
 	/*------------------------------*\
@@ -95,7 +102,12 @@ public class Equation implements Serializable
 	public void setMatrix(Matrix matrix)
 		{
 		listMatrix.clear();
-		listMatrix.add(0, matrix);
+		listMatrix.add(ORIGIN, matrix);
+		}
+
+	public void setSaved()
+		{
+		saved = true;
 		}
 
 	/*------------------------------*\
@@ -112,19 +124,26 @@ public class Equation implements Serializable
 		return modeStep;
 		}
 
+	public boolean isSolved()
+		{
+		return solved;
+		}
+
 	/*------------------------------------------------------------------*\
 	|*							Attributs Private						*|
 	\*------------------------------------------------------------------*/
 
 	// Tools
-	String name;
-	List<Matrix> listMatrix;
-	List<String> listOperation;
-	int numberVar;
-	int numberEquation;
-	int speed;
-	boolean modeStep = false;
+	private String name;
+	private List<Matrix> listMatrix;
+	private List<String> listOperation;
+	private int numberVar;
+	private int numberEquation;
+	private int speed;
+	private boolean modeStep;
+	private boolean solved;
+	private boolean saved;
 
-	final static int ORIGIN = 0;
+	private final static int ORIGIN = 0;
 
 	}
