@@ -14,8 +14,10 @@ public class ControllerEquation
 	public ControllerEquation()
 		{
 		//Matrice par défaut
-		this.equation = new Equation("Name", 3, 3, 10, true);
-		this.actualStep = 0;
+		this.equation = new Equation();
+
+		//Utilisation matrice temporaire
+		this.tempEquation = null;
 		}
 
 	/*------------------------------------------------------------------*\
@@ -24,21 +26,13 @@ public class ControllerEquation
 
 	public void solveEquation()
 		{
+		this.actualStep = 0;
 		equation.solve();
 		}
 
 	/*------------------------------*\
 	|*				Set				*|
 	\*------------------------------*/
-
-	public void setEquation(String name, int numberVar, int numberEquation, boolean modeStep, int speed)
-		{
-		equation = new Equation(name, numberVar, numberEquation, speed, modeStep);
-
-		//Default matrix
-		Matrix matrix = new Matrix(numberVar, numberEquation);
-		equation.setMatrix(matrix);
-		}
 
 	public void setEquation(Equation equation)
 		{
@@ -48,6 +42,22 @@ public class ControllerEquation
 	public void setMatrix(Matrix matrix)
 		{
 		equation.setMatrix(matrix);
+		}
+
+	public void useTemp()//Save current equation
+		{
+		tempEquation = equation;
+		tempStep = actualStep;
+		}
+
+	public void avoidTemp()//Reload previous equation
+		{
+		if (tempEquation != null)
+			{
+			equation = tempEquation;
+			actualStep = tempStep;
+			tempEquation = null;
+			}
 		}
 
 	/*------------------------------*\
@@ -63,6 +73,11 @@ public class ControllerEquation
 		{
 		actualStep = pos;
 		return equation.getMatrix(pos);
+		}
+
+	public Matrix getCurrentMatrix()
+		{
+		return equation.getMatrix(actualStep);
 		}
 
 	public Matrix getNextMatrix()
@@ -108,12 +123,13 @@ public class ControllerEquation
 
 	public boolean hasNextMatrix()
 		{
-		return equation.hasMatrixIndex(actualStep+1);
+		return equation.hasMatrixIndex(actualStep + 1);
 		}
 
-	public boolean isEquationSolved() {
+	public boolean isEquationSolved()
+		{
 		return equation.isSolved();
-	}
+		}
 
 	/*------------------------------------------------------------------*\
 	|*							Attributs Private						*|
@@ -122,5 +138,8 @@ public class ControllerEquation
 	//Tools
 	private Equation equation;
 	private int actualStep;
+
+	private Equation tempEquation;
+	private int tempStep;
 
 	}

@@ -3,9 +3,14 @@ package ch.hearc.p2.java.view;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JDialog;
 import javax.swing.JPanel;
+import javax.swing.WindowConstants;
+
+import ch.hearc.p2.java.controller.ControllerMain;
 
 public class JDialogMain extends JDialog
 	{
@@ -14,9 +19,11 @@ public class JDialogMain extends JDialog
 	|*							Constructeurs							*|
 	\*------------------------------------------------------------------*/
 
-	public JDialogMain()
+	public JDialogMain(ControllerMain controllerMain)
 		{
 		super();
+
+		this.controllerMain = controllerMain;
 
 		geometry();
 		control();
@@ -27,10 +34,11 @@ public class JDialogMain extends JDialog
 	|*							Methodes Public							*|
 	\*------------------------------------------------------------------*/
 
-	public void close() {
+	public void close()
+		{
 		setVisible(false);
 		dispose();
-	}
+		}
 
 	/*------------------------------*\
 	|*				Set				*|
@@ -69,7 +77,25 @@ public class JDialogMain extends JDialog
 
 	private void control()
 		{
-		setDefaultCloseOperation(HIDE_ON_CLOSE);
+		//Changement de comportement du bouton fermé des dialogues
+		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		addWindowListener(new WindowAdapter()
+			{
+
+				@Override
+				public void windowClosing(WindowEvent e)
+					{
+//					if (controllerMain.isEquationSetted())
+//						{
+						controllerMain.avoidNewEquation();
+						controllerMain.closeDialog();
+//						}
+//					else
+//						{
+//						JOptionPane.showMessageDialog(JDialogMain.this, "Veuillez définir l'équation et la matrice.");
+//						}
+					}
+			});
 		}
 
 	private void appearance()
@@ -77,4 +103,11 @@ public class JDialogMain extends JDialog
 		//setSize(600, 400);
 		setLocationRelativeTo(null);
 		}
+
+	/*------------------------------------------------------------------*\
+	|*							Attributs Private						*|
+	\*------------------------------------------------------------------*/
+
+	private ControllerMain controllerMain;
+
 	}

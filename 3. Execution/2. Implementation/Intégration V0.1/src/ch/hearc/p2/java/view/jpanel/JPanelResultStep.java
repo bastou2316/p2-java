@@ -101,7 +101,7 @@ public class JPanelResultStep extends JPanel implements Control_I
 	private void geometry()
 		{
 		// JComponent : Instanciation
-		textArea = new JTextArea("Debut\n");
+		textArea = new JTextArea(controllerEquation.getCurrentMatrix().toString());
 		//textArea.setBounds(new Rectangle(getBounds()));
 		textArea.setLineWrap(true);
 

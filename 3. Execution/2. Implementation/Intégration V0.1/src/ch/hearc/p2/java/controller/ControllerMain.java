@@ -7,7 +7,6 @@ import java.io.IOException;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.WindowConstants;
 
 import ch.hearc.p2.java.model.Equation;
 import ch.hearc.p2.java.view.JDialogMain;
@@ -33,8 +32,7 @@ public class ControllerMain
 		this.controllerIO = new ControllerIO();
 
 		this.jFrameMain = new JFrameMain(this);
-		this.jDialogMain = new JDialogMain();
-		jDialogMain.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		this.jDialogMain = new JDialogMain(this);
 
 		changeView(PANEL.MENU);
 		}
@@ -127,11 +125,20 @@ public class ControllerMain
 		changeView(lastFrame);
 		}
 
-	public void newEquation()
+	public void createNewEquation()
 		{
-		//Re-Init de facon à avoir la matrice par défaut contenu dans le controlleur DRY
-		controllerEquation = new ControllerEquation();
+		//Sauvegarde de l'équation actuelle //TODO: JBox demande de sauvegarde
+		//save();
+
+		//Création de l'équation
+		controllerEquation.useTemp();//Save in case user stop create
+		controllerEquation.setEquation(new Equation());
 		showDialog(DIALOG.SET_EQUATION);
+		}
+
+	public void avoidNewEquation()
+		{
+		controllerEquation.avoidTemp();
 		}
 
 	public void save()
@@ -142,6 +149,7 @@ public class ControllerMain
 		try
 			{
 			controllerIO.save(controllerEquation.getEquation(), jfilechooser.getSelectedFile());
+			controllerEquation.getEquation().setSaved();
 			}
 		catch (IOException e)
 			{

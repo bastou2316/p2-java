@@ -18,6 +18,8 @@ import javax.swing.JTextField;
 import ch.hearc.p2.java.controller.ControllerEquation;
 import ch.hearc.p2.java.controller.ControllerMain;
 import ch.hearc.p2.java.controller.ControllerMain.DIALOG;
+import ch.hearc.p2.java.model.Equation;
+import ch.hearc.p2.java.model.Matrix;
 
 public class JPanelSetEquation extends JPanel
 	{
@@ -110,7 +112,10 @@ public class JPanelSetEquation extends JPanel
 				@Override
 				public void actionPerformed(ActionEvent e)
 					{
-					controllerEquation.setEquation(textFieldName.getText(), (Integer)numberVar.getValue(), (Integer)numberEquation.getValue(), methodStep.isSelected(), 1000);
+					//todo : setEquationTemp
+					Equation equation = new Equation(textFieldName.getText(), (Integer)numberVar.getValue(), (Integer)numberEquation.getValue(), 1000, methodStep.isSelected());
+					equation.setMatrix(new Matrix((Integer)numberVar.getValue(), (Integer)numberEquation.getValue()));
+					controllerEquation.setEquation(equation);
 					controllerMain.showDialog(DIALOG.SET_MATRIX);
 					}
 			});
@@ -121,8 +126,8 @@ public class JPanelSetEquation extends JPanel
 				@Override
 				public void actionPerformed(ActionEvent e)
 					{
+					controllerEquation.avoidTemp();
 					controllerMain.closeDialog();
-					//controllerMain.changeView(PANEL.MENU);//pas tjr vrai
 					}
 			});
 

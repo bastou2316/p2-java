@@ -106,17 +106,17 @@ public class JFrameMain extends JFrame
 
 	protected void control()
 		{
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+
 		itemNew.addActionListener(new ActionListener()
 			{
 
 				@Override
 				public void actionPerformed(ActionEvent e)
 					{
-					controllerMain.newEquation();
+					controllerMain.createNewEquation();
 					}
 			});
-
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
 
 		itemLoad.addActionListener(new ActionListener()
 			{
@@ -149,6 +149,16 @@ public class JFrameMain extends JFrame
 					}
 			});
 
+		itemSetMatrix.addActionListener(new ActionListener()
+			{
+
+				@Override
+				public void actionPerformed(ActionEvent e)
+					{
+					controllerMain.showDialog(DIALOG.SET_MATRIX);
+					}
+			});
+
 		itemHelp.addActionListener(new ActionListener()
 			{
 
@@ -156,6 +166,16 @@ public class JFrameMain extends JFrame
 				public void actionPerformed(ActionEvent e)
 					{
 					JOptionPane.showMessageDialog(JFrameMain.this, "Explications : en image");
+					}
+			});
+
+		itemShowGraphic.addActionListener(new ActionListener()
+			{
+
+				@Override
+				public void actionPerformed(ActionEvent e)
+					{
+					// TODO
 					}
 			});
 		}
@@ -185,6 +205,7 @@ public class JFrameMain extends JFrame
 
 		itemSetEquation = menuOption.add(new JMenuItem("Modifier l'équation"));
 		itemSetMatrix = menuOption.add(new JMenuItem("Modifier la matrice"));
+		itemShowGraphic = menuOption.add(new JMenuItem("Afficher le graphique"));
 
 		menuBar.add(menuOption);
 
@@ -201,15 +222,16 @@ public class JFrameMain extends JFrame
 	|*							Attributs Private						*|
 	\*------------------------------------------------------------------*/
 	//Input
-	ControllerMain controllerMain;
+	private ControllerMain controllerMain;
 
 	//Tools
 	JMenu menuOption;
-	JMenuItem itemNew;
-	JMenuItem itemSave;
-	JMenuItem itemLoad;
-	JMenuItem itemSetEquation;
-	JMenuItem itemSetMatrix;
-	JMenuItem itemHelp;
+	private JMenuItem itemNew;
+	private JMenuItem itemSave;
+	private JMenuItem itemLoad;
+	private JMenuItem itemSetEquation;
+	private JMenuItem itemSetMatrix;
+	private JMenuItem itemShowGraphic;
+	private JMenuItem itemHelp;
 
 	}

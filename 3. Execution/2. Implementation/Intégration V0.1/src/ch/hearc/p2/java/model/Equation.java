@@ -12,6 +12,10 @@ public class Equation implements Serializable
 	|*							Constructeurs							*|
 	\*------------------------------------------------------------------*/
 
+	public Equation() {
+		this("Name", 3, 3, 10, true);
+	}
+
 	public Equation(String name, int numberVar, int numberEquation, int speed, boolean modeStep)
 		{
 		listMatrix = new ArrayList<Matrix>();
@@ -21,6 +25,7 @@ public class Equation implements Serializable
 		this.numberEquation = numberEquation;
 		this.speed = speed;
 		this.modeStep = modeStep;
+		this.saved = false;
 		}
 
 	/*------------------------------------------------------------------*\
@@ -42,6 +47,8 @@ public class Equation implements Serializable
 			{
 			listMatrix.set(1, new QRDecomposition(matrix.getMatrix(0, matrix.rowCount() - 1, 0, matrix.columnCount() - 2)).solve(matrix.getMatrix(0, matrix.rowCount() - 1, matrix.columnCount() - 1, matrix.columnCount() - 1)));
 			}
+
+		solved = true;
 		}
 
 	/*------------------------------*\
@@ -98,6 +105,11 @@ public class Equation implements Serializable
 		listMatrix.add(ORIGIN, matrix);
 		}
 
+	public void setSaved()
+		{
+		saved = true;
+		}
+
 	/*------------------------------*\
 	|*				Is				*|
 	\*------------------------------*/
@@ -130,6 +142,7 @@ public class Equation implements Serializable
 	private int speed;
 	private boolean modeStep;
 	private boolean solved;
+	private boolean saved;
 
 	private final static int ORIGIN = 0;
 
