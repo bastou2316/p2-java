@@ -87,7 +87,7 @@ public class JPanelSetMatrix extends JPanel
 							{
 							//System.out.println(matrixTables[i].getValueAt(j, 0));
 							//matrix.set(i, j, Double.parseDouble((String)matrixTables[i].getValueAt(j, 0)));
-							matrix.set(i, j, i*j);
+							matrix.set(i, j, (i+1)*(j+1));
 							}
 						}
 

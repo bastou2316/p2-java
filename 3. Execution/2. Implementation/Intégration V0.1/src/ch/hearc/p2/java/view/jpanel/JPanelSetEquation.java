@@ -48,18 +48,29 @@ public class JPanelSetEquation extends JPanel
 
 	private void geometry()
 		{
+		Equation equation;
+
+//		if (controllerEquation.getEquation == null || controllerEquation.isCreating())
+//			{
+//			equation = new Equation();
+//			}
+//		else
+//			{
+			equation = controllerEquation.getEquation();
+//			}
+
 		// JComponent : Instanciation
 		labelName = new JLabel("Nom :");
-		textFieldName = new JTextField(controllerEquation.getName());
+		textFieldName = new JTextField(equation.getName());
 		textFieldName.setMinimumSize(new Dimension(100, 5));
 
 		labelNumberEquation = new JLabel("Nombre d'équations :");
 		numberEquation = new JSpinner();
-		numberEquation.setValue(controllerEquation.getNumberEquation());
+		numberEquation.setValue(equation.getMatrixNumberEquation());
 
 		labelNumberVar = new JLabel("Nombre d'inconnues :");
 		numberVar = new JSpinner();
-		numberVar.setValue(controllerEquation.getNumberVar());
+		numberVar.setValue(equation.getMatrixNumberVariable());
 
 		labelVarStyle = new JLabel("Style des variables :");
 		varStyle = new JComboBox<String>();
@@ -69,14 +80,14 @@ public class JPanelSetEquation extends JPanel
 		varStyle.setSelectedItem(0);
 
 		methodStep = new JRadioButton("étape par étape");
-		methodStep.setSelected(controllerEquation.getStepMode());
+		methodStep.setSelected(equation.isStepMode());
 		methodDirect = new JRadioButton("directe");
+		methodDirect.setSelected(!equation.isStepMode());
 		ButtonGroup bg = new ButtonGroup();
 		bg.add(methodStep);
 		bg.add(methodDirect);
 
-		nextButton = new JButton("Next");
-		cancelButton = new JButton("Cancel");
+		nextButton = new JButton("Suivant");
 
 			// Layout : Specification
 			{
@@ -101,7 +112,6 @@ public class JPanelSetEquation extends JPanel
 		add(methodDirect);
 
 		add(nextButton);
-		add(cancelButton);
 		}
 
 	private void control()
@@ -119,18 +129,6 @@ public class JPanelSetEquation extends JPanel
 					controllerMain.showDialog(DIALOG.SET_MATRIX);
 					}
 			});
-
-		cancelButton.addActionListener(new ActionListener()
-			{
-
-				@Override
-				public void actionPerformed(ActionEvent e)
-					{
-					controllerEquation.avoidTemp();
-					controllerMain.closeDialog();
-					}
-			});
-
 		}
 
 	private void appearance()
@@ -152,6 +150,6 @@ public class JPanelSetEquation extends JPanel
 	private JComboBox<String> varStyle;
 	private JSpinner numberEquation, numberVar;
 	private JTextField textFieldName;
-	private JButton nextButton, cancelButton;
+	private JButton nextButton;
 
 	}

@@ -14,7 +14,7 @@ public class ControllerEquation
 	public ControllerEquation()
 		{
 		//Matrice par défaut
-		this.equation = new Equation();
+		this.equation = new Equation();//A enlever
 
 		//Utilisation matrice temporaire
 		this.tempEquation = null;
