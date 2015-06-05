@@ -85,8 +85,9 @@ public class JPanelSetMatrix extends JPanel
 						{
 						for(int j = 0; j < controllerEquation.getNumberVar()+1; j++)
 							{
-							//System.out.println(matrixTables[i].getValueAt(j, 0));
-							//matrix.set(i, j, Double.parseDouble((String)matrixTables[i].getValueAt(j, 0)));
+							System.out.println(matrixTables[j].getValueAt(i, 0));
+							//System.out.println(matrixTables[j].toString());
+							//matrix.set(i, j, Double.parseDouble((String)matrixTables[j].getValueAt(i, 0)));
 							matrix.set(i, j, (i+1)*(j+1));
 							}
 						}
@@ -128,8 +129,6 @@ public class JPanelSetMatrix extends JPanel
 		{
 		int nbVar = controllerEquation.getNumberVar();
 		int nbEqu = controllerEquation.getNumberEquation();
-
-		System.out.println(nbVar);
 
 		matrixTables = new JTable[nbVar + 1];
 		varsTables = new JTable[nbVar];
