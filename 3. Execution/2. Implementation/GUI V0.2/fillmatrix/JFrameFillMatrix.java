@@ -20,11 +20,12 @@ import javax.swing.border.TitledBorder;
 public class JFrameFillMatrix extends JFrame
 	{
 
-	public JFrameFillMatrix(int n, int m)
+	public JFrameFillMatrix(int n, int m, int method)
 		{
-		JFrameFillMatrix.m = m;
-		JFrameFillMatrix.n = n;
-		geometry(n, m);
+		this.m = m;
+		this.n = n;
+		this.method = method;
+		geometry(n, m, method);
 		control();
 		apparance();
 		}
@@ -78,16 +79,23 @@ public class JFrameFillMatrix extends JFrame
 		return tabFloat;
 		}
 
-	public static void methodSolve(int noMethod)
+	public static void methodSolve(int m, int n, int noMethod)
 		{
 
 		switch(noMethod)
 			{
 			case 0:
-				tabString = new String[3];
-				tabString[0] = "X";
-				tabString[1] = "Y";
-				tabString[2] = "Z";
+				if (n > 3)
+					{
+					methodSolve(m,n,1);
+					}
+				else
+					{
+					tabString = new String[3];
+					tabString[0] = "X";
+					tabString[1] = "Y";
+					tabString[2] = "Z";
+					}
 				break;
 			case 1:
 				tabString = new String[27];
@@ -119,11 +127,11 @@ public class JFrameFillMatrix extends JFrame
 				tabString[25] = "Z";
 				break;
 			case 2:
-				tabString = new String[n+1];
+				tabString = new String[n + 1];
 
 				for(int i = 1; i <= n; i++)
 					{
-					tabString[i-1] = "X";
+					tabString[i - 1] = "X";
 					}
 
 				break;
@@ -133,9 +141,9 @@ public class JFrameFillMatrix extends JFrame
 			}
 		}
 
-	private void geometry(int n, int m)
+	private void geometry(int n, int m, int method)
 		{
-		methodSolve(1);
+		methodSolve(m,n,method);
 		panel = new JPanel();
 		getContentPane().setLayout(new FlowLayout(FlowLayout.CENTER));
 		panel.setLayout(new GridLayout(n, m, 0, 0));
@@ -207,8 +215,9 @@ public class JFrameFillMatrix extends JFrame
 	private JPanel panel;
 	private JTextField[][] tabTextField;
 	private static float[][] tabFloat;
-	private static int n;
-	private static int m;
+	private  int n;
+	private int m;
+	private int method;
 	private static String[] tabString;
 
 	}

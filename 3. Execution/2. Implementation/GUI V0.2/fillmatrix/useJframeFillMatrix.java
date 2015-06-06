@@ -35,7 +35,11 @@ public class useJframeFillMatrix
 			{
 			e.printStackTrace();
 			}
-		new JFrameFillMatrix(3, 3);
+		//3ème paramètre, affichage des variables
+		// 0 = X, Y , Z
+		// 1 = A, B, C , D
+		// 3 = X1, Y1, Z1
+		new JFrameFillMatrix(4, 4, 0);
 		}
 
 
