@@ -4,6 +4,13 @@ package ch.hearc.p2.java.model;
 //import org.junit.Assert;
 //import org.junit.Test;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+import ch.hearc.p2.java.JPanel3D;
 import ch.hearc.p2.java.SimpleUniverseNavigation2;
 import ch.hearc.p2.java.tools.MathTools;
 
@@ -29,6 +36,62 @@ public final class TestUnitMatrix
 		testReduceMatrix(in, out);
 		//testDecompositionQR(in, out);
 		}
+	
+//	@Test
+	public void test3x3_Infinit_Line2() {
+		double[][] in = { { 0, 1, 1, 4 }, { 2, 4, -2, 2 }, { 2, 5, -1, 6 } };
+		double[][] out = { { 1, 0, -3, -7 }, { 0, 1, 1, 4 }, { 0, 0, 0, 0 } };
+		testReduceMatrix(in, out);		
+	}
+	
+//	@Test
+	public void test3x3_A() {
+		double[][] in = {{ 1, 1, 1, 4 }, { 1, -2.5, 1, -0.6 }, { 0, 1, -0.5, 0 }  };
+		double[][] out = { { 1, 0, -3, -7 }, { 0, 1, 1, 4 }, { 0, 0, 0, 0 } };//faux
+		testReduceMatrix(in, out);		
+	}
+	
+//	@Test
+	public void test3x3_B() {
+		double[][] in = { { 2, 3, -5, -16 }, { 4, 13, -8, -5 }, { 1, 2, 7, 22 } };
+		double[][] out = { { 1, 0, -3, -7 }, { 0, 1, 1, 4 }, { 0, 0, 0, 0 } };//faux
+		testReduceMatrix(in, out);		
+	}
+	
+//	@Test
+	public void test3x3_C() {
+		double[][] in = { { 1, 0, -1, 1 }, { 0, -1, 1, 0 }, { 1, 1, -2, 1 } };
+		double[][] out = { { 1, 0, -3, -7 }, { 0, 1, 1, 4 }, { 0, 0, 0, 0 } };//faux
+		testReduceMatrix(in, out);		
+	}
+	
+//	@Test	//aucune solution	//scale idéal : 
+	public void test3x3_D() {
+		double[][] in = { { 1, -1, 0, 0 }, { 0, 1, -1, 1 }, { -1, 0, 1, 0 } };
+		double[][] out = { { 1, 0, -3, -7 }, { 0, 1, 1, 4 }, { 0, 0, 0, 0 } };//faux
+		testReduceMatrix(in, out);		
+	}
+	
+//	@Test	//aucune solution	//scale idéal : 2
+	public void test3x3_E() {
+		double[][] in = { { 1, 2, -1, 1 }, { 2, 1, 2, 2 }, { 1, -4, 7, 3 } };
+		double[][] out = { { 1, 0, -3, -7 }, { 0, 1, 1, 4 }, { 0, 0, 0, 0 } };//faux
+		testReduceMatrix(in, out);		
+	}
+	
+//	@Test	//demo
+	public void test3x3_F() {
+		double[][] in = { { 1, -1, 3, 5 }, { 1, 1, 1, 5 }, { -0.5, 0, 1, 0 } };
+		double[][] out = { { 1, 0, -3, -7 }, { 0, 1, 1, 4 }, { 0, 0, 0, 0 } };//faux
+		testReduceMatrix(in, out);		
+	}
+	
+//	@Test
+	public void test3x3_G() {
+		double[][] in = { { -2, 3, 4, 2.7 }, { 2, -3, 1.3, 3.7 }, { 2, 0, 0, 1.1 } };
+		double[][] out = { { 1, 0, -3, -7 }, { 0, 1, 1, 4 }, { 0, 0, 0, 0 } };//faux
+		testReduceMatrix(in, out);		
+	}
 
 //	@Test
 	public void test3x4_Impossible()
@@ -88,7 +151,25 @@ public final class TestUnitMatrix
 		System.out.println("Initial matrix");
 		mat.print();
 		
-		new SimpleUniverseNavigation2(mat);
+		
+		// intégration de mon JPanel3D
+		
+		JFrame jFrame = new JFrame();
+		JPanel panel = new JPanel3D(mat);
+		jFrame.setTitle("Vue 3D du système d'équation linéaire à 3 inconnues");
+		jFrame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+		jFrame.add(panel);
+		jFrame.pack();
+
+//		Dimension jframeDim = jFrame.getSize();
+//		Toolkit toolkit = Toolkit.getDefaultToolkit();
+//		Dimension screenDim = toolkit.getScreenSize();
+//		jFrame.setLocation((screenDim .width - jframeDim.width) / 2,
+//				(screenDim.height - jframeDim.height) / 2);
+		jFrame.setVisible(true);
+		
+		//fin intégration
+		
 
 		mat.reducedRowEchelonForm();
 		for(int i = 0; i < out.length; i++)
@@ -139,4 +220,5 @@ public final class TestUnitMatrix
 		System.out.println("Solution matrix");
 		matSolved.print();
 		}
+
 	}
