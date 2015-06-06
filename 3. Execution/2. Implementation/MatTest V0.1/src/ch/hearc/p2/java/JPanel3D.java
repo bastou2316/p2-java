@@ -11,7 +11,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
 import java.util.Hashtable;
 
 import javax.media.j3d.Appearance;
@@ -39,10 +38,8 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -85,8 +82,6 @@ final public class JPanel3D extends JPanel {
 
 	private OrbitBehaviorInterim orbitBehInterim = null;
 	private boolean isHomeRotCenter = true;
-	private boolean isLookAtRotCenter = true;
-	private boolean isPickVertex = true;
 
 	private BranchGroup enviBranch = null;
 	private BranchGroup sceneBranch = null;
@@ -162,60 +157,6 @@ final public class JPanel3D extends JPanel {
 
 	}
 
-	private void changeRotationCenter(MouseEvent event) {
-
-		pickCanvas.setShapeLocation(event.getX(), event.getY());
-		PickInfo pickInfo = pickCanvas.pickClosest();
-
-		if (pickInfo != null) {
-
-			Node pickedNode = pickInfo.getNode();
-
-			Transform3D locToVWord = new Transform3D();
-			pickedNode.getLocalToVworld(locToVWord);
-
-			Point3d rotationPoint = new Point3d();
-
-			if (isPickVertex) {
-				rotationPoint.set(pickInfo.getClosestIntersectionPoint());
-			} else {
-
-				Bounds bounds = pickedNode.getBounds();
-				if (bounds == null || bounds.isEmpty()) {
-					JOptionPane.showMessageDialog(this,
-							"Selected Shape3D doesn't provide a not empty Bounds object! \n"
-									+ "Can't set center of rotation ! \n \n",
-							"Bounds missing", JOptionPane.ERROR_MESSAGE);
-				}
-
-				if (bounds instanceof BoundingBox) {
-					BoundingBox pickedBox = (BoundingBox) bounds;
-
-					Point3d lower = new Point3d();
-					Point3d upper = new Point3d();
-					pickedBox.getLower(lower);
-					pickedBox.getUpper(upper);
-
-					rotationPoint.set(lower.x + (upper.x - lower.x) / 2,
-							lower.y + (upper.y - lower.y) / 2, lower.z
-									+ (upper.z - lower.z) / 2);
-				} else {
-					BoundingSphere pickedSphere = null;
-					if (bounds instanceof BoundingSphere)
-						pickedSphere = (BoundingSphere) bounds;
-					else
-						pickedSphere = new BoundingSphere(bounds);
-
-					pickedSphere.getCenter(rotationPoint);
-				}
-
-			}
-
-			locToVWord.transform(rotationPoint);
-			orbitBehInterim.setRotationCenter(rotationPoint, isLookAtRotCenter);
-		}
-	}
-
 	// Base world
 	private void createUniverse() {
 		// Bounds
@@ -227,18 +168,9 @@ final public class JPanel3D extends JPanel {
 		try {
 			canvas3D = new Canvas3D(gcfg);
 
-			canvas3D.addMouseListener(new MouseAdapter() {
-				public void mouseClicked(MouseEvent event) {
-					int clicks = event.getClickCount();
-					if (clicks == 2 && SwingUtilities.isLeftMouseButton(event)) {
-						changeRotationCenter(event);
-					}
-				}
-			});
-
 			canvas3D.setBackground(bgColor);
 		} catch (Exception e) {
-			System.out.println("SimpleUniverseNavigation2: Canvas3D failed !!");
+			System.out.println("JPanel3D : Canvas3D failed !!");
 			e.printStackTrace();
 			System.exit(0);
 		}
@@ -408,6 +340,8 @@ final public class JPanel3D extends JPanel {
 		if (app.getPolygonAttributes() == null)
 			app.setPolygonAttributes(pa);
 
+		
+		
 		// création de 3 plans
 		drawPlans();
 
@@ -1007,10 +941,11 @@ final public class JPanel3D extends JPanel {
 		canvas3D.setPreferredSize(dim);
 		canvas3D.setSize(dim);
 
-		//
+		// 
 		this.setLayout(new BorderLayout());
 		this.add(canvas3D, BorderLayout.CENTER);
 		this.add(jPanelLine, BorderLayout.SOUTH);
 
+		
 	}
 }
