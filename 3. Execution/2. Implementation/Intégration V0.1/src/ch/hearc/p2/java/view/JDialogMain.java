@@ -2,7 +2,6 @@
 package ch.hearc.p2.java.view;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -51,11 +50,18 @@ public class JDialogMain extends JDialog
 
 	public void setPanel(String title, JPanel jpanel, int sizeX, int sizeY)
 		{
-		setTitle(title);
 		setSize(sizeX, sizeY);
 		setLocationRelativeTo(null);
 
+		setPanel(title, jpanel);
+		}
+
+	public void setPanel(String title, JPanel jpanel)
+		{
+		setTitle(title);
+
 		setContentPane(jpanel);
+
 		revalidate();
 		}
 
@@ -67,8 +73,8 @@ public class JDialogMain extends JDialog
 		{
 		setModal(true);
 
-		setMinimumSize(new Dimension(300, 300));
-		setResizable(true);
+		//setMinimumSize(new Dimension(300, 300));
+		//setResizable(true);
 
 		// Layout : Specification
 		BorderLayout borderLayout = new BorderLayout();
@@ -102,7 +108,7 @@ public class JDialogMain extends JDialog
 	private void appearance()
 		{
 		//setSize(600, 400);
-		setLocationRelativeTo(null);
+		//setLocationRelativeTo(null);
 		}
 
 	/*------------------------------------------------------------------*\

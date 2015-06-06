@@ -117,8 +117,9 @@ public class ControllerMain
 					if (controllerEquation.getNumberEquation() == 3 && controllerEquation.getNumberVar() == 3)
 						{
 						jpanel = new JPanel3D(controllerEquation.getMatrix(0));
-						jDialogMain.setPanel("Vue 3D du système", jpanel, 1000, 500);
-						//jDialogMain.pack();
+						jDialogMain.setPanel("Vue 3D du système", jpanel);
+						jDialogMain.setLocation(0, 0);
+						jDialogMain.pack();
 						}
 					else
 						{
