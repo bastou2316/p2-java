@@ -95,6 +95,11 @@ public class Equation implements Serializable
 			}
 		}
 
+	public List<String> getOperations()
+	{
+		return listOperation;
+	}
+
 	/*------------------------------*\
 	|*				Set				*|
 	\*------------------------------*/

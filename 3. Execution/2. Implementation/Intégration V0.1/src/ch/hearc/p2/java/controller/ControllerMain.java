@@ -83,6 +83,7 @@ public class ControllerMain
 					jpanel.add(jpanelControl, BorderLayout.SOUTH);
 
 					jFrameMain.setPanel("Résolution étape par étape", jpanel, 600, 600);
+					jFrameMain.pack();
 					jFrameMain.enableAlternativeMenu(true);
 
 					break;

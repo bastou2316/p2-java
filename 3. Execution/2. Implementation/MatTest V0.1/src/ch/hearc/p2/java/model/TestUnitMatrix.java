@@ -4,15 +4,10 @@ package ch.hearc.p2.java.model;
 //import org.junit.Assert;
 //import org.junit.Test;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
-
-import javax.swing.JFrame;
+import javax.swing.JDialog;
 import javax.swing.JPanel;
 
 import ch.hearc.p2.java.JPanel3D;
-import ch.hearc.p2.java.SimpleUniverseNavigation2;
-import ch.hearc.p2.java.tools.MathTools;
 
 public final class TestUnitMatrix
 	{
@@ -154,19 +149,25 @@ public final class TestUnitMatrix
 		
 		// intégration de mon JPanel3D
 		
-		JFrame jFrame = new JFrame();
+//		JFrame jFrame = new JFrame();
+		JDialog jDial = new JDialog();
 		JPanel panel = new JPanel3D(mat);
-		jFrame.setTitle("Vue 3D du système d'équation linéaire à 3 inconnues");
-		jFrame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-		jFrame.add(panel);
-		jFrame.pack();
+//		jFrame.setTitle("Vue 3D du système d'équation linéaire à 3 inconnues");
+//		jFrame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+//		jFrame.add(panel);
+//		jFrame.pack();
+		jDial.setTitle("Vue 3D du système d'équation linéaire à 3 inconnues");
+//		jDial.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+		jDial.add(panel);
+		jDial.pack();
+		
 
 //		Dimension jframeDim = jFrame.getSize();
 //		Toolkit toolkit = Toolkit.getDefaultToolkit();
 //		Dimension screenDim = toolkit.getScreenSize();
 //		jFrame.setLocation((screenDim .width - jframeDim.width) / 2,
 //				(screenDim.height - jframeDim.height) / 2);
-		jFrame.setVisible(true);
+		jDial.setVisible(true);
 		
 		//fin intégration
 		
