@@ -53,7 +53,7 @@ public final class TestUnitMatrix
 		testReduceMatrix(in, out);		
 	}
 	
-//	@Test
+//	@Test	//Exemple présentation	//scale idéal : 5
 	public void test3x3_C() {
 		double[][] in = { { 1, 0, -1, 1 }, { 0, -1, 1, 0 }, { 1, 1, -2, 1 } };
 		double[][] out = { { 1, 0, -3, -7 }, { 0, 1, 1, 4 }, { 0, 0, 0, 0 } };//faux
@@ -149,11 +149,10 @@ public final class TestUnitMatrix
 		
 		// intégration de mon JPanel3D
 		
-//		JFrame jFrame = new JFrame();
 		JDialog jDial = new JDialog();
 		JPanel panel = new JPanel3D(mat);
 //		jFrame.setTitle("Vue 3D du système d'équation linéaire à 3 inconnues");
-//		jFrame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+//		jDial.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 //		jFrame.add(panel);
 //		jFrame.pack();
 		jDial.setTitle("Vue 3D du système d'équation linéaire à 3 inconnues");
