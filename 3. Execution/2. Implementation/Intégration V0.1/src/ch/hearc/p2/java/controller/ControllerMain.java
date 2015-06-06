@@ -17,6 +17,7 @@ import ch.hearc.p2.java.view.jpanel.JPanelResultDirect;
 import ch.hearc.p2.java.view.jpanel.JPanelResultStep;
 import ch.hearc.p2.java.view.jpanel.JPanelSetEquation;
 import ch.hearc.p2.java.view.jpanel.JPanelSetMatrix;
+import ch.hearc.p2.java.view.jpanel3d.JPanel3D;
 
 public class ControllerMain
 	{
@@ -111,6 +112,18 @@ public class ControllerMain
 					jpanel = new JPanelSetMatrix(this, controllerEquation);
 					jDialogMain.setPanel("Remplissage de la matrice", jpanel, 500, 300);
 					break;
+
+				case RESULT_3D:
+					if (controllerEquation.getNumberEquation() == 3 && controllerEquation.getNumberVar() == 3)
+						{
+						jpanel = new JPanel3D(controllerEquation.getMatrix(0));
+						jDialogMain.setPanel("Vue 3D du système", jpanel, 1000, 500);
+						//jDialogMain.pack();
+						}
+					else
+						{
+						JOptionPane.showMessageDialog(jFrameMain, "Seules les matrices 3x3 (3x4 avec les réponses) peuvent être affichés graphiquement.", "", JOptionPane.WARNING_MESSAGE);
+						}
 				}
 
 			if (!jDialogMain.isShowing())
@@ -145,7 +158,8 @@ public class ControllerMain
 	public void save()
 		{
 		JFileChooser jfilechooser = new JFileChooser();
-		jfilechooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		jfilechooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+		//jfilechooser.setSelectedFile(controller)
 		int returnOption = jfilechooser.showOpenDialog(jFrameMain);
 
 		try
@@ -211,7 +225,7 @@ public class ControllerMain
 
 	public enum DIALOG implements VIEW
 		{
-		SET_EQUATION, SET_MATRIX
+		SET_EQUATION, SET_MATRIX, RESULT_3D
 		}
 
 	}

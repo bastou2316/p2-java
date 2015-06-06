@@ -165,7 +165,7 @@ public class JFrameMain extends JFrame
 				@Override
 				public void actionPerformed(ActionEvent e)
 					{
-					JOptionPane.showMessageDialog(JFrameMain.this, "Explications : en image");
+					JOptionPane.showMessageDialog(JFrameMain.this, "Explications : en image", "Aide", JOptionPane.INFORMATION_MESSAGE);
 					}
 			});
 
@@ -175,7 +175,7 @@ public class JFrameMain extends JFrame
 				@Override
 				public void actionPerformed(ActionEvent e)
 					{
-					// TODO
+					controllerMain.showDialog(DIALOG.RESULT_3D);
 					}
 			});
 		}
