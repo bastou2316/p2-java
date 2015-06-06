@@ -93,6 +93,7 @@ public class JPanelSetMatrix extends JPanel
 						}
 
 					controllerEquation.setMatrix(matrix);
+					controllerEquation.applyTempEquation();//Fin de la version provisoire
 					controllerEquation.solveEquation();
 
 					//Changement de fenêtre

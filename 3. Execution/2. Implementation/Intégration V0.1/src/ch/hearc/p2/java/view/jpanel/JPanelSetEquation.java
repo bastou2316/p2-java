@@ -35,6 +35,8 @@ public class JPanelSetEquation extends JPanel
 		this.controllerMain = controllerMain;
 		this.controllerEquation = controllerEquation;
 
+		equation = controllerEquation.getEquation();
+
 		// Composition du panel
 		geometry();
 		control();
@@ -48,16 +50,6 @@ public class JPanelSetEquation extends JPanel
 
 	private void geometry()
 		{
-		Equation equation;
-
-//		if (controllerEquation.getEquation == null || controllerEquation.isCreating())
-//			{
-//			equation = new Equation();
-//			}
-//		else
-//			{
-			equation = controllerEquation.getEquation();
-//			}
 
 		// JComponent : Instanciation
 		labelName = new JLabel("Nom :");
@@ -122,9 +114,14 @@ public class JPanelSetEquation extends JPanel
 				@Override
 				public void actionPerformed(ActionEvent e)
 					{
-					//todo : setEquationTemp
-					Equation equation = new Equation(textFieldName.getText(), (Integer)numberVar.getValue(), (Integer)numberEquation.getValue(), 1000, methodStep.isSelected());
+					//Settage de la l'equation courante
+					equation.setName(textFieldName.getText());
+					equation.setNumberVar((Integer)numberVar.getValue());
+					equation.setNumberEquation((Integer)numberEquation.getValue());
+					equation.setSpeed(1000);
+					equation.setModeStep(methodStep.isSelected());
 					equation.setMatrix(new Matrix((Integer)numberVar.getValue(), (Integer)numberEquation.getValue()));
+
 					controllerEquation.setEquation(equation);
 					controllerMain.showDialog(DIALOG.SET_MATRIX);
 					}
@@ -145,6 +142,8 @@ public class JPanelSetEquation extends JPanel
 	private ControllerEquation controllerEquation;
 
 	// Tools
+	Equation equation;
+
 	private JLabel labelName, labelNumberEquation, labelNumberVar, labelVarStyle;
 	private JRadioButton methodStep, methodDirect;
 	private JComboBox<String> varStyle;

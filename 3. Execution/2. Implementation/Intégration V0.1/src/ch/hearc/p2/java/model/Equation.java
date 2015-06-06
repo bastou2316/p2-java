@@ -105,6 +105,35 @@ public class Equation implements Serializable
 		listMatrix.add(ORIGIN, matrix);
 		}
 
+	public void setName(String name)
+		{
+		this.name = name;
+		}
+
+
+	public void setNumberVar(int numberVar)
+		{
+		this.numberVar = numberVar;
+		}
+
+
+	public void setNumberEquation(int numberEquation)
+		{
+		this.numberEquation = numberEquation;
+		}
+
+
+	public void setSpeed(int speed)
+		{
+		this.speed = speed;
+		}
+
+
+	public void setModeStep(boolean modeStep)
+		{
+		this.modeStep = modeStep;
+		}
+
 	public void setSaved()
 		{
 		saved = true;

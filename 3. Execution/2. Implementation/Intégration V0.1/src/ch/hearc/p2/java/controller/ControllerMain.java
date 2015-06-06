@@ -127,24 +127,26 @@ public class ControllerMain
 
 	public void createNewEquation()
 		{
-		//Sauvegarde de l'équation actuelle //TODO: JBox demande de sauvegarde
+		//Sauvegarde de l'équation actuelle
+		//TODO: JBox demande de sauvegarde
 		//save();
 
 		//Création de l'équation
-		controllerEquation.useTemp();//Save in case user stop create
-		controllerEquation.setEquation(new Equation());
+		controllerEquation.setCreating(true);
 		showDialog(DIALOG.SET_EQUATION);
 		}
 
-	public void avoidNewEquation()
+	public void stopCreating()
 		{
-		controllerEquation.avoidTemp();
+		//Equation temporaire non appliquée
+		controllerEquation.setCreating(false);
 		}
 
 	public void save()
 		{
 		JFileChooser jfilechooser = new JFileChooser();
-		jfilechooser.setVisible(true);
+		jfilechooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		int returnOption = jfilechooser.showOpenDialog(jFrameMain);
 
 		try
 			{

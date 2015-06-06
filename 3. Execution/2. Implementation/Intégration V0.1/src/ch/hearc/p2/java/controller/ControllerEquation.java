@@ -16,8 +16,9 @@ public class ControllerEquation
 		//Matrice par défaut
 		this.equation = new Equation();//A enlever
 
-		//Utilisation matrice temporaire
+		//Utilisation equation temporaire
 		this.tempEquation = null;
+		this.isCreating = true;//creation la 1ère fois
 		}
 
 	/*------------------------------------------------------------------*\
@@ -26,7 +27,7 @@ public class ControllerEquation
 
 	public void solveEquation()
 		{
-		this.actualStep = 0;
+		actualStep = 0;
 		equation.solve();
 		}
 
@@ -36,28 +37,40 @@ public class ControllerEquation
 
 	public void setEquation(Equation equation)
 		{
-		this.equation = equation;
+		if (isCreating)
+			{
+			tempEquation = equation;
+			}
+		else
+			{
+			this.equation = equation;
+			}
 		}
 
 	public void setMatrix(Matrix matrix)
 		{
-		equation.setMatrix(matrix);
+		if (isCreating)
+			{
+			tempEquation.setMatrix(matrix);
+			}
+		else
+			{
+			equation.setMatrix(matrix);
+			}
 		}
 
-	public void useTemp()//Save current equation
+	public void applyTempEquation()//Reload previous equation
 		{
-		tempEquation = equation;
-		tempStep = actualStep;
-		}
-
-	public void avoidTemp()//Reload previous equation
-		{
-		if (tempEquation != null)
+		if (isCreating)
 			{
 			equation = tempEquation;
-			actualStep = tempStep;
-			tempEquation = null;
+			isCreating = false;
 			}
+		}
+
+	public void setCreating(boolean isCreating)
+		{
+		this.isCreating = isCreating;
 		}
 
 	/*------------------------------*\
@@ -66,7 +79,14 @@ public class ControllerEquation
 
 	public Equation getEquation()
 		{
-		return equation;
+		if(isCreating())
+			{
+			return new Equation();//par défaut
+			}
+		else
+			{
+			return equation;
+			}
 		}
 
 	public Matrix getMatrix(int pos)
@@ -83,14 +103,18 @@ public class ControllerEquation
 	public Matrix getNextMatrix()
 		{
 		++actualStep;
-		return getMatrix(actualStep);
+		return equation.getMatrix(actualStep);
 		}
 
 	public Matrix getPreviousMatrix()
 		{
 		--actualStep;
-		return getMatrix(actualStep);
+		return equation.getMatrix(actualStep);
 		}
+
+	/*------------------------------*\
+	|*				Get				*|
+	\*------------------------------*/
 
 	public String getName()
 		{
@@ -99,12 +123,26 @@ public class ControllerEquation
 
 	public int getNumberVar()
 		{
-		return equation.getMatrixNumberVariable();
+		if (isCreating)
+			{
+			return tempEquation.getMatrixNumberVariable();
+			}
+		else
+			{
+			return equation.getMatrixNumberVariable();
+			}
 		}
 
 	public int getNumberEquation()
 		{
-		return equation.getMatrixNumberEquation();
+		if (isCreating)
+			{
+			return tempEquation.getMatrixNumberEquation();
+			}
+		else
+			{
+			return equation.getMatrixNumberEquation();
+			}
 		}
 
 	public boolean getStepMode()
@@ -131,6 +169,11 @@ public class ControllerEquation
 		return equation.isSolved();
 		}
 
+	public boolean isCreating()
+		{
+		return isCreating;
+		}
+
 	/*------------------------------------------------------------------*\
 	|*							Attributs Private						*|
 	\*------------------------------------------------------------------*/
@@ -140,6 +183,6 @@ public class ControllerEquation
 	private int actualStep;
 
 	private Equation tempEquation;
-	private int tempStep;
+	private boolean isCreating;
 
 	}

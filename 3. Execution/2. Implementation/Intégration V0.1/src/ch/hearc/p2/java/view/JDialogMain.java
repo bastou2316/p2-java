@@ -87,7 +87,8 @@ public class JDialogMain extends JDialog
 					{
 //					if (controllerMain.isEquationSetted())
 //						{
-						controllerMain.avoidNewEquation();
+						//controllerMain.avoidNewEquation();
+						controllerMain.stopCreating();
 						controllerMain.closeDialog();
 //						}
 //					else
