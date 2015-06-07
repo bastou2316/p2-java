@@ -100,6 +100,11 @@ public class ControllerEquation
 		return equation.getMatrix(actualStep);
 		}
 
+	public int getCurrentStep()
+		{
+		return actualStep;
+		}
+
 	public Matrix getNextMatrix()
 		{
 		++actualStep;

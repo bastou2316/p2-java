@@ -33,14 +33,14 @@ public class Equation implements Serializable
 	\*------------------------------------------------------------------*/
 	public void solve()
 		{
-		Matrix matrix = listMatrix.get(ORIGIN);
+		Matrix matrix = new Matrix(listMatrix.get(ORIGIN));
 		if (modeStep)
 			{
 			matrix.reducedRowEchelonForm();
-			for(int i = 0; i < matrix.getHistLength(); ++i)
+			for(int i = 1; i < matrix.getHistLength()-1; ++i)
 				{
-				listMatrix.add(i, new Matrix(matrix.getStep(i)));
-				listOperation.add(i, matrix.getOperation(i));
+				listMatrix.add(new Matrix(matrix.getStep(i)));
+				listOperation.add(matrix.getOperation(i));
 				}
 			}
 		else
@@ -108,6 +108,8 @@ public class Equation implements Serializable
 		{
 		listMatrix.clear();
 		listMatrix.add(ORIGIN, matrix);
+		listOperation.clear();
+		listOperation.add(ORIGIN, "Origine");
 		}
 
 	public void setName(String name)

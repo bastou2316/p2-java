@@ -3,12 +3,16 @@ package ch.hearc.p2.java.view.jpanel;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -16,9 +20,9 @@ import javax.swing.JTextArea;
 import javax.swing.border.TitledBorder;
 
 import ch.hearc.p2.java.controller.ControllerEquation;
-import ch.hearc.p2.java.model.Matrix;
+import ch.hearc.p2.java.tools.ListAction;
 
-public class JPanelResultStep extends JPanel implements Control_I
+public class JPanelResultStep extends JPanel
 	{
 
 	/*------------------------------------------------------------------*\
@@ -28,7 +32,10 @@ public class JPanelResultStep extends JPanel implements Control_I
 	public JPanelResultStep(ControllerEquation controllerEquation)
 		{
 		this.controllerEquation = controllerEquation;
-		this.listHistory = controllerEquation.getEquation().getOperations();
+		List<String> listHistory = controllerEquation.getEquation().getOperations();
+		//Collections.reverse(listHistory);
+		tabString = new String[listHistory.size()];
+		tabString = listHistory.toArray(tabString);
 
 		//Composition du panel
 		geometry();
@@ -44,56 +51,53 @@ public class JPanelResultStep extends JPanel implements Control_I
 	|*							Methodes Public							*|
 	\*------------------------------------------------------------------*/
 
-	@Override
 	public synchronized void start()
 		{
 		if (!isRunning)
 			{
+			isFini = false;
 			isRunning = true;
+			updateDisplay();
 			thread = new Thread(new Runnable()
 				{
 
 					@Override
 					public void run()
 						{
-						Matrix matrix = null;
-						while(!isFini)
+//						Matrix matrix = null;
+						while(!isFini && controllerEquation.hasNextMatrix())
 							{
-							if (controllerEquation.hasNextMatrix())
-								{
-								matrix = controllerEquation.getNextMatrix();
-								textMatrix.setText(matrix.toString());
-								sleep(controllerEquation.getSpeed());
-								}
-							else
-								{
-								stop();
-								}
+							controllerEquation.getNextMatrix();
+							updateDisplay();
+//							textMatrix.setText(matrix.toString());//
+//							graphicListHistory.setSelectedIndex(controllerEquation.getCurrentStep());
+							sleep(controllerEquation.getSpeed());
 							}
 						isRunning = false;
+						stop();
 						}
 				});
 			thread.start();
 			}
 		}
 
-	@Override
 	public synchronized void stop()
 		{
+		updateDisplay();
 		isFini = true;
 		thread = null;
 		}
 
-	@Override
 	public void next()
 		{
-		textMatrix.setText(controllerEquation.getNextMatrix().toString());
+		controllerEquation.getNextMatrix();
+		updateDisplay();
 		}
 
-	@Override
 	public void previous()
 		{
-		textMatrix.setText(controllerEquation.getPreviousMatrix().toString());
+		controllerEquation.getPreviousMatrix();
+		updateDisplay();
 		}
 
 	/*------------------------------*\
@@ -108,6 +112,20 @@ public class JPanelResultStep extends JPanel implements Control_I
 	|*							Methodes Private						*|
 	\*------------------------------------------------------------------*/
 
+	private void updateDisplay()
+		{
+		int currentStep = controllerEquation.getCurrentStep();
+
+		textMatrix.setText(controllerEquation.getCurrentMatrix().toString());
+		graphicListHistory.setSelectedIndex(currentStep);
+
+		graphicListHistory.setEnabled(!isRunning);
+		buttonStart.setEnabled(currentStep < tabString.length-1 && !isRunning);
+		buttonStop.setEnabled(isRunning);
+		buttonNext.setEnabled(currentStep < tabString.length-1 && !isRunning);
+		buttonPrevious.setEnabled(currentStep > 0 && !isRunning);
+		}
+
 	private void sleep(long delayMS)
 		{
 		try
@@ -116,82 +134,129 @@ public class JPanelResultStep extends JPanel implements Control_I
 			}
 		catch (InterruptedException e)
 			{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			}
 		}
 
 	private void geometry()
 		{
-
 		// JComponent : Instanciation
-		String[] tabString = new String[listHistory.size()];
-		tabString=listHistory.toArray(tabString);
-		graphicListHistory = new JList<String>(tabString);
-		graphicListHistory.setVisibleRowCount(5);
+		JPanel jPanelCenter = new JPanel();
 
-		scrollPaneList = new JScrollPane();
-		scrollPaneList.setViewportView(graphicListHistory);
+		JPanel jPanelOperation = new JPanel();
+		TitledBorder titlesborder = BorderFactory.createTitledBorder("Opérations");
+		titlesborder.setTitleColor(Color.blue);
+		jPanelOperation.setBorder(titlesborder);
+		jPanelOperation.setForeground(Color.blue);
 
-		setLayout(new BorderLayout(0, 0));
+		JPanel jPanelMatrix = new JPanel();
+		TitledBorder titlematrix = BorderFactory.createTitledBorder("Matrice");
+		titlematrix.setTitleColor(Color.blue);
+		jPanelMatrix.setBorder(titlematrix);
+		jPanelMatrix.setForeground(Color.blue);
 
-		JPanel panel_1 = new JPanel();
-		panel_1.setLayout(new GridLayout(1, 0, 0, 0));
-		add(panel_1, BorderLayout.CENTER);
+		JPanel jPanelButtons = new JPanel();
 
-		JPanel panel_3 = new JPanel();
-		panel_3.setLayout(new BorderLayout(0, 0));
-		panel_1.add(panel_3);
+		buttonStart = new JButton("Start");
+		buttonStop = new JButton("Stop");
+		buttonNext = new JButton("Suivant");
+		buttonPrevious = new JButton("Précédent");
 
-		JPanel panel_4 = new JPanel();
-		panel_4.setLayout(new BorderLayout(0, 0));
+		buttonStart.setEnabled(true);
+		buttonStop.setEnabled(false);
+		buttonNext.setEnabled(true);
+		buttonPrevious.setEnabled(true);
+
 		textMatrix = new JTextArea();
 		textMatrix.setLineWrap(true);
 		textMatrix.setEditable(false);
-		panel_4.add(textMatrix, BorderLayout.CENTER);
-		panel_1.add(panel_4);
+		textMatrix.setText(controllerEquation.getMatrix(0).toString());
 
-		JPanel panel_2 = new JPanel();
-		add(panel_2, BorderLayout.SOUTH);
+		graphicListHistory = new JList<String>(tabString);
+		graphicListHistory.setVisibleRowCount(5);
+		graphicListHistory.setSelectedIndex(0);
+		scrollPaneList = new JScrollPane();
+		scrollPaneList.setViewportView(graphicListHistory);
 
-		TitledBorder titlesborder = BorderFactory.createTitledBorder("Opérations");
-		titlesborder.setTitleColor(Color.blue);
-		panel_3.setBorder(titlesborder);
-		panel_3.setForeground(Color.blue);
+			// Layout : Specification
+			{
+			setLayout(new BorderLayout());
+			jPanelCenter.setLayout(new GridLayout(1, 0, 0, 0));
+			jPanelOperation.setLayout(new BorderLayout(0, 0));
+			jPanelMatrix.setLayout(new BorderLayout(0, 0));
+			jPanelButtons.setLayout(new FlowLayout(FlowLayout.CENTER));
+			}
 
-		TitledBorder titlematrix = BorderFactory.createTitledBorder("Matrice");
-		titlematrix.setTitleColor(Color.blue);
-		panel_4.setBorder(titlematrix);
-		panel_4.setForeground(Color.blue);
+		// JComponent : add
+		jPanelMatrix.add(textMatrix, BorderLayout.CENTER);
+		jPanelOperation.add(scrollPaneList);
 
-		panel_3.add(scrollPaneList);
+		jPanelCenter.add(jPanelOperation, BorderLayout.WEST);
+		jPanelCenter.add(jPanelMatrix, BorderLayout.EAST);
 
-//		textArea = new JTextArea(controllerEquation.getCurrentMatrix().toString());
-//		//textArea.setBounds(new Rectangle(getBounds()));
-//		textArea.setLineWrap(true);
-//
-//			// Layout : Specification
-//			{
-//			FlowLayout flowlayout = new FlowLayout(FlowLayout.CENTER);
-//			setLayout(flowlayout);
-//
-//			// flowlayout.setHgap(20);
-//			// flowlayout.setVgap(20);
-//			}
-//
-//		// JComponent : add
-//		add(textArea);
+		jPanelButtons.add(buttonStart);
+		jPanelButtons.add(buttonStop);
+		jPanelButtons.add(buttonPrevious);
+		jPanelButtons.add(buttonNext);
+
+		add(jPanelCenter, BorderLayout.CENTER);
+		add(jPanelButtons, BorderLayout.SOUTH);
 		}
 
 	private void control()
 		{
-		addComponentListener(new ComponentAdapter()
+		Action changeAction = new AbstractAction()
+			{
+
+				@SuppressWarnings("unchecked")
+				@Override
+				public void actionPerformed(ActionEvent e)
+					{
+					JList<String> list = (JList<String>)e.getSource();
+					controllerEquation.getMatrix(list.getSelectedIndex());
+					//System.out.println(idSelected);
+					updateDisplay();
+					}
+			};
+		new ListAction(graphicListHistory, changeAction);
+
+		buttonStart.addActionListener(new ActionListener()
 			{
 
 				@Override
-				public void componentResized(ComponentEvent e)
+				public void actionPerformed(ActionEvent e)
 					{
-					//Quand modif de la fenêtre
+					start();
+					}
+			});
+
+		buttonStop.addActionListener(new ActionListener()
+			{
+
+				@Override
+				public void actionPerformed(ActionEvent e)
+					{
+					stop();
+					}
+			});
+
+		buttonNext.addActionListener(new ActionListener()
+			{
+
+				@Override
+				public void actionPerformed(ActionEvent e)
+					{
+					next();
+					}
+			});
+
+		buttonPrevious.addActionListener(new ActionListener()
+			{
+
+				@Override
+				public void actionPerformed(ActionEvent e)
+					{
+					previous();
 					}
 			});
 		}
@@ -211,8 +276,12 @@ public class JPanelResultStep extends JPanel implements Control_I
 	private boolean isFini;
 
 	ControllerEquation controllerEquation;
+	private String[] tabString;
 
-	private List<String> listHistory;
+	private JButton buttonStart;
+	private JButton buttonStop;
+	private JButton buttonNext;
+	private JButton buttonPrevious;
 	private JScrollPane scrollPaneList;
 	private JList<String> graphicListHistory;
 	private JTextArea textMatrix;

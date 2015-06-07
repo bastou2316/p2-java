@@ -1,7 +1,6 @@
 
 package ch.hearc.p2.java.controller;
 
-import java.awt.BorderLayout;
 import java.io.IOException;
 
 import javax.swing.JFileChooser;
@@ -11,7 +10,6 @@ import javax.swing.JPanel;
 import ch.hearc.p2.java.model.Equation;
 import ch.hearc.p2.java.view.JDialogMain;
 import ch.hearc.p2.java.view.JFrameMain;
-import ch.hearc.p2.java.view.jpanel.JPanelControl;
 import ch.hearc.p2.java.view.jpanel.JPanelMenu;
 import ch.hearc.p2.java.view.jpanel.JPanelResultDirect;
 import ch.hearc.p2.java.view.jpanel.JPanelResultStep;
@@ -75,14 +73,9 @@ public class ControllerMain
 					break;
 
 				case RESULT_STEP:
-					jpanel = new JPanel(new BorderLayout());
 					JPanelResultStep jpanelResultStep = new JPanelResultStep(controllerEquation);
-					JPanelControl jpanelControl = new JPanelControl(jpanelResultStep);
 
-					jpanel.add(jpanelResultStep, BorderLayout.CENTER);
-					jpanel.add(jpanelControl, BorderLayout.SOUTH);
-
-					jFrameMain.setPanel("Résolution étape par étape", jpanel, 600, 600);
+					jFrameMain.setPanel("Résolution étape par étape", jpanelResultStep, 600, 600);
 					jFrameMain.pack();
 					jFrameMain.enableAlternativeMenu(true);
 

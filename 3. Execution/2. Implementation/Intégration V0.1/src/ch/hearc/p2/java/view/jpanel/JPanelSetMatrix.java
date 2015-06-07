@@ -37,6 +37,7 @@ public class JPanelSetMatrix extends JPanel
 
 		this.n = controllerEquation.getNumberEquation();
 		this.m = controllerEquation.getNumberVar();
+		prepareTabNameVar(m, n, method);
 
 		// Composition du panel
 		geometry();
@@ -51,16 +52,17 @@ public class JPanelSetMatrix extends JPanel
 
 	private void geometry()
 		{
-		solveButton = new JButton("R\u00E9soudre");
-		previousButton = new JButton("Précédent");
-
+		// JComponent : Instanciation
 		JPanel panelVar = new JPanel();
 		panelVar.setLayout(new GridLayout(n, m, 0, 0));
 		panelVar.setBorder(new TitledBorder(null, "Remplissage de la matrice", TitledBorder.LEADING, TitledBorder.TOP, null, Color.BLACK));
 
-		methodSolve(m,n,method);
-		tabTextField = new JTextField[n][];
+		JPanel panelButton = new JPanel();
 
+		solveButton = new JButton("R\u00E9soudre");
+		previousButton = new JButton("Précédent");
+
+		tabTextField = new JTextField[n][];
 		for(int i = 1; i <= n; i++)
 			{
 			tabTextField[i - 1] = new JTextField[m + 1];
@@ -97,14 +99,16 @@ public class JPanelSetMatrix extends JPanel
 				}
 			}
 
-		setLayout(new BorderLayout());
-		add(panelVar, BorderLayout.CENTER);
+			// Layout : Specification
+			{
+			setLayout(new BorderLayout());
+			}
 
-		JPanel panelButton = new JPanel();
-
+		// JComponent : add
 		panelButton.add(previousButton);
 		panelButton.add(solveButton);
 
+		add(panelVar, BorderLayout.CENTER);
 		add(panelButton, BorderLayout.SOUTH);
 		}
 
@@ -117,11 +121,11 @@ public class JPanelSetMatrix extends JPanel
 				public void actionPerformed(ActionEvent e)
 					{
 					//Remplissage de la matrice
-					Matrix matrix = new Matrix(n, m+1);
+					Matrix matrix = new Matrix(n, m + 1);
 
 					for(int i = 0; i < n; i++)
 						{
-						for(int j = 0; j < m+1; j++)
+						for(int j = 0; j < m + 1; j++)
 							{
 							//System.out.println(Float.parseFloat(tabTextField[i][j].getText()));
 							float value = (tabTextField[i][j].getText().isEmpty()) ? 0 : Float.parseFloat(tabTextField[i][j].getText());
@@ -161,7 +165,7 @@ public class JPanelSetMatrix extends JPanel
 		// rien
 		}
 
-	private void methodSolve(int m, int n, int noMethod)
+	private void prepareTabNameVar(int m, int n, int noMethod)
 		{
 
 		switch(noMethod)
@@ -169,7 +173,7 @@ public class JPanelSetMatrix extends JPanel
 			case 0:
 				if (n > 3)
 					{
-					methodSolve(m,n,1);
+					prepareTabNameVar(m, n, 2);
 					}
 				else
 					{
@@ -235,7 +239,7 @@ public class JPanelSetMatrix extends JPanel
 	private JButton solveButton, previousButton;
 	private JTextField[][] tabTextField;
 	private static float[][] tabFloat;
-	private  int n;
+	private int n;
 	private int m;
 	private int method;
 	private static String[] tabString;
