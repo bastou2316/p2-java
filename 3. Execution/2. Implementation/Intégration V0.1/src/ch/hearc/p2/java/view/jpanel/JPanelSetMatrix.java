@@ -1,15 +1,19 @@
 
 package ch.hearc.p2.java.view.jpanel;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.FlowLayout;
+import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.Box;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.border.TitledBorder;
 
 import ch.hearc.p2.java.controller.ControllerEquation;
 import ch.hearc.p2.java.controller.ControllerMain;
@@ -31,6 +35,9 @@ public class JPanelSetMatrix extends JPanel
 		this.controllerMain = controllerMain;
 		this.controllerEquation = controllerEquation;
 
+		this.n = controllerEquation.getNumberEquation();
+		this.m = controllerEquation.getNumberVar();
+
 		// Composition du panel
 		geometry();
 		control();
@@ -44,30 +51,61 @@ public class JPanelSetMatrix extends JPanel
 
 	private void geometry()
 		{
-		solveButton = new JButton("Résoudre");
+		solveButton = new JButton("R\u00E9soudre");
 		previousButton = new JButton("Précédent");
 
-		createMatrixTables();
+		JPanel panelVar = new JPanel();
+		panelVar.setLayout(new GridLayout(n, m, 0, 0));
+		panelVar.setBorder(new TitledBorder(null, "Remplissage de la matrice", TitledBorder.LEADING, TitledBorder.TOP, null, Color.BLACK));
 
-			// Layout : Specification
+		methodSolve(m,n,method);
+		tabTextField = new JTextField[n][];
+
+		for(int i = 1; i <= n; i++)
 			{
-			FlowLayout flowlayout = new FlowLayout(FlowLayout.CENTER);
-			setLayout(flowlayout);
-			}
-
-		// JComponent : add
-		for(int i = 0; i < matrixTables.length; i++)
-			{
-			add(matrixTables[i]);
-
-			if (i != matrixTables.length - 1)//pas de derniere ligne
+			tabTextField[i - 1] = new JTextField[m + 1];
+			for(int j = 1; j <= m + 1; j++)
 				{
-				add(varsTables[i]);
+				JPanel panMatrice = new JPanel();
+				panMatrice.setLayout(new GridLayout(0, 2));
+
+				String string;
+
+				if (j == m)
+					{
+					string = tabString[j - 1] + j + "=";
+					}
+				else
+					{
+					if (j == m + 1)
+						{
+						string = "";
+						}
+					else
+						{
+						string = tabString[j - 1] + j + "+";
+						}
+					}
+				JLabel label = new JLabel(string);
+				label.setHorizontalAlignment(SwingConstants.CENTER);
+				JTextField textfield = new JTextField();
+				tabTextField[i - 1][j - 1] = textfield;
+				textfield.setPreferredSize(new Dimension(50, 30));
+				panMatrice.add(textfield);
+				panMatrice.add(label);
+				panelVar.add(panMatrice);
 				}
 			}
 
-		add(solveButton);
-		add(previousButton);
+		setLayout(new BorderLayout());
+		add(panelVar, BorderLayout.CENTER);
+
+		JPanel panelButton = new JPanel();
+
+		panelButton.add(previousButton);
+		panelButton.add(solveButton);
+
+		add(panelButton, BorderLayout.SOUTH);
 		}
 
 	private void control()
@@ -79,16 +117,15 @@ public class JPanelSetMatrix extends JPanel
 				public void actionPerformed(ActionEvent e)
 					{
 					//Remplissage de la matrice
-					Matrix matrix = new Matrix(controllerEquation.getNumberEquation(), controllerEquation.getNumberVar()+1);
+					Matrix matrix = new Matrix(n, m+1);
 
-					for(int i = 0; i < controllerEquation.getNumberEquation(); i++)
+					for(int i = 0; i < n; i++)
 						{
-						for(int j = 0; j < controllerEquation.getNumberVar()+1; j++)
+						for(int j = 0; j < m+1; j++)
 							{
-							System.out.println(matrixTables[j].getValueAt(i, 0));
-							//System.out.println(matrixTables[j].toString());
-							//matrix.set(i, j, Double.parseDouble((String)matrixTables[j].getValueAt(i, 0)));
-							matrix.set(i, j, (i+1)*(j+1));
+							//System.out.println(Float.parseFloat(tabTextField[i][j].getText()));
+							float value = (tabTextField[i][j].getText().isEmpty()) ? 0 : Float.parseFloat(tabTextField[i][j].getText());
+							matrix.set(i, j, value);
 							}
 						}
 
@@ -105,8 +142,6 @@ public class JPanelSetMatrix extends JPanel
 						{
 						controllerMain.changeView(PANEL.RESULT);
 						}
-
-					//controllerMain.closeDialog();
 					}
 			});
 
@@ -126,97 +161,66 @@ public class JPanelSetMatrix extends JPanel
 		// rien
 		}
 
-	private void createMatrixTables()
+	private void methodSolve(int m, int n, int noMethod)
 		{
-		int nbVar = controllerEquation.getNumberVar();
-		int nbEqu = controllerEquation.getNumberEquation();
 
-		matrixTables = new JTable[nbVar + 1];
-		varsTables = new JTable[nbVar];
-
-		for(int j = 0; j < nbVar; j++)
-			{
-			matrixTables[j] = new JTable(nbEqu, 1);
-			matrixTables[j].setRowHeight(40);
-			matrixTables[j].setCellSelectionEnabled(false);
-			varsTables[j] = new JTable(nbEqu, 1);
-			varsTables[j].setRowHeight(40);
-			varsTables[j].setShowVerticalLines(false);
-			varsTables[j].setEnabled(false);
-			}
-		matrixTables[nbVar] = new JTable(nbEqu, 1);
-		matrixTables[nbVar].setRowHeight(40);
-		matrixTables[nbVar].setRowSelectionAllowed(false);
-		matrixTables[nbVar].setBackground(Color.YELLOW);
-
-		char addOrEqual;
-		switch(0)
-			//varStyle.getSelectedIndex())
+		switch(noMethod)
 			{
 			case 0:
-				for(int i = 0; i < nbEqu; i++)
+				if (n > 3)
 					{
-					addOrEqual = '+';
-					for(int j = 0; j < nbVar; j++)
-						{
-						if (j + 1 == nbVar)
-							{
-							addOrEqual = '=';
-							}
-						varsTables[j].setValueAt("  x" + j + "   " + addOrEqual, i, 0);
-						}
+					methodSolve(m,n,1);
+					}
+				else
+					{
+					tabString = new String[3];
+					tabString[0] = "X";
+					tabString[1] = "Y";
+					tabString[2] = "Z";
 					}
 				break;
-
 			case 1:
-				for(int i = 0; i < nbEqu; i++)
-					{
-					addOrEqual = '+';
-					for(int j = 0; j < nbVar; j++)
-						{
-						if (j == nbVar - 1)
-							{
-							addOrEqual = '=';
-							}
-						varsTables[j].setValueAt("     " + (char)(97 + j) + "      " + addOrEqual, i, 0);
-						}
-					}
+				tabString = new String[27];
+				tabString[0] = "A";
+				tabString[1] = "B";
+				tabString[2] = "C";
+				tabString[3] = "D";
+				tabString[4] = "E";
+				tabString[5] = "F";
+				tabString[6] = "G";
+				tabString[7] = "H";
+				tabString[8] = "I";
+				tabString[9] = "J";
+				tabString[10] = "K";
+				tabString[11] = "L";
+				tabString[12] = "M";
+				tabString[13] = "N";
+				tabString[14] = "O";
+				tabString[15] = "P";
+				tabString[16] = "Q";
+				tabString[17] = "R";
+				tabString[18] = "S";
+				tabString[19] = "T";
+				tabString[20] = "U";
+				tabString[21] = "V";
+				tabString[22] = "W";
+				tabString[23] = "X";
+				tabString[24] = "Y";
+				tabString[25] = "Z";
 				break;
-
 			case 2:
-				for(int i = 0; i < nbEqu; i++)
+				tabString = new String[n + 1];
+
+				for(int i = 1; i <= n; i++)
 					{
-					addOrEqual = '+';
-					for(int j = 0; j < nbVar; j++)
-						{
-						if (j == nbVar - 1)
-							{
-							addOrEqual = '=';
-							}
-						varsTables[j].setValueAt("     " + (char)(120 + j) + "      " + addOrEqual, i, 0);
-						}
+					tabString[i - 1] = "X";
 					}
+
 				break;
+
+			default:
+				throw new IllegalStateException("Not valide variable display");
 			}
-
-		boxV = Box.createVerticalBox();
-		boxH = Box.createHorizontalBox();
-
-		boxH.add(Box.createHorizontalGlue());
-		for(int j = 0; j < nbVar; j++)
-			{
-			boxH.add(matrixTables[j]);
-			boxH.add(Box.createHorizontalStrut(5));
-			boxH.add(varsTables[j]);
-			boxH.add(Box.createHorizontalStrut(5));
-			}
-		boxH.add(matrixTables[nbVar]);
-		boxH.add(Box.createHorizontalGlue());
-
-		boxV.add(Box.createVerticalGlue());
-		boxV.add(boxH);
-		boxV.add(Box.createVerticalGlue());
-
 		}
 
 	/*------------------------------------------------------------------*\
@@ -228,11 +232,12 @@ public class JPanelSetMatrix extends JPanel
 	private ControllerEquation controllerEquation;
 
 	// Tools
-	private JTable[] matrixTables;
-	private JTable[] varsTables;
-	private Box boxV;
-	private Box boxH;
-
 	private JButton solveButton, previousButton;
+	private JTextField[][] tabTextField;
+	private static float[][] tabFloat;
+	private  int n;
+	private int m;
+	private int method;
+	private static String[] tabString;
 
 	}

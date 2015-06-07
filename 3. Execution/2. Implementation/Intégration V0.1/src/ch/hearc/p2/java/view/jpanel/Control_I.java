@@ -6,5 +6,7 @@ public interface Control_I
 
 	public void start();
 	public void stop();
+	public void next();
+	public void previous();
 
 	}

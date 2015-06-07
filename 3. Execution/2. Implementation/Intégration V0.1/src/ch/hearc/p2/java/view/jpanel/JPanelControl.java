@@ -30,17 +30,21 @@ public class JPanelControl extends JPanel
 	private void geometry()
 		{
 		// JComponent : Instanciation
-		boutonStart = new JButton("Start");
-		boutonStop = new JButton("Stop");
+		buttonStart = new JButton("Start");
+		buttonStop = new JButton("Stop");
+		buttonNext = new JButton("Suivant");
+		buttonPrevious = new JButton("Précédent");
 
-		boutonStart.setSize(100, 40);
-		boutonStop.setSize(100, 40);
+		//boutonStart.setSize(100, 40);
+		//boutonStop.setSize(100, 40);
 
-		boutonStart.setLocation(10, 100);
-		boutonStop.setLocation(10, 300);
+		//boutonStart.setLocation(10, 100);
+		//boutonStop.setLocation(10, 300);
 
-		boutonStart.setEnabled(true);
-		boutonStop.setEnabled(false);
+		buttonStart.setEnabled(true);
+		buttonStop.setEnabled(false);
+		buttonNext.setEnabled(true);
+		buttonPrevious.setEnabled(true);
 
 			// Layout : Specification
 			{
@@ -52,8 +56,10 @@ public class JPanelControl extends JPanel
 			}
 
 		// JComponent : add
-		add(boutonStart);
-		add(boutonStop);
+		add(buttonStart);
+		add(buttonStop);
+		add(buttonNext);
+		add(buttonPrevious);
 
 		}
 
@@ -69,10 +75,10 @@ public class JPanelControl extends JPanel
 					}
 			};
 
-		boutonStart.addActionListener(actionListener);
-		boutonStop.addActionListener(actionListener);
+		buttonStart.addActionListener(actionListener);
+		buttonStop.addActionListener(actionListener);
 
-		boutonStart.addActionListener(new ActionListener()
+		buttonStart.addActionListener(new ActionListener()
 			{
 
 				@Override
@@ -82,13 +88,33 @@ public class JPanelControl extends JPanel
 					}
 			});
 
-		boutonStop.addActionListener(new ActionListener()
+		buttonStop.addActionListener(new ActionListener()
 			{
 
 				@Override
 				public void actionPerformed(ActionEvent e)
 					{
 					stop();
+					}
+			});
+
+		buttonNext.addActionListener(new ActionListener()
+			{
+
+				@Override
+				public void actionPerformed(ActionEvent e)
+					{
+					next();
+					}
+			});
+
+		buttonPrevious.addActionListener(new ActionListener()
+			{
+
+				@Override
+				public void actionPerformed(ActionEvent e)
+					{
+					previous();
 					}
 			});
 
@@ -105,8 +131,10 @@ public class JPanelControl extends JPanel
 
 	private void switchEtatBouton()
 		{
-		switchEtatBouton(boutonStart);
-		switchEtatBouton(boutonStop);
+		switchEtatBouton(buttonStart);
+		switchEtatBouton(buttonStop);
+		switchEtatBouton(buttonNext);
+		switchEtatBouton(buttonPrevious);
 		}
 
 	private void start()
@@ -117,6 +145,16 @@ public class JPanelControl extends JPanel
 	private void stop()
 		{
 		controlable.stop();
+		}
+
+	private void next()
+		{
+		controlable.next();
+		}
+
+	private void previous()
+		{
+		controlable.previous();
 		}
 
 	/*------------------------------*\
@@ -133,8 +171,10 @@ public class JPanelControl extends JPanel
 	\*------------------------------------------------------------------*/
 
 	// Tools
-	private JButton boutonStart;
-	private JButton boutonStop;
+	private JButton buttonStart;
+	private JButton buttonStop;
+	private JButton buttonNext;
+	private JButton buttonPrevious;
 
 	// Input
 	private Control_I controlable;

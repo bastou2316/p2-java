@@ -28,7 +28,7 @@ public class JPanelResultStep extends JPanel implements Control_I
 	public JPanelResultStep(ControllerEquation controllerEquation)
 		{
 		this.controllerEquation = controllerEquation;
-		this.listString = controllerEquation.getEquation().getOperations();
+		this.listHistory = controllerEquation.getEquation().getOperations();
 
 		//Composition du panel
 		geometry();
@@ -62,11 +62,14 @@ public class JPanelResultStep extends JPanel implements Control_I
 							if (controllerEquation.hasNextMatrix())
 								{
 								matrix = controllerEquation.getNextMatrix();
-								textArea.setText(matrix.toString());
+								textMatrix.setText(matrix.toString());
 								sleep(controllerEquation.getSpeed());
 								}
+							else
+								{
+								stop();
+								}
 							}
-						isFini = false;
 						isRunning = false;
 						}
 				});
@@ -79,6 +82,18 @@ public class JPanelResultStep extends JPanel implements Control_I
 		{
 		isFini = true;
 		thread = null;
+		}
+
+	@Override
+	public void next()
+		{
+		textMatrix.setText(controllerEquation.getNextMatrix().toString());
+		}
+
+	@Override
+	public void previous()
+		{
+		textMatrix.setText(controllerEquation.getPreviousMatrix().toString());
 		}
 
 	/*------------------------------*\
@@ -108,33 +123,33 @@ public class JPanelResultStep extends JPanel implements Control_I
 
 	private void geometry()
 		{
-		// JComponent : Instanciation
-		String[] tabString = new String[listString.size()];
-		tabString=listString.toArray(tabString);
-		rowList = new JList<String>(tabString);
-		rowList.setVisibleRowCount(5);
 
-		listScrollPane = new JScrollPane();
-		listScrollPane.setViewportView(rowList);
+		// JComponent : Instanciation
+		String[] tabString = new String[listHistory.size()];
+		tabString=listHistory.toArray(tabString);
+		graphicListHistory = new JList<String>(tabString);
+		graphicListHistory.setVisibleRowCount(5);
+
+		scrollPaneList = new JScrollPane();
+		scrollPaneList.setViewportView(graphicListHistory);
 
 		setLayout(new BorderLayout(0, 0));
 
 		JPanel panel_1 = new JPanel();
-		add(panel_1, BorderLayout.CENTER);
 		panel_1.setLayout(new GridLayout(1, 0, 0, 0));
+		add(panel_1, BorderLayout.CENTER);
 
 		JPanel panel_3 = new JPanel();
-		panel_1.add(panel_3);
 		panel_3.setLayout(new BorderLayout(0, 0));
+		panel_1.add(panel_3);
 
 		JPanel panel_4 = new JPanel();
-		panel_1.add(panel_4);
 		panel_4.setLayout(new BorderLayout(0, 0));
-
-		textArea = new JTextArea();
-		textArea.setLineWrap(true);
-		textArea.setEditable(false);
-		panel_4.add(textArea, BorderLayout.CENTER);
+		textMatrix = new JTextArea();
+		textMatrix.setLineWrap(true);
+		textMatrix.setEditable(false);
+		panel_4.add(textMatrix, BorderLayout.CENTER);
+		panel_1.add(panel_4);
 
 		JPanel panel_2 = new JPanel();
 		add(panel_2, BorderLayout.SOUTH);
@@ -149,7 +164,7 @@ public class JPanelResultStep extends JPanel implements Control_I
 		panel_4.setBorder(titlematrix);
 		panel_4.setForeground(Color.blue);
 
-		panel_3.add(listScrollPane);
+		panel_3.add(scrollPaneList);
 
 //		textArea = new JTextArea(controllerEquation.getCurrentMatrix().toString());
 //		//textArea.setBounds(new Rectangle(getBounds()));
@@ -195,11 +210,10 @@ public class JPanelResultStep extends JPanel implements Control_I
 	private boolean isRunning;
 	private boolean isFini;
 
-	//JTextArea textArea;
 	ControllerEquation controllerEquation;
 
-	private List<String> listString;
-	private JScrollPane listScrollPane;
-	private JList<String> rowList;
-	private JTextArea textArea;
+	private List<String> listHistory;
+	private JScrollPane scrollPaneList;
+	private JList<String> graphicListHistory;
+	private JTextArea textMatrix;
 	}
