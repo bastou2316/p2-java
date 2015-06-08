@@ -62,6 +62,8 @@ public class ControllerMain
 					jpanel = new JPanelMenu(this);
 					jFrameMain.setPanel("Menu", jpanel);
 					jFrameMain.enableAlternativeMenu(false);
+					jFrameMain.pack();
+					jFrameMain.setResizable(false);
 					break;
 
 				case RESULT:
@@ -99,12 +101,13 @@ public class ControllerMain
 				{
 				case SET_EQUATION:
 					jpanel = new JPanelSetEquation(this, controllerEquation);
-					jDialogMain.setPanel("Création de problème", jpanel, 300, 300);
+					jDialogMain.setPanel("Création de problème", jpanel, 400, 400);
 					break;
 
 				case SET_MATRIX:
 					jpanel = new JPanelSetMatrix(this, controllerEquation);
 					jDialogMain.setPanel("Remplissage de la matrice", jpanel, 500, 300);
+					jDialogMain.pack();
 					break;
 
 				case RESULT_3D:
@@ -114,6 +117,7 @@ public class ControllerMain
 						jDialogMain.setPanel("Vue 3D du système", jpanel);
 						jDialogMain.setLocation(0, 0);
 						jDialogMain.pack();
+						jDialogMain.setResizable(false);
 						}
 					else
 						{
