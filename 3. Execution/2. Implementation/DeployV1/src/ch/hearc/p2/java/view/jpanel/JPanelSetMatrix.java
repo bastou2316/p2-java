@@ -37,7 +37,7 @@ public class JPanelSetMatrix extends JPanel
 
 		this.n = controllerEquation.getNumberEquation();
 		this.m = controllerEquation.getNumberVar();
-		prepareTabNameVar(m, n, method);
+		prepareTabNameVar( m, n, method);
 
 		// Composition du panel
 		geometry();
@@ -182,6 +182,7 @@ public class JPanelSetMatrix extends JPanel
 					}
 				else
 					{
+					controllerEquation.setVariableName("x");
 					tabString = new String[3];
 					tabString[0] = "X";
 					tabString[1] = "Y";
@@ -189,6 +190,7 @@ public class JPanelSetMatrix extends JPanel
 					}
 				break;
 			case 1:
+				controllerEquation.setVariableName("a");
 				tabString = new String[27];
 				tabString[0] = "A";
 				tabString[1] = "B";
@@ -219,7 +221,7 @@ public class JPanelSetMatrix extends JPanel
 				break;
 			case 2:
 				tabString = new String[n + 1];
-
+				controllerEquation.setVariableName("x1");
 				for(int i = 1; i <= n; i++)
 					{
 					tabString[i - 1] = "X";
@@ -243,7 +245,6 @@ public class JPanelSetMatrix extends JPanel
 	// Tools
 	private JButton solveButton, previousButton;
 	private JTextField[][] tabTextField;
-	private static float[][] tabFloat;
 	private int n;
 	private int m;
 	private int method;

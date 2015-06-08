@@ -19,6 +19,7 @@ public class ControllerEquation
 		//Utilisation equation temporaire
 		this.tempEquation = equation;
 		this.isCreating = true;//creation la 1ère fois
+		this.isFinalStep=false;
 		}
 
 	/*------------------------------------------------------------------*\
@@ -39,6 +40,11 @@ public class ControllerEquation
 	/*------------------------------*\
 	|*				Set				*|
 	\*------------------------------*/
+
+	public void setVariableName(String name)
+		{
+		equation.variableName=name;
+		}
 
 	public void setEquation(Equation equation)
 		{
@@ -78,10 +84,18 @@ public class ControllerEquation
 		this.isCreating = isCreating;
 		}
 
+	public void setIsFinalStep(boolean isFinalStep)
+	{
+	this.isFinalStep=isFinalStep;
+	}
+
 	/*------------------------------*\
 	|*				Get				*|
 	\*------------------------------*/
-
+	public String getVariableName()
+		{
+		return equation.getVariableName();
+		}
 	public Equation getEquation()
 		{
 		if (isCreating())
@@ -185,6 +199,11 @@ public class ControllerEquation
 		return isCreating;
 		}
 
+	public boolean isFinalStep()
+		{
+		return this.isFinalStep;
+		}
+
 	/*------------------------------------------------------------------*\
 	|*							Attributs Private						*|
 	\*------------------------------------------------------------------*/
@@ -192,8 +211,9 @@ public class ControllerEquation
 	//Tools
 	private Equation equation;
 	private int actualStep;
-
+	private boolean isFinalStep;
 	private Equation tempEquation;
 	private boolean isCreating;
+
 
 	}

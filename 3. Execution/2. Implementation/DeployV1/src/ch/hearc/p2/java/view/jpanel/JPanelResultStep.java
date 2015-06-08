@@ -93,13 +93,31 @@ public class JPanelResultStep extends JPanel
 
 	public void next()
 		{
-		controllerEquation.getNextMatrix();
+		int currentStep = controllerEquation.getCurrentStep();
+		if (currentStep < tabString.length-2)
+			{
+			controllerEquation.getNextMatrix();
+			controllerEquation.setIsFinalStep(false);
+			}
+		else
+			{
+			controllerEquation.setIsFinalStep(true);
+			}
 		updateDisplay();
 		}
 
 	public void previous()
 		{
-		controllerEquation.getPreviousMatrix();
+		if(controllerEquation.isFinalStep())
+			{
+				controllerEquation.getCurrentMatrix();
+				}
+		else
+			{
+				controllerEquation.getPreviousMatrix();
+				}
+
+		controllerEquation.setIsFinalStep(false);
 		updateDisplay();
 		}
 
@@ -118,14 +136,21 @@ public class JPanelResultStep extends JPanel
 	private void updateDisplay()
 		{
 		int currentStep = controllerEquation.getCurrentStep();
-
-		textMatrix.setText(controllerEquation.getCurrentMatrix().toString());
-		graphicListHistory.setSelectedIndex(currentStep);
-
+		if (!controllerEquation.isFinalStep())
+			{
+			textMatrix.setText(controllerEquation.getCurrentMatrix().toString());
+			graphicListHistory.setSelectedIndex(currentStep);
+			}
+		else
+			{
+			controllerEquation.getCurrentMatrix().setVariableName(controllerEquation.getEquation().getVariableName());
+			textMatrix.setText(controllerEquation.getCurrentMatrix().showResult());
+			graphicListHistory.setSelectedIndex(currentStep+1);
+			}
 		graphicListHistory.setEnabled(!isRunning);
-		buttonStart.setEnabled(currentStep < tabString.length - 1 && !isRunning);
+		buttonStart.setEnabled(currentStep < tabString.length-1 && !isRunning && !controllerEquation.isFinalStep());
 		buttonStop.setEnabled(isRunning);
-		buttonNext.setEnabled(currentStep < tabString.length - 1 && !isRunning);
+		buttonNext.setEnabled(currentStep < tabString.length-1 && !isRunning && !controllerEquation.isFinalStep());
 		buttonPrevious.setEnabled(currentStep > 0 && !isRunning);
 		}
 
@@ -233,7 +258,15 @@ public class JPanelResultStep extends JPanel
 				public void actionPerformed(ActionEvent e)
 					{
 					JList<String> list = (JList<String>)e.getSource();
+					if (list.getSelectedIndex() < tabString.length-1)
+						{
 					controllerEquation.getMatrix(list.getSelectedIndex());
+					controllerEquation.setIsFinalStep(false);
+						}
+					if(list.getSelectedIndex()==tabString.length-1)
+						{
+							controllerEquation.setIsFinalStep(true);
+							}
 					//System.out.println(idSelected);
 					updateDisplay();
 					}
