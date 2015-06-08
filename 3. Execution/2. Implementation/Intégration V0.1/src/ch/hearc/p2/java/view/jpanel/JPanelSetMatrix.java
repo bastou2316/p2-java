@@ -75,7 +75,7 @@ public class JPanelSetMatrix extends JPanel
 
 				if (j == m)
 					{
-					string = tabString[j - 1] + j + "=";
+					string = tabString[j - 1] +  " =";
 					}
 				else
 					{
@@ -85,7 +85,7 @@ public class JPanelSetMatrix extends JPanel
 						}
 					else
 						{
-						string = tabString[j - 1] + j + "+";
+						string = tabString[j - 1] + " +";
 						}
 					}
 				JLabel label = new JLabel(string);
@@ -176,54 +176,55 @@ public class JPanelSetMatrix extends JPanel
 
 		switch(noMethod)
 			{
-			case 0:
+			case 2:
 				if (n > 3)
 					{
-					prepareTabNameVar(m, n, 2);
+					prepareTabNameVar(m, n, 1);
+					
 					}
 				else
 					{
 					tabString = new String[3];
-					tabString[0] = "X";
-					tabString[1] = "Y";
-					tabString[2] = "Z";
+					tabString[0] = "x";
+					tabString[1] = "y";
+					tabString[2] = "z";
 					}
 				break;
 			case 1:
 				tabString = new String[27];
-				tabString[0] = "A";
-				tabString[1] = "B";
-				tabString[2] = "C";
-				tabString[3] = "D";
-				tabString[4] = "E";
-				tabString[5] = "F";
-				tabString[6] = "G";
-				tabString[7] = "H";
-				tabString[8] = "I";
-				tabString[9] = "J";
-				tabString[10] = "K";
-				tabString[11] = "L";
-				tabString[12] = "M";
-				tabString[13] = "N";
-				tabString[14] = "O";
-				tabString[15] = "P";
-				tabString[16] = "Q";
-				tabString[17] = "R";
-				tabString[18] = "S";
-				tabString[19] = "T";
-				tabString[20] = "U";
-				tabString[21] = "V";
-				tabString[22] = "W";
-				tabString[23] = "X";
-				tabString[24] = "Y";
-				tabString[25] = "Z";
+				tabString[0] = "a";
+				tabString[1] = "b";
+				tabString[2] = "c";
+				tabString[3] = "d";
+				tabString[4] = "e";
+				tabString[5] = "f";
+				tabString[6] = "g";
+				tabString[7] = "h";
+				tabString[8] = "i";
+				tabString[9] = "j";
+				tabString[10] = "k";
+				tabString[11] = "l";
+				tabString[12] = "m";
+				tabString[13] = "n";
+				tabString[14] = "o";
+				tabString[15] = "p";
+				tabString[16] = "q";
+				tabString[17] = "r";
+				tabString[18] = "s";
+				tabString[19] = "z";
+				tabString[20] = "u";
+				tabString[21] = "v";
+				tabString[22] = "w";
+				tabString[23] = "x";
+				tabString[24] = "y";
+				tabString[25] = "z";
 				break;
-			case 2:
+			case 0:
 				tabString = new String[n + 1];
 
 				for(int i = 1; i <= n; i++)
 					{
-					tabString[i - 1] = "X";
+					tabString[i - 1] = "x"+i;
 					}
 
 				break;

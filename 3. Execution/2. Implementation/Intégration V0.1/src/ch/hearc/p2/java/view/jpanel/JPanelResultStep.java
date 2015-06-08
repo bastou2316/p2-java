@@ -93,13 +93,31 @@ public class JPanelResultStep extends JPanel
 
 	public void next()
 		{
-		controllerEquation.getNextMatrix();
+		int currentStep = controllerEquation.getCurrentStep();
+		if (currentStep < tabString.length-2)
+			{
+			controllerEquation.getNextMatrix();
+			controllerEquation.setIsFinalStep(false);
+			}
+		else
+			{
+			controllerEquation.setIsFinalStep(true);
+			}
 		updateDisplay();
 		}
 
 	public void previous()
 		{
-		controllerEquation.getPreviousMatrix();
+		if(controllerEquation.isFinalStep())
+			{
+				controllerEquation.getCurrentMatrix();
+				}
+		else
+			{
+				controllerEquation.getPreviousMatrix();
+				}
+
+		controllerEquation.setIsFinalStep(false);
 		updateDisplay();
 		}
 
@@ -118,15 +136,24 @@ public class JPanelResultStep extends JPanel
 	private void updateDisplay()
 		{
 		int currentStep = controllerEquation.getCurrentStep();
-
-		textMatrix.setText(controllerEquation.getCurrentMatrix().toString());
-		graphicListHistory.setSelectedIndex(currentStep);
-
+		if (!controllerEquation.isFinalStep())
+			{
+			textMatrix.setText(controllerEquation.getCurrentMatrix().toString());
+			graphicListHistory.setSelectedIndex(currentStep);
+			}
+		else
+			{
+			controllerEquation.getCurrentMatrix().setVariableName(controllerEquation.getEquation().getVariableName());
+			textMatrix.setText(controllerEquation.getCurrentMatrix().showResult());
+			graphicListHistory.setSelectedIndex(currentStep+1);
+			}
 		graphicListHistory.setEnabled(!isRunning);
-		buttonStart.setEnabled(currentStep < tabString.length - 1 && !isRunning);
+		buttonStart.setEnabled(currentStep < tabString.length-1 && !isRunning && !controllerEquation.isFinalStep());
 		buttonStop.setEnabled(isRunning);
-		buttonNext.setEnabled(currentStep < tabString.length - 1 && !isRunning);
+		buttonNext.setEnabled(currentStep < tabString.length-1 && !isRunning && !controllerEquation.isFinalStep());
 		buttonPrevious.setEnabled(currentStep > 0 && !isRunning);
+		if(controllerEquation.isFinalStep())
+			buttonPrevious.setEnabled(true);
 		}
 
 	private void sleep(long delayMS)
@@ -224,103 +251,112 @@ public class JPanelResultStep extends JPanel
 		}
 
 	private void control()
+	{
+	Action changeAction = new AbstractAction()
 		{
-		Action changeAction = new AbstractAction()
-			{
 
-				@SuppressWarnings("unchecked")
-				@Override
-				public void actionPerformed(ActionEvent e)
+			@SuppressWarnings("unchecked")
+			@Override
+			public void actionPerformed(ActionEvent e)
+				{
+				JList<String> list = (JList<String>)e.getSource();
+				if (list.getSelectedIndex() < tabString.length-1)
 					{
-					JList<String> list = (JList<String>)e.getSource();
-					controllerEquation.getMatrix(list.getSelectedIndex());
-					//System.out.println(idSelected);
-					updateDisplay();
+				controllerEquation.getMatrix(list.getSelectedIndex());
+				controllerEquation.setIsFinalStep(false);
 					}
-			};
-		new ListAction(graphicListHistory, changeAction);
-
-		buttonStart.addActionListener(new ActionListener()
-			{
-
-				@Override
-				public void actionPerformed(ActionEvent e)
+				if(list.getSelectedIndex()==tabString.length-1)
 					{
-					start();
-					}
-			});
-
-		buttonStop.addActionListener(new ActionListener()
-			{
-
-				@Override
-				public void actionPerformed(ActionEvent e)
-					{
-					stop();
-					}
-			});
-
-		buttonNext.addActionListener(new ActionListener()
-			{
-
-				@Override
-				public void actionPerformed(ActionEvent e)
-					{
-					next();
-					}
-			});
-
-		buttonPrevious.addActionListener(new ActionListener()
-			{
-
-				@Override
-				public void actionPerformed(ActionEvent e)
-					{
-					previous();
-					}
-			});
-
-		textMatrix.addMouseWheelListener(new MouseWheelListener()
-			{
-
-				@Override
-				public void mouseWheelMoved(MouseWheelEvent e)
-					{
-					if (actualTextSize > 0)
-						{
-						actualTextSize += e.getWheelRotation();
-						//System.out.println(actualTextSize);
-						textMatrix.setFont(new Font("Sans-Serif", Font.PLAIN, actualTextSize));
+						controllerEquation.setIsFinalStep(true);
 						}
-					}
-			});
-		}
+				//System.out.println(idSelected);
+				updateDisplay();
+				}
+		};
+	new ListAction(graphicListHistory, changeAction);
 
-	private void appearance()
+	buttonStart.addActionListener(new ActionListener()
 		{
-		// rien
-		}
 
-	/*------------------------------------------------------------------*\
-	|*							Attributs Private						*|
-	\*------------------------------------------------------------------*/
+			@Override
+			public void actionPerformed(ActionEvent e)
+				{
+				start();
+				}
+		});
 
-	// Tools
-	private Thread thread;
-	private boolean isRunning;
-	private boolean isFini;
+	buttonStop.addActionListener(new ActionListener()
+		{
 
-	ControllerEquation controllerEquation;
-	private String[] tabString;
+			@Override
+			public void actionPerformed(ActionEvent e)
+				{
+				stop();
+				}
+		});
 
-	private JButton buttonStart;
-	private JButton buttonStop;
-	private JButton buttonNext;
-	private JButton buttonPrevious;
-	private JScrollPane scrollPaneList;
-	private JList<String> graphicListHistory;
-	private JTextArea textMatrix;
+	buttonNext.addActionListener(new ActionListener()
+		{
 
-	private int actualTextSize;
-	//	private JTextPane textPaneMatrix;
+			@Override
+			public void actionPerformed(ActionEvent e)
+				{
+				next();
+				}
+		});
+
+	buttonPrevious.addActionListener(new ActionListener()
+		{
+
+			@Override
+			public void actionPerformed(ActionEvent e)
+				{
+				previous();
+				}
+		});
+
+	textMatrix.addMouseWheelListener(new MouseWheelListener()
+		{
+
+			@Override
+			public void mouseWheelMoved(MouseWheelEvent e)
+				{
+				if (actualTextSize > 0)
+					{
+					actualTextSize += e.getWheelRotation();
+					//System.out.println(actualTextSize);
+					textMatrix.setFont(new Font("Sans-Serif", Font.PLAIN, actualTextSize));
+					}
+				}
+		});
 	}
+
+private void appearance()
+	{
+	// rien
+	}
+
+/*------------------------------------------------------------------*\
+|*							Attributs Private						*|
+\*------------------------------------------------------------------*/
+
+// Tools
+private Thread thread;
+private boolean isRunning;
+private boolean isFini;
+
+ControllerEquation controllerEquation;
+private String[] tabString;
+
+private JButton buttonStart;
+private JButton buttonStop;
+private JButton buttonNext;
+private JButton buttonPrevious;
+private JScrollPane scrollPaneList;
+private JList<String> graphicListHistory;
+private JTextArea textMatrix;
+
+private int actualTextSize;
+//	private JTextPane textPaneMatrix;
+}
+
