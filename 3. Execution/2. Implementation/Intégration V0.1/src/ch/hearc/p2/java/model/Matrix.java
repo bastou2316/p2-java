@@ -35,6 +35,7 @@ public final class Matrix implements Serializable
 		{
 		mapIndexVariableName = new TreeMap<Integer, String>();
 		this.variableName = variableToken;
+
 		this.values = values;
 		currentStep = 0;
 		hist = new double[20][values.length][values[0].length];
@@ -456,8 +457,8 @@ public final class Matrix implements Serializable
 			{
 			for(int j = 0; j < cols-1; j++)
 				{
-				builder.append(get(i, j));
-				builder.append("\t");
+				builder.append(formatter.format(get(i, j)));
+				builder.append(" ");
 				}
 			builder.append("= ");
 			builder.append(formatter.format(get(i,cols-1)));
@@ -479,7 +480,7 @@ public final class Matrix implements Serializable
 			for(int j = 0; j < cols-1; j++)
 				{
 				builder.append(formatter.format(tabStep[i][j]));
-				builder.append("\t");
+				builder.append(" ");
 				}
 			builder.append("= ");
 			builder.append(formatter.format(tabStep[i][cols-1]));
@@ -665,21 +666,21 @@ public final class Matrix implements Serializable
 	private void fillVariableNameStructures()
 		{
 		boolean isVariableCount = false;
-		int tokenStartIndex = 0;
-		//Fill the list of name for the variable.
-		if (variableName.equals("a"))
-			{
-			tokenStartIndex = 97; //a,b,c
-			}
-		else if (variableName.equals("x"))
-			{
-			tokenStartIndex = 120; //x,y,z
-			}
-		else
-			{
-			tokenStartIndex = 120; //x1,x2,x3
-			isVariableCount = true;
-			}
+		int tokenStartIndex = 97;
+//		//Fill the list of name for the variable.
+//		if (variableName.equals("a"))
+//			{
+//			tokenStartIndex = 97; //a,b,c
+//			}
+//		else if (variableName.equals("x"))
+//			{
+//			tokenStartIndex = 120; //x,y,z
+//			}
+//		else
+//			{
+//			tokenStartIndex = 120; //x1,x2,x3
+//			isVariableCount = true;
+//			}
 		for(int i = 0; i < columnCount(); ++i)
 			{
 			if (isVariableCount)

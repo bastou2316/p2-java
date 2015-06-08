@@ -43,6 +43,7 @@ public class Equation implements Serializable
 				listMatrix.add(new Matrix(matrix.getStep(i)));
 				listOperation.add(matrix.getOperation(i));
 				}
+			listOperation.add("Final");
 			}
 		else
 			{
@@ -57,6 +58,10 @@ public class Equation implements Serializable
 	|*				Get				*|
 	\*------------------------------*/
 
+	public String getVariableName()
+		{
+		return variableName;
+		}
 	public String getName()
 		{
 		return name;
@@ -110,6 +115,11 @@ public class Equation implements Serializable
 	/*------------------------------*\
 	|*				Set				*|
 	\*------------------------------*/
+
+	public void setVariableName(String variableName)
+		{
+		listMatrix.get(listMatrix.size()-1).setVariableName(variableName);
+		}
 
 	public void setMatrix(Matrix matrix)
 		{
@@ -183,6 +193,8 @@ public class Equation implements Serializable
 	private boolean modeStep;
 	private boolean solved;
 	private boolean saved;
+
+	public String variableName;
 
 	public final static int ORIGIN = 0;
 

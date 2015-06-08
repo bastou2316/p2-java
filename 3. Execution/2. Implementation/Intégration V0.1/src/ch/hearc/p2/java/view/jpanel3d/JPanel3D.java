@@ -23,7 +23,6 @@ import javax.media.j3d.Canvas3D;
 import javax.media.j3d.ColoringAttributes;
 import javax.media.j3d.DirectionalLight;
 import javax.media.j3d.GeometryArray;
-import javax.media.j3d.Group;
 import javax.media.j3d.LineArray;
 import javax.media.j3d.LineAttributes;
 import javax.media.j3d.Node;
@@ -56,22 +55,22 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
 
+import ch.hearc.p2.java.model.Matrix;
+
 import com.sun.j3d.utils.geometry.Text2D;
 import com.sun.j3d.utils.pickfast.PickCanvas;
 import com.sun.j3d.utils.universe.SimpleUniverse;
 
-import ch.hearc.p2.java.model.Matrix;
-
 /**
  * Mateli program based on the following sample program:
- *
+ * 
  * http://interactivemesh.org/testspace/orbitbehavior.html
  *
  * Version: 2.0 Date: 2009/04/08
  *
  * Copyright (c) 2009 August Lammersdorf, InteractiveMesh e.K. Kolomanstrasse
  * 2a, 85737 Ismaning Germany / Munich Area www.InteractiveMesh.com/org *
- *
+ * 
  */
 final public class JPanel3D extends JPanel {
 
@@ -83,8 +82,6 @@ final public class JPanel3D extends JPanel {
 
 	private OrbitBehaviorInterim orbitBehInterim = null;
 	private boolean isHomeRotCenter = true;
-	private boolean isLookAtRotCenter = true;
-	private boolean isPickVertex = true;
 
 	private BranchGroup enviBranch = null;
 	private BranchGroup sceneBranch = null;
@@ -129,15 +126,11 @@ final public class JPanel3D extends JPanel {
 			fcts_str[i] = "";
 			for (int j = 0; j < 3; j++) {
 				if (matrixValues[i][j] > 0)
-					{
-						fcts_str[i] += " + " + matrixValues[i][j] + ""
-								+ (char) (120 + j);
-						}
+					fcts_str[i] += " + " + matrixValues[i][j] + ""
+							+ (char) (120 + j);
 				else if (matrixValues[i][j] < 0)
-					{
-						fcts_str[i] += " - " + (-matrixValues[i][j]) + ""
-								+ (char) (120 + j);
-						}
+					fcts_str[i] += " - " + (-matrixValues[i][j]) + ""
+							+ (char) (120 + j);
 
 			}
 			fcts_str[i] = " " + fcts_str[i].substring(2) + " = "
@@ -164,64 +157,6 @@ final public class JPanel3D extends JPanel {
 
 	}
 
-	private void changeRotationCenter(MouseEvent event) {
-
-		pickCanvas.setShapeLocation(event.getX(), event.getY());
-		PickInfo pickInfo = pickCanvas.pickClosest();
-
-		if (pickInfo != null) {
-
-			Node pickedNode = pickInfo.getNode();
-
-			Transform3D locToVWord = new Transform3D();
-			pickedNode.getLocalToVworld(locToVWord);
-
-			Point3d rotationPoint = new Point3d();
-
-			if (isPickVertex) {
-				rotationPoint.set(pickInfo.getClosestIntersectionPoint());
-			} else {
-
-				Bounds bounds = pickedNode.getBounds();
-				if (bounds == null || bounds.isEmpty()) {
-					JOptionPane.showMessageDialog(this,
-							"Selected Shape3D doesn't provide a not empty Bounds object! \n"
-									+ "Can't set center of rotation ! \n \n",
-							"Bounds missing", JOptionPane.ERROR_MESSAGE);
-				}
-
-				if (bounds instanceof BoundingBox) {
-					BoundingBox pickedBox = (BoundingBox) bounds;
-
-					Point3d lower = new Point3d();
-					Point3d upper = new Point3d();
-					pickedBox.getLower(lower);
-					pickedBox.getUpper(upper);
-
-					rotationPoint.set(lower.x + (upper.x - lower.x) / 2,
-							lower.y + (upper.y - lower.y) / 2, lower.z
-									+ (upper.z - lower.z) / 2);
-				} else {
-					BoundingSphere pickedSphere = null;
-					if (bounds instanceof BoundingSphere)
-						{
-							pickedSphere = (BoundingSphere) bounds;
-							}
-					else
-						{
-							pickedSphere = new BoundingSphere(bounds);
-							}
-
-					pickedSphere.getCenter(rotationPoint);
-				}
-
-			}
-
-			locToVWord.transform(rotationPoint);
-			orbitBehInterim.setRotationCenter(rotationPoint, isLookAtRotCenter);
-		}
-	}
-
 	// Base world
 	private void createUniverse() {
 		// Bounds
@@ -233,19 +168,9 @@ final public class JPanel3D extends JPanel {
 		try {
 			canvas3D = new Canvas3D(gcfg);
 
-			canvas3D.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent event) {
-					int clicks = event.getClickCount();
-					if (clicks == 2 && SwingUtilities.isLeftMouseButton(event)) {
-						changeRotationCenter(event);
-					}
-				}
-			});
-
 			canvas3D.setBackground(bgColor);
 		} catch (Exception e) {
-			System.out.println("SimpleUniverseNavigation2: Canvas3D failed !!");
+			System.out.println("JPanel3D : Canvas3D failed !!");
 			e.printStackTrace();
 			System.exit(0);
 		}
@@ -323,8 +248,8 @@ final public class JPanel3D extends JPanel {
 	private void drawScene() {
 
 		TG1 = new TransformGroup();
-		TG1.setCapability(Group.ALLOW_CHILDREN_WRITE);
-		TG1.setCapability(Group.ALLOW_CHILDREN_EXTEND);
+		TG1.setCapability(TransformGroup.ALLOW_CHILDREN_WRITE);
+		TG1.setCapability(TransformGroup.ALLOW_CHILDREN_EXTEND);
 		// ------------ début de création des axes ------------
 
 		LineAttributes lineAttr = new LineAttributes(4f, 0, true);
@@ -332,24 +257,24 @@ final public class JPanel3D extends JPanel {
 		lineApp.setLineAttributes(lineAttr);
 
 		// axe des X
-		LineArray axisX = new LineArray(2, GeometryArray.COORDINATES
-				| GeometryArray.COLOR_3);
+		LineArray axisX = new LineArray(2, LineArray.COORDINATES
+				| LineArray.COLOR_3);
 		axisX.setCoordinate(0, new Point3f(0f, 0f, 0f));
 		axisX.setCoordinate(1, new Point3f(0f, 0f, 4f));
 		axisX.setColor(0, new Color3f(0.2f, 0.2f, 0.2f));
 		axisX.setColor(1, new Color3f(0.2f, 0.2f, 0.2f));
 
 		// axe des Y
-		LineArray axisY = new LineArray(2, GeometryArray.COORDINATES
-				| GeometryArray.COLOR_3);
+		LineArray axisY = new LineArray(2, LineArray.COORDINATES
+				| LineArray.COLOR_3);
 		axisY.setCoordinate(0, new Point3f(0f, 0f, 0f));
 		axisY.setCoordinate(1, new Point3f(4f, 0f, 0f));
 		axisY.setColor(0, new Color3f(0.2f, 0.2f, 0.2f));
 		axisY.setColor(1, new Color3f(0.2f, 0.2f, 0.2f));
 
 		// axe des Z
-		LineArray axisZ = new LineArray(2, GeometryArray.COORDINATES
-				| GeometryArray.COLOR_3);
+		LineArray axisZ = new LineArray(2, LineArray.COORDINATES
+				| LineArray.COLOR_3);
 		axisZ.setCoordinate(0, new Point3f(0f, 0f, 0f));
 		axisZ.setCoordinate(1, new Point3f(0f, 4f, 0f));
 		axisZ.setColor(0, new Color3f(0.2f, 0.2f, 0.2f));
@@ -374,14 +299,10 @@ final public class JPanel3D extends JPanel {
 		Appearance app = textObject.getAppearance();
 		PolygonAttributes pa = app.getPolygonAttributes();
 		if (pa == null)
-			{
-				pa = new PolygonAttributes();
-				}
+			pa = new PolygonAttributes();
 		pa.setCullFace(PolygonAttributes.CULL_NONE);
 		if (app.getPolygonAttributes() == null)
-			{
-				app.setPolygonAttributes(pa);
-				}
+			app.setPolygonAttributes(pa);
 
 		/* Axe Y */
 		textObject = new Text2D("Y", new Color3f(0.2f, 0.2f, 0.2f), "Serif",
@@ -396,14 +317,10 @@ final public class JPanel3D extends JPanel {
 		app = textObject.getAppearance();
 		pa = app.getPolygonAttributes();
 		if (pa == null)
-			{
-				pa = new PolygonAttributes();
-				}
+			pa = new PolygonAttributes();
 		pa.setCullFace(PolygonAttributes.CULL_NONE);
 		if (app.getPolygonAttributes() == null)
-			{
-				app.setPolygonAttributes(pa);
-				}
+			app.setPolygonAttributes(pa);
 
 		/* Axe Z */
 		textObject = new Text2D("Z", new Color3f(0.2f, 0.2f, 0.2f), "Serif",
@@ -418,15 +335,13 @@ final public class JPanel3D extends JPanel {
 		app = textObject.getAppearance();
 		pa = app.getPolygonAttributes();
 		if (pa == null)
-			{
-				pa = new PolygonAttributes();
-				}
+			pa = new PolygonAttributes();
 		pa.setCullFace(PolygonAttributes.CULL_NONE);
 		if (app.getPolygonAttributes() == null)
-			{
-				app.setPolygonAttributes(pa);
-				}
+			app.setPolygonAttributes(pa);
 
+		
+		
 		// création de 3 plans
 		drawPlans();
 
@@ -439,8 +354,8 @@ final public class JPanel3D extends JPanel {
 		Appearance cubeApp = new Appearance();
 		cubeApp.setLineAttributes(cubeAttr);
 
-		LineArray cube = new LineArray(24, GeometryArray.COORDINATES
-				| GeometryArray.COLOR_3);
+		LineArray cube = new LineArray(24, LineArray.COORDINATES
+				| LineArray.COLOR_3);
 		cube.setCoordinate(0, new Point3f(1f, 1f, 1f));
 		cube.setCoordinate(1, new Point3f(1f, 1f, -1f));
 
@@ -489,8 +404,8 @@ final public class JPanel3D extends JPanel {
 		lineApp.setLineAttributes(lineAttr);
 
 		// Axe X
-		LineArray tickX = new LineArray(2, GeometryArray.COORDINATES
-				| GeometryArray.COLOR_3);
+		LineArray tickX = new LineArray(2, LineArray.COORDINATES
+				| LineArray.COLOR_3);
 		tickX.setCoordinate(0, new Point3f(1.0f, 0f, -0.08f));
 		tickX.setCoordinate(1, new Point3f(1.0f, 0f, 0.08f));
 		tickX.setColor(0, new Color3f(0.2f, 0.2f, 0.2f));
@@ -499,8 +414,8 @@ final public class JPanel3D extends JPanel {
 		TG1.addChild(new Shape3D(tickX, lineApp));
 
 		/* Axe Y */
-		LineArray tickY = new LineArray(2, GeometryArray.COORDINATES
-				| GeometryArray.COLOR_3);
+		LineArray tickY = new LineArray(2, LineArray.COORDINATES
+				| LineArray.COLOR_3);
 		tickY.setCoordinate(0, new Point3f(-0.08f, 0f, 1f));
 		tickY.setCoordinate(1, new Point3f(0.08f, 0f, 1f));
 		tickY.setColor(0, new Color3f(0.2f, 0.2f, 0.2f));
@@ -509,8 +424,8 @@ final public class JPanel3D extends JPanel {
 		// tabTG1Shapes.add(new Shape3D(tickY, lineApp));
 
 		/* Axe Z */
-		LineArray tickZ = new LineArray(2, GeometryArray.COORDINATES
-				| GeometryArray.COLOR_3);
+		LineArray tickZ = new LineArray(2, LineArray.COORDINATES
+				| LineArray.COLOR_3);
 		tickZ.setCoordinate(0, new Point3f(0f, 1f, -0.08f));
 		tickZ.setCoordinate(1, new Point3f(0f, 1f, 0.08f));
 		tickZ.setColor(0, new Color3f(0.2f, 0.2f, 0.2f));
@@ -556,14 +471,10 @@ final public class JPanel3D extends JPanel {
 		Appearance appTick = tickValue.getAppearance();
 		PolygonAttributes paTick = appTick.getPolygonAttributes();
 		if (paTick == null)
-			{
-				paTick = new PolygonAttributes();
-				}
+			paTick = new PolygonAttributes();
 		paTick.setCullFace(PolygonAttributes.CULL_NONE);
 		if (appTick.getPolygonAttributes() == null)
-			{
-				appTick.setPolygonAttributes(paTick);
-				}
+			appTick.setPolygonAttributes(paTick);
 
 		TG1.addChild(labelsBranch);
 	}
@@ -579,8 +490,8 @@ final public class JPanel3D extends JPanel {
 
 		plansTogetherBranch = new BranchGroup();
 		plansTogetherBranch.setCapability(BranchGroup.ALLOW_DETACH);
-		plansTogetherBranch.setCapability(Group.ALLOW_CHILDREN_WRITE);
-		plansTogetherBranch.setCapability(Group.ALLOW_CHILDREN_EXTEND);
+		plansTogetherBranch.setCapability(TransformGroup.ALLOW_CHILDREN_WRITE);
+		plansTogetherBranch.setCapability(TransformGroup.ALLOW_CHILDREN_EXTEND);
 		plansBranch = new BranchGroup[3];
 		plansBranch[0] = new BranchGroup();
 		plansBranch[1] = new BranchGroup();
@@ -638,9 +549,7 @@ final public class JPanel3D extends JPanel {
 		// construction mais pas d'affichage si checkbox non selectionnee
 		for (int i = 0; i < 3; i++) {
 			if (!jCheckFct[i].isSelected())
-				{
-					plansTogetherBranch.removeChild(plansBranch[i]);
-					}
+				plansTogetherBranch.removeChild(plansBranch[i]);
 		}
 
 		TG1.addChild(plansTogetherBranch);
@@ -649,7 +558,7 @@ final public class JPanel3D extends JPanel {
 	/**
 	 * create plan that fits that stays inside the "box" (x and y axis ok, but z
 	 * axis might go out of the box)
-	 *
+	 * 
 	 * @param a
 	 * @param b
 	 * @param c
@@ -662,7 +571,7 @@ final public class JPanel3D extends JPanel {
 
 	/**
 	 * create plan : ax + by + cz = d
-	 *
+	 * 
 	 * @param a
 	 * @param b
 	 * @param c
@@ -735,13 +644,9 @@ final public class JPanel3D extends JPanel {
 
 		int fontSize = 14;
 		if (screenDim.height < 1024)
-			{
-				fontSize = 11;
-				}
+			fontSize = 11;
 		else if (screenDim.height < 1200)
-			{
-				fontSize = 12;
-				}
+			fontSize = 12;
 
 		font = new Font("SansSerif", Font.BOLD, fontSize);
 
@@ -862,9 +767,7 @@ final public class JPanel3D extends JPanel {
 
 				int projMode = View.PERSPECTIVE_PROJECTION;
 				if (jRadioParallel.isSelected())
-					{
-						projMode = View.PARALLEL_PROJECTION;
-						}
+					projMode = View.PARALLEL_PROJECTION;
 
 				orbitBehInterim.setProjectionMode(projMode);
 
@@ -933,7 +836,7 @@ final public class JPanel3D extends JPanel {
 			public void stateChanged(ChangeEvent e) {
 				// if (!jSliderScale.getValueIsAdjusting()) {
 				if (jSliderScale.getValue() >= 0) {
-					scaleFactor = Math.round(Math.pow(10,
+					scaleFactor = (float) Math.round(Math.pow(10,
 							jSliderScale.getValue() / 10.0));
 				} else {
 					scaleFactor = (float) Math.pow(10,
@@ -980,13 +883,9 @@ final public class JPanel3D extends JPanel {
 				JCheckBox src = (JCheckBox) event.getSource();
 				int index = 0;
 				if (src == jCheckFct[1])
-					{
-						index = 1;
-						}
+					index = 1;
 				else if (src == jCheckFct[2])
-					{
-						index = 2;
-						}
+					index = 2;
 
 				if (src.isSelected()) {
 					plansTogetherBranch.addChild(plansBranch[index]);
@@ -1000,13 +899,13 @@ final public class JPanel3D extends JPanel {
 		jPanelSelection.setLayout(new BoxLayout(jPanelSelection,
 				BoxLayout.Y_AXIS));
 		// jPanelSelection.setAlignmentY(Component.TOP_ALIGNMENT);
-
-
+		
+	
 
 		jCheckFct[0].setForeground(plansColor[0]);
 		jCheckFct[1].setForeground(plansColor[1]);
 		jCheckFct[2].setForeground(plansColor[2]);
-
+		
 		jPanelSelection.add(Box.createVerticalStrut(5));
 
 		for (JCheckBox jCheck : jCheckFct) {
@@ -1014,7 +913,7 @@ final public class JPanel3D extends JPanel {
 			jCheck.addActionListener(selectionListener);
 			jPanelSelection.add(jCheck);
 			jPanelSelection.add(Box.createVerticalStrut(5));
-
+			
 		}
 		// jCheckFct[].setForeground(bgColor);
 		// jCheckFct[].setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -1042,10 +941,11 @@ final public class JPanel3D extends JPanel {
 		canvas3D.setPreferredSize(dim);
 		canvas3D.setSize(dim);
 
-		//
+		// 
 		this.setLayout(new BorderLayout());
 		this.add(canvas3D, BorderLayout.CENTER);
 		this.add(jPanelLine, BorderLayout.SOUTH);
 
+		
 	}
 }
