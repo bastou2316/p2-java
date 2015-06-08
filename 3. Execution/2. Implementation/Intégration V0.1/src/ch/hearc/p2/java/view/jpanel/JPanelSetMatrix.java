@@ -37,6 +37,7 @@ public class JPanelSetMatrix extends JPanel
 
 		this.n = controllerEquation.getNumberEquation();
 		this.m = controllerEquation.getNumberVar();
+		method = JPanelSetEquation.getNoMethod();
 		prepareTabNameVar(m, n, method);
 
 		// Composition du panel

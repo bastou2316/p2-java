@@ -46,6 +46,11 @@ public class JPanelSetEquation extends JPanel
 		appearance();
 
 		}
+	
+	public static int getNoMethod()
+	{
+		return varStyle.getSelectedIndex();
+	}
 
 	/*------------------------------------------------------------------*\
 	|*							Methodes Private						*|
@@ -84,6 +89,7 @@ public class JPanelSetEquation extends JPanel
 		varStyle.addItem("a, b, c, d, e, ...");
 		varStyle.addItem("x, y, z (max 3)");
 		varStyle.setSelectedItem(0);
+	
 
 		methodStep = new JRadioButton("étape par étape");
 		methodStep.setSelected(equation.isStepMode());
@@ -184,6 +190,8 @@ public class JPanelSetEquation extends JPanel
 		{
 		// rien
 		}
+	
+	
 
 	/*------------------------------------------------------------------*\
 	|*							Attributs Private						*|
@@ -198,9 +206,10 @@ public class JPanelSetEquation extends JPanel
 
 	private JLabel labelName, labelNumberEquation, labelNumberVar, labelVarStyle, labelSpeed;
 	private JRadioButton methodStep, methodDirect;
-	private JComboBox<String> varStyle;
+	private static JComboBox<String> varStyle;
 	private JSpinner numberEquation, numberVar, spinSpeed;
 	private JTextField textFieldName;
 	private JButton nextButton;
+
 
 	}
