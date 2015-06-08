@@ -17,7 +17,7 @@ public class ControllerEquation
 		this.equation = new Equation();//A enlever
 
 		//Utilisation equation temporaire
-		this.tempEquation = null;
+		this.tempEquation = equation;
 		this.isCreating = true;//creation la 1ère fois
 		}
 
@@ -25,9 +25,14 @@ public class ControllerEquation
 	|*							Methodes Public							*|
 	\*------------------------------------------------------------------*/
 
+	public void reInitMatrix()
+		{
+		setMatrix(equation.getMatrix(Equation.ORIGIN));
+		}
+
 	public void solveEquation()
 		{
-		actualStep = 0;
+		actualStep = Equation.ORIGIN;
 		equation.solve();
 		}
 
@@ -59,7 +64,7 @@ public class ControllerEquation
 			}
 		}
 
-	public void applyTempEquation()//Reload previous equation
+	public void applyTempEquation()
 		{
 		if (isCreating)
 			{
@@ -79,9 +84,10 @@ public class ControllerEquation
 
 	public Equation getEquation()
 		{
-		if(isCreating())
+		if (isCreating())
 			{
-			return new Equation();//par défaut
+			tempEquation = (tempEquation == equation) ?  new Equation() : tempEquation;
+			return tempEquation;
 			}
 		else
 			{
@@ -157,7 +163,7 @@ public class ControllerEquation
 
 	public long getSpeed()
 		{
-		return equation.getSpeed();
+		return equation.getSpeedMs();
 		}
 
 	/*------------------------------*\

@@ -1,6 +1,7 @@
 
 package ch.hearc.p2.java.model;
 
+import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.TreeMap;
 
 import ch.hearc.p2.java.tools.MathTools;
 
-public final class Matrix
+public final class Matrix implements Serializable
 	{
 
 	/*------------------------------------------------------------------*\

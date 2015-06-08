@@ -43,7 +43,6 @@ public class JPanelSetMatrix extends JPanel
 		geometry();
 		control();
 		appearance();
-
 		}
 
 	/*------------------------------------------------------------------*\
@@ -93,6 +92,12 @@ public class JPanelSetMatrix extends JPanel
 				JTextField textfield = new JTextField();
 				tabTextField[i - 1][j - 1] = textfield;
 				textfield.setPreferredSize(new Dimension(50, 30));
+
+				if (controllerEquation.isEquationSolved() && !controllerEquation.isCreating())
+					{
+					textfield.setText(String.valueOf(controllerEquation.getEquation().getMatrix(0).get(i - 1, j - 1)));
+					}
+
 				panMatrice.add(textfield);
 				panMatrice.add(label);
 				panelVar.add(panMatrice);

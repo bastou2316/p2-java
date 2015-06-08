@@ -6,12 +6,12 @@ import java.io.IOException;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import ch.hearc.p2.java.model.Equation;
 import ch.hearc.p2.java.view.JDialogMain;
 import ch.hearc.p2.java.view.JFrameMain;
 import ch.hearc.p2.java.view.jpanel.JPanelMenu;
-import ch.hearc.p2.java.view.jpanel.JPanelResultDirect;
 import ch.hearc.p2.java.view.jpanel.JPanelResultStep;
 import ch.hearc.p2.java.view.jpanel.JPanelSetEquation;
 import ch.hearc.p2.java.view.jpanel.JPanelSetMatrix;
@@ -65,7 +65,7 @@ public class ControllerMain
 					break;
 
 				case RESULT:
-					jpanel = new JPanelResultDirect(this, controllerEquation);
+					jpanel = new JPanelResultStep(controllerEquation);
 
 					jFrameMain.setPanel("Résolution directe", jpanel, 600, 600);
 					jFrameMain.enableAlternativeMenu(true);
@@ -73,9 +73,9 @@ public class ControllerMain
 					break;
 
 				case RESULT_STEP:
-					JPanelResultStep jpanelResultStep = new JPanelResultStep(controllerEquation);
+					jpanel = new JPanelResultStep(controllerEquation);
 
-					jFrameMain.setPanel("Résolution étape par étape", jpanelResultStep, 600, 600);
+					jFrameMain.setPanel("Résolution étape par étape", jpanel, 600, 600);
 					jFrameMain.pack();
 					jFrameMain.enableAlternativeMenu(true);
 
@@ -153,14 +153,20 @@ public class ControllerMain
 	public void save()
 		{
 		JFileChooser jfilechooser = new JFileChooser();
+		jfilechooser.setDialogTitle("Choisissez un emplacement de sauvegarde");
 		jfilechooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+
 		//jfilechooser.setSelectedFile(controller)
-		int returnOption = jfilechooser.showOpenDialog(jFrameMain);
+		jfilechooser.setFileFilter(new FileNameExtensionFilter("NSolver extension", "nso"));
+		int returnOption = jfilechooser.showSaveDialog(jFrameMain);
 
 		try
 			{
-			controllerIO.save(controllerEquation.getEquation(), jfilechooser.getSelectedFile());
-			controllerEquation.getEquation().setSaved();
+			if (returnOption == JFileChooser.APPROVE_OPTION)
+				{
+				controllerIO.save(controllerEquation.getEquation(), jfilechooser.getSelectedFile());
+				controllerEquation.getEquation().setSaved();
+				}
 			}
 		catch (IOException e)
 			{
@@ -172,6 +178,8 @@ public class ControllerMain
 	public void load()
 		{
 		JFileChooser jfilechooser = new JFileChooser();
+		jfilechooser.setDialogTitle("Choisissez un fichier à charger");
+		jfilechooser.setFileFilter(new FileNameExtensionFilter("NSolver extension", "nso"));
 		int returnOption = jfilechooser.showOpenDialog(jFrameMain);
 
 		if (returnOption == JFileChooser.APPROVE_OPTION)
@@ -180,6 +188,8 @@ public class ControllerMain
 				{
 				Equation equation = controllerIO.load(jfilechooser.getSelectedFile());
 				controllerEquation.setEquation(equation);
+				controllerEquation.applyTempEquation();
+				controllerEquation.reInitMatrix();
 				controllerEquation.solveEquation();
 				changeView(PANEL.RESULT);
 				}

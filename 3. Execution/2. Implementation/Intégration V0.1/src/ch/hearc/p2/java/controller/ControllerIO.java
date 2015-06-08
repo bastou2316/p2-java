@@ -30,9 +30,16 @@ public class ControllerIO
 
 	public void save(Equation equation, File file) throws IOException
 		{
-		file.createNewFile();
+		//file.createNewFile();
+		String fileName = file.toString();
+		String[] split = fileName.split("\\.");
+		String extension = split[split.length-1];
+		if (!extension.equals("nso"))
+			{
+			fileName += ".nso";
+			}
 
-		FileOutputStream fos = new FileOutputStream(file.toString()+".nso");
+		FileOutputStream fos = new FileOutputStream(fileName);
 		BufferedOutputStream bos = new BufferedOutputStream(fos);
 		ObjectOutputStream oos = new ObjectOutputStream(bos);
 
@@ -45,7 +52,7 @@ public class ControllerIO
 
 	public Equation load(File file) throws ClassNotFoundException, IOException
 		{
-		if (!file.exists() || file.isDirectory()) { throw new IOException("File is directory or doesn't exists.");}	//verifier
+		if (!file.exists() || file.isDirectory()) { throw new IOException("File is directory or doesn't exists."); } //verifier
 
 		FileInputStream fis = new FileInputStream(file);
 		BufferedInputStream bis = new BufferedInputStream(fis);

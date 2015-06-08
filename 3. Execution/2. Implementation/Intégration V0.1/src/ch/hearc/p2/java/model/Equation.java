@@ -12,18 +12,19 @@ public class Equation implements Serializable
 	|*							Constructeurs							*|
 	\*------------------------------------------------------------------*/
 
-	public Equation() {
-		this("Name", 3, 3, 10, true);
-	}
+	public Equation()
+		{
+		this("Name", 3, 3, 1, true);
+		}
 
-	public Equation(String name, int numberVar, int numberEquation, int speed, boolean modeStep)
+	public Equation(String name, int numberVar, int numberEquation, int speedSec, boolean modeStep)
 		{
 		listMatrix = new ArrayList<Matrix>();
 		listOperation = new ArrayList<String>();
 		this.name = name;
 		this.numberVar = numberVar;
 		this.numberEquation = numberEquation;
-		this.speed = speed;
+		this.speedMs = speedSec * 1000;
 		this.modeStep = modeStep;
 		this.saved = false;
 		}
@@ -37,7 +38,7 @@ public class Equation implements Serializable
 		if (modeStep)
 			{
 			matrix.reducedRowEchelonForm();
-			for(int i = 1; i < matrix.getHistLength()-1; ++i)
+			for(int i = 1; i < matrix.getHistLength() - 1; ++i)
 				{
 				listMatrix.add(new Matrix(matrix.getStep(i)));
 				listOperation.add(matrix.getOperation(i));
@@ -45,7 +46,8 @@ public class Equation implements Serializable
 			}
 		else
 			{
-			listMatrix.set(1, new QRDecomposition(matrix.getMatrix(0, matrix.rowCount() - 1, 0, matrix.columnCount() - 2)).solve(matrix.getMatrix(0, matrix.rowCount() - 1, matrix.columnCount() - 1, matrix.columnCount() - 1)));
+			listMatrix.add(new QRDecomposition(matrix.getMatrix(0, matrix.rowCount() - 1, 0, matrix.columnCount() - 2)).solve(matrix.getMatrix(0, matrix.rowCount() - 1, matrix.columnCount() - 1, matrix.columnCount() - 1)));
+			listOperation.add("Final");
 			}
 
 		solved = true;
@@ -70,9 +72,14 @@ public class Equation implements Serializable
 		return numberVar;
 		}
 
-	public long getSpeed()
+	public int getSpeedSec()
 		{
-		return speed;
+		return speedMs / 1000;
+		}
+
+	public long getSpeedMs()
+		{
+		return speedMs;
 		}
 
 	public Matrix getMatrix(int pos)
@@ -96,9 +103,9 @@ public class Equation implements Serializable
 		}
 
 	public List<String> getOperations()
-	{
+		{
 		return listOperation;
-	}
+		}
 
 	/*------------------------------*\
 	|*				Set				*|
@@ -107,8 +114,9 @@ public class Equation implements Serializable
 	public void setMatrix(Matrix matrix)
 		{
 		listMatrix.clear();
-		listMatrix.add(ORIGIN, matrix);
 		listOperation.clear();
+
+		listMatrix.add(ORIGIN, matrix);
 		listOperation.add(ORIGIN, "Origine");
 		}
 
@@ -117,24 +125,20 @@ public class Equation implements Serializable
 		this.name = name;
 		}
 
-
 	public void setNumberVar(int numberVar)
 		{
 		this.numberVar = numberVar;
 		}
-
 
 	public void setNumberEquation(int numberEquation)
 		{
 		this.numberEquation = numberEquation;
 		}
 
-
-	public void setSpeed(int speed)
+	public void setSpeed(int speedSec)
 		{
-		this.speed = speed;
+		this.speedMs = speedSec * 1000;
 		}
-
 
 	public void setModeStep(boolean modeStep)
 		{
@@ -175,11 +179,11 @@ public class Equation implements Serializable
 	private List<String> listOperation;
 	private int numberVar;
 	private int numberEquation;
-	private int speed;
+	private int speedMs;
 	private boolean modeStep;
 	private boolean solved;
 	private boolean saved;
 
-	private final static int ORIGIN = 0;
+	public final static int ORIGIN = 0;
 
 	}

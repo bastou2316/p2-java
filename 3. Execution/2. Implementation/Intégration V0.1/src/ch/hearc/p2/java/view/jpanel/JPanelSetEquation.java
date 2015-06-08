@@ -1,11 +1,14 @@
 
 package ch.hearc.p2.java.view.jpanel;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -14,12 +17,12 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.border.TitledBorder;
 
 import ch.hearc.p2.java.controller.ControllerEquation;
 import ch.hearc.p2.java.controller.ControllerMain;
 import ch.hearc.p2.java.controller.ControllerMain.DIALOG;
 import ch.hearc.p2.java.model.Equation;
-import ch.hearc.p2.java.model.Matrix;
 
 public class JPanelSetEquation extends JPanel
 	{
@@ -50,8 +53,19 @@ public class JPanelSetEquation extends JPanel
 
 	private void geometry()
 		{
-
 		// JComponent : Instanciation
+		JPanel jpanelCenter = new JPanel();
+
+		JPanel jpanelMatrix = new JPanel();
+		TitledBorder titlesborder = BorderFactory.createTitledBorder("Matrice");
+		jpanelMatrix.setBorder(titlesborder);
+
+		JPanel jpanelResolution = new JPanel();
+		TitledBorder panreso = BorderFactory.createTitledBorder("Résolution");
+		jpanelResolution.setBorder(panreso);
+
+		JPanel jpanelControl = new JPanel();
+
 		labelName = new JLabel("Nom :");
 		textFieldName = new JTextField(equation.getName());
 		textFieldName.setMinimumSize(new Dimension(100, 5));
@@ -79,31 +93,50 @@ public class JPanelSetEquation extends JPanel
 		bg.add(methodStep);
 		bg.add(methodDirect);
 
+		labelSpeed = new JLabel("Vitesse (en seconde) :");
+		spinSpeed = new JSpinner();
+		spinSpeed.setValue(equation.getSpeedSec());
+
 		nextButton = new JButton("Suivant");
 
 			// Layout : Specification
 			{
-			FlowLayout flowlayout = new FlowLayout(FlowLayout.LEFT);
-			setLayout(flowlayout);
+			setLayout(new BorderLayout());
+
+			jpanelCenter.setLayout(new GridLayout(2, 0));
+
+			jpanelMatrix.setLayout(new GridLayout(4, 2));
+			jpanelResolution.setLayout(new GridLayout(2, 2));
+
+			jpanelControl.setLayout(new FlowLayout(FlowLayout.CENTER));
 			}
 
 		// JComponent : add
-		add(labelName);
-		add(textFieldName);
+		jpanelMatrix.add(labelName);
+		jpanelMatrix.add(textFieldName);
 
-		add(labelNumberEquation);
-		add(numberEquation);
+		jpanelMatrix.add(labelNumberEquation);
+		jpanelMatrix.add(numberEquation);
 
-		add(labelNumberVar);
-		add(numberVar);
+		jpanelMatrix.add(labelNumberVar);
+		jpanelMatrix.add(numberVar);
 
-		add(labelVarStyle);
-		add(varStyle);
+		jpanelMatrix.add(labelVarStyle);
+		jpanelMatrix.add(varStyle);
 
-		add(methodStep);
-		add(methodDirect);
+		jpanelResolution.add(methodStep);
+		jpanelResolution.add(methodDirect);
 
-		add(nextButton);
+		jpanelResolution.add(labelSpeed);
+		jpanelResolution.add(spinSpeed);
+
+		jpanelCenter.add(jpanelMatrix);
+		jpanelCenter.add(jpanelResolution);
+
+		jpanelControl.add(nextButton);
+
+		add(jpanelCenter, BorderLayout.CENTER);
+		add(jpanelControl, BorderLayout.SOUTH);
 		}
 
 	private void control()
@@ -114,16 +147,35 @@ public class JPanelSetEquation extends JPanel
 				@Override
 				public void actionPerformed(ActionEvent e)
 					{
-					//Settage de la l'equation courante
 					equation.setName(textFieldName.getText());
-					equation.setNumberVar((Integer)numberVar.getValue());
-					equation.setNumberEquation((Integer)numberEquation.getValue());
-					equation.setSpeed(1000);
-					equation.setModeStep(methodStep.isSelected());
-					equation.setMatrix(new Matrix((Integer)numberVar.getValue(), (Integer)numberEquation.getValue()));
+					equation.setSpeed((Integer)spinSpeed.getValue());
 
-					controllerEquation.setEquation(equation);
-					controllerMain.showDialog(DIALOG.SET_MATRIX);
+					int newNumberEqu = (Integer)numberEquation.getValue();
+					int newNumberVar = (Integer)numberVar.getValue();
+
+					if (controllerEquation.isCreating() || !equation.isSolved() || newNumberVar != equation.getMatrixNumberVariable() || newNumberEqu != equation.getMatrixNumberEquation())
+						{
+						//Changement de matrix
+						equation.setNumberVar(newNumberVar);
+						equation.setNumberEquation(newNumberEqu);
+						equation.setModeStep(methodStep.isSelected());
+
+						controllerEquation.setEquation(equation);
+						controllerMain.showDialog(DIALOG.SET_MATRIX);
+						}
+					else if(equation.isStepMode() != methodStep.isSelected())
+						{
+						//Changement de mode
+						equation.setModeStep(methodStep.isSelected());
+						controllerEquation.reInitMatrix();//On reinitialise la matrix
+						controllerEquation.solveEquation();//On recalcule avec l'autre méthode
+						controllerMain.closeDialog();//On ferme aussi directement le dialogue
+						}
+					else
+						{
+						controllerEquation.setEquation(equation);
+						controllerMain.closeDialog();//On ferme aussi directement le dialogue
+						}
 					}
 			});
 		}
@@ -144,10 +196,10 @@ public class JPanelSetEquation extends JPanel
 	// Tools
 	Equation equation;
 
-	private JLabel labelName, labelNumberEquation, labelNumberVar, labelVarStyle;
+	private JLabel labelName, labelNumberEquation, labelNumberVar, labelVarStyle, labelSpeed;
 	private JRadioButton methodStep, methodDirect;
 	private JComboBox<String> varStyle;
-	private JSpinner numberEquation, numberVar;
+	private JSpinner numberEquation, numberVar, spinSpeed;
 	private JTextField textFieldName;
 	private JButton nextButton;
 
