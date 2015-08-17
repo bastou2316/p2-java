@@ -1,0 +1,8 @@
+Conception
+-Specification des besoins
+-Maquette
+-Diagrammes
+
+Implementation
+-Code
+-Tests
