@@ -1,4 +1,0 @@
--Rapport finale
--Présentation
--Guide utilisateur
--Release finale du programme
