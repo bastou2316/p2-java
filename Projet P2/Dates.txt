@@ -1,0 +1,18 @@
+Cdc ~6h
+23/2
+
+Points chauds
+Spec
+	fonctionnalités
+	architecture
+	tests
+2/3
+
+Présentation du prototype
+30/3
+
+trouver les points chauds :
+	technique (prog, design, ...)
+	mathematique...
+	
+
