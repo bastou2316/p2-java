@@ -56,6 +56,8 @@ import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
 
 import ch.hearc.p2.java.model.Matrix;
+import ch.hearc.p2.java.view.jpanel3d.actions.JPanelHomeTransform;
+import ch.hearc.p2.java.view.jpanel3d.actions.JPanelProjection;
 
 import com.sun.j3d.utils.geometry.Text2D;
 import com.sun.j3d.utils.pickfast.PickCanvas;
@@ -686,113 +688,13 @@ final public class JPanel3D extends JPanel {
 		jPanelActions.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 		// Home Transform
-		JPanel jPanelActionHome = new JPanel();
-		BoxLayout boxLayoutHome = new BoxLayout(jPanelActionHome,
-				BoxLayout.Y_AXIS);
-		jPanelActionHome.setLayout(boxLayoutHome);
+		JPanelHomeTransform jPanelHomeTransform = new JPanelHomeTransform(font, titleColor, this);		
+		jPanelActions.add(jPanelHomeTransform);
+		jPanelActions.add(Box.createHorizontalStrut(10));		
 
-		TitledBorder tBorderHome = BorderFactory
-				.createTitledBorder(" Réinitialisation et centrage");
-		tBorderHome.setTitleFont(font);
-		tBorderHome.setTitleColor(titleColor);
-		// tBorderHome.setBorder(BorderFactory.createLineBorder(bgColor));
-
-		jPanelActionHome.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createRaisedBevelBorder(), tBorderHome));
-
-		JButton jButtonHomeTransform = new JButton("Retour à la vue de départ");
-		jButtonHomeTransform.setFont(font);
-		// jButtonHomeTransform.setForeground(bgColor);
-		jButtonHomeTransform.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-		jButtonHomeTransform.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent event) {
-				// heavy-weight !!
-				view.stopView();
-				orbitBehInterim.goHome(isHomeRotCenter);
-				view.startView();
-			}
-		});
-
-		JButton jButtonLookAt = new JButton("Centrer");
-		jButtonLookAt.setFont(font);
-		// jButtonLookAt.setForeground(bgColor);
-		jButtonLookAt.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-		jButtonLookAt.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent event) {
-
-				orbitBehInterim.lookAtRotationCenter();
-
-			}
-		});
-
-		jPanelActionHome.add(Box.createVerticalStrut(10));
-		jPanelActionHome.add(jButtonHomeTransform);
-		jPanelActionHome.add(Box.createVerticalStrut(10));
-		jPanelActionHome.add(jButtonLookAt);
-		jPanelActionHome.add(Box.createVerticalStrut(10));
-
-		jPanelActions.add(jPanelActionHome);
-		jPanelActions.add(Box.createHorizontalStrut(10));
-
-		//
 		// Projection
-		JPanel jPanelActionProjection = new JPanel();
-		jPanelActionProjection.setLayout(new BoxLayout(jPanelActionProjection,
-				BoxLayout.Y_AXIS));
-
-		TitledBorder tBorderProjection = BorderFactory
-				.createTitledBorder(" Projection ");
-		tBorderProjection.setTitleFont(font);
-		tBorderProjection.setTitleColor(titleColor);
-		// tBorderProjection.setBorder(BorderFactory.createLineBorder(bgColor));
-
-		jPanelActionProjection.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createRaisedBevelBorder(), tBorderProjection));
-
-		final JRadioButton jRadioParallel = new JRadioButton("Parallèle");
-		final JRadioButton jRadioPerspective = new JRadioButton("Perspective");
-		jRadioPerspective.setSelected(true);
-
-		jRadioParallel.setFont(font);
-		jRadioPerspective.setFont(font);
-		// jRadioParallel.setForeground(bgColor);
-		// jRadioPerspective.setForeground(bgColor);
-
-		jRadioPerspective.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-		ActionListener projectionListener = new ActionListener() {
-			public void actionPerformed(ActionEvent event) {
-
-				int projMode = View.PERSPECTIVE_PROJECTION;
-				if (jRadioParallel.isSelected())
-					projMode = View.PARALLEL_PROJECTION;
-
-				orbitBehInterim.setProjectionMode(projMode);
-
-			}
-		};
-		jRadioParallel.addActionListener(projectionListener);
-		jRadioPerspective.addActionListener(projectionListener);
-
-		ButtonGroup projGroup = new ButtonGroup();
-		projGroup.add(jRadioParallel);
-		projGroup.add(jRadioPerspective);
-
-		JPanel jPanelParProj = new JPanel();
-		jPanelParProj.setLayout(new BoxLayout(jPanelParProj, BoxLayout.X_AXIS));
-		jPanelParProj.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-		jPanelParProj.add(jRadioParallel);
-
-		jPanelActionProjection.add(Box.createVerticalStrut(5));
-		jPanelActionProjection.add(jPanelParProj);
-		jPanelActionProjection.add(Box.createVerticalStrut(5));
-		jPanelActionProjection.add(jRadioPerspective);
-		jPanelActionProjection.add(Box.createVerticalStrut(5));
-
-		jPanelActions.add(jPanelActionProjection);
+		JPanelProjection jPanelProjection = new JPanelProjection(font, titleColor, this);
+		jPanelActions.add(jPanelProjection);
 		jPanelActions.add(Box.createHorizontalStrut(10));
 
 		// Scale
@@ -947,5 +849,28 @@ final public class JPanel3D extends JPanel {
 		this.add(jPanelLine, BorderLayout.SOUTH);
 
 		
+	}
+	
+	public void goHomeView(){
+		view.stopView();
+		orbitBehInterim.goHome(isHomeRotCenter);
+		view.startView();
+	}
+	
+	public void centerView(){
+		orbitBehInterim.lookAtRotationCenter();
+	}
+	
+	/**
+	 * true : perspective
+	 * false: parallele
+	 * @param perspective
+	 */
+	public void setPerspective(boolean perspective){
+		int projMode = View.PARALLEL_PROJECTION;
+		if (perspective)
+			projMode = View.PERSPECTIVE_PROJECTION;
+
+		orbitBehInterim.setProjectionMode(projMode);
 	}
 }
