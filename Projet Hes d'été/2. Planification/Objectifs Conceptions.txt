@@ -1,0 +1,22 @@
+1.	19.08	(1j)	Correction du schéma des classes :
+				-Arrangement du voyage des informations de l'équation à travers le programme
+				-Suppression éventuel de la classe "ControllerEquation"
+					(s'inspirer de la station météo et comparer)
+	
+1.			Adaption du code depuis schéma :
+	20.08	(1j)		-Applications des changement décidés (supression, modification des classes)
+	21.08	(1j)		-Correction de la résolution automatique
+	24.08	(1j)		-Correction de la résolution manuelle
+	25.08	(1j)		-Correction des beugs liés à la création ou modification (intégrité des données)
+
+3.			Sauvegarde et charge :
+	26.08	(1/2j)		-format ".txt"
+	26.08	(1/2j)		-format ".csv"
+	27.08	(1j)		-Lancement du programme NSolver en cliquant sur fichier d'extension ".nso" (ouvrir avec)
+
+CDC :
+-Simplifier la transition de l'équation à travers la hierarchie
+-Corrections des beugs liée à la résolution
+-Corrections des beugs liées à la création et la modification (intégrité des données)
+-Sauvegarde et charge au format ".csv" et ".txt"
+-Lancement du programme à partir d'un fichier ".nso" (ouvrir avec)
