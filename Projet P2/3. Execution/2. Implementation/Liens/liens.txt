@@ -1,0 +1,3 @@
+http://stackoverflow.com/questions/2956325/is-it-impossible-to-embed-java3d-in-a-way-that-i-dont-need-to-install-it
+http://stackoverflow.com/questions/21295534/build-java-project-into-executable
+http://stackoverflow.com/questions/21295534/build-java-project-into-executable
