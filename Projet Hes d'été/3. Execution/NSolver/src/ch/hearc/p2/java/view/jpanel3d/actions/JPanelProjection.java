@@ -1,3 +1,4 @@
+
 package ch.hearc.p2.java.view.jpanel3d.actions;
 
 import java.awt.Color;
@@ -6,7 +7,6 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.media.j3d.View;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -17,20 +17,19 @@ import javax.swing.border.TitledBorder;
 
 import ch.hearc.p2.java.view.jpanel3d.JPanel3D;
 
-public class JPanelProjection extends JPanel{
-	
-	public JPanelProjection(Font font, Color titleColor, JPanel3D jPanel3d) {
-		this.setLayout(new BoxLayout(this,
-				BoxLayout.Y_AXIS));
+public class JPanelProjection extends JPanel
+	{
 
-		TitledBorder tBorderProjection = BorderFactory
-				.createTitledBorder(" Projection ");
+	public JPanelProjection(Font font, Color titleColor, final JPanel3D jPanel3d)
+		{
+		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+
+		TitledBorder tBorderProjection = BorderFactory.createTitledBorder(" Projection ");
 		tBorderProjection.setTitleFont(font);
 		tBorderProjection.setTitleColor(titleColor);
 		// tBorderProjection.setBorder(BorderFactory.createLineBorder(bgColor));
 
-		this.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createRaisedBevelBorder(), tBorderProjection));
+		this.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(), tBorderProjection));
 
 		final JRadioButton jRadioParallel = new JRadioButton("Parallèle");
 		final JRadioButton jRadioPerspective = new JRadioButton("Perspective");
@@ -43,16 +42,23 @@ public class JPanelProjection extends JPanel{
 
 		jRadioPerspective.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-		ActionListener projectionListener = new ActionListener() {
-			public void actionPerformed(ActionEvent event) {
+		ActionListener projectionListener = new ActionListener()
+			{
 
-				if (jRadioParallel.isSelected())
-					jPanel3d.setPerspective(true);
-				else
-					jPanel3d.setPerspective(false);
+				public void actionPerformed(ActionEvent event)
+					{
 
-			}
-		};
+					if (jRadioParallel.isSelected())
+						{
+						jPanel3d.setPerspective(true);
+						}
+					else
+						{
+						jPanel3d.setPerspective(false);
+						}
+
+					}
+			};
 		jRadioParallel.addActionListener(projectionListener);
 		jRadioPerspective.addActionListener(projectionListener);
 
@@ -72,6 +78,5 @@ public class JPanelProjection extends JPanel{
 		this.add(jRadioPerspective);
 		this.add(Box.createVerticalStrut(5));
 
-		
+		}
 	}
-}
