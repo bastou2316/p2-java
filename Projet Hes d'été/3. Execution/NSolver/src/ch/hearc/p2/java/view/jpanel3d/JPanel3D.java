@@ -58,6 +58,8 @@ import javax.vecmath.Vector3f;
 import ch.hearc.p2.java.model.Matrix;
 import ch.hearc.p2.java.view.jpanel3d.actions.JPanelHomeTransform;
 import ch.hearc.p2.java.view.jpanel3d.actions.JPanelProjection;
+import ch.hearc.p2.java.view.jpanel3d.actions.JPanelScale;
+import ch.hearc.p2.java.view.jpanel3d.actions.JPanelSelection;
 
 import com.sun.j3d.utils.geometry.Text2D;
 import com.sun.j3d.utils.pickfast.PickCanvas;
@@ -101,47 +103,20 @@ final public class JPanel3D extends JPanel {
 	private Color titleColor = Color.BLUE.darker();
 	private Color[] plansColor;
 
-	private JCheckBox[] jCheckFct;
-
 	private float scaleFactor;
 	private double[][] matrixValues;
-
-	public float getScaleFactor() {
-		return scaleFactor;
-	}
-
-	public void setScaleFactor(float scaleFactor) {
-		this.scaleFactor = scaleFactor;
-	}
+	
+	private JPanelSelection jPanelSelection;
 
 	public JPanel3D(Matrix mat) {
 		matrixValues = mat.getValuesCopy();
 		scaleFactor = 10f;
+		jPanelSelection = null;
 
 		plansColor = new Color[3];
 		plansColor[0] = new Color(0.1f, 0.15f, 0.9f);
 		plansColor[1] = new Color(0.95f, 0.05f, 0.05f);
-		plansColor[2] = new Color(0.1f, 1.0f, 0.1f);
-
-		String[] fcts_str = new String[3];
-		for (int i = 0; i < 3; i++) {
-			fcts_str[i] = "";
-			for (int j = 0; j < 3; j++) {
-				if (matrixValues[i][j] > 0)
-					fcts_str[i] += " + " + matrixValues[i][j] + ""
-							+ (char) (120 + j);
-				else if (matrixValues[i][j] < 0)
-					fcts_str[i] += " - " + (-matrixValues[i][j]) + ""
-							+ (char) (120 + j);
-
-			}
-			fcts_str[i] = " " + fcts_str[i].substring(2) + " = "
-					+ matrixValues[i][3];
-		}
-		jCheckFct = new JCheckBox[3];
-		jCheckFct[0] = new JCheckBox(fcts_str[0], true);
-		jCheckFct[1] = new JCheckBox(fcts_str[1], true);
-		jCheckFct[2] = new JCheckBox(fcts_str[2], true);
+		plansColor[2] = new Color(0.1f, 1.0f, 0.1f);		
 
 		createUniverse();
 
@@ -549,11 +524,13 @@ final public class JPanel3D extends JPanel {
 		plansTogetherBranch.addChild(plansBranch[2]);
 
 		// construction mais pas d'affichage si checkbox non selectionnee
-		for (int i = 0; i < 3; i++) {
-			if (!jCheckFct[i].isSelected())
-				plansTogetherBranch.removeChild(plansBranch[i]);
+		if(jPanelSelection != null){
+			for (int i = 0; i < 3; i++) {
+				if (!jPanelSelection.isCheckBoxSelected(i))
+					plansTogetherBranch.removeChild(plansBranch[i]);
+			}
 		}
-
+		
 		TG1.addChild(plansTogetherBranch);
 	}
 
@@ -698,133 +675,15 @@ final public class JPanel3D extends JPanel {
 		jPanelActions.add(Box.createHorizontalStrut(10));
 
 		// Scale
-		JPanel jPanelActionScale = new JPanel();
-		jPanelActionScale.setLayout(new BoxLayout(jPanelActionScale,
-				BoxLayout.Y_AXIS));
-
-		TitledBorder tBorderScale = BorderFactory.createTitledBorder("Echelle de la boîte");
-		tBorderScale.setTitleFont(font);
-		tBorderScale.setTitleColor(titleColor);
-		// tBorderScale.setBorder(BorderFactory.createLineBorder(bgColor));
-
-		jPanelActionScale.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createRaisedBevelBorder(), tBorderScale));
-
-		final JSlider jSliderScale = new JSlider(-30, 30,
-				(int) (10 * Math.log10(scaleFactor)));
-		jSliderScale.setFont(font);
-		jSliderScale.setAlignmentX(Component.LEFT_ALIGNMENT);
-		jSliderScale.setMajorTickSpacing(10);
-		jSliderScale.setPaintTicks(true);
-		Dimension scaleSliderDim = new Dimension(280, 60);
-		jSliderScale.setPreferredSize(scaleSliderDim);
-
-		Hashtable<Integer, JLabel> labelTable = new Hashtable<Integer, JLabel>();
-
-		labelTable.put(new Integer(-30), new JLabel("0.001"));
-		labelTable.put(new Integer(-20), new JLabel("0.01"));
-		labelTable.put(new Integer(-10), new JLabel("0.1"));
-		labelTable.put(new Integer(0), new JLabel("1"));
-		labelTable.put(new Integer(10), new JLabel("10"));
-		labelTable.put(new Integer(20), new JLabel("100"));
-		labelTable.put(new Integer(30), new JLabel("1000"));
-
-		jSliderScale.setLabelTable(labelTable);
-		jSliderScale.setPaintLabels(true);
-
-		jSliderScale.addChangeListener(new ChangeListener() {
-
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				// if (!jSliderScale.getValueIsAdjusting()) {
-				if (jSliderScale.getValue() >= 0) {
-					scaleFactor = (float) Math.round(Math.pow(10,
-							jSliderScale.getValue() / 10.0));
-				} else {
-					scaleFactor = (float) Math.pow(10,
-							jSliderScale.getValue() / 10.0);
-				}
-
-				TG1.removeChild(plansTogetherBranch);
-				TG1.removeChild(labelsBranch);
-
-				drawPlans();
-				drawAxisLabels();
-
-				// }
-			}
-		});
-
-		JPanel jPanelScale = new JPanel();
-		jPanelScale.setPreferredSize(scaleSliderDim);
-		jPanelScale.setMinimumSize(scaleSliderDim);
-
-		jPanelScale.add(jSliderScale);
-
-		jPanelActionScale.add(jPanelScale);
-		jPanelActions.add(jPanelActionScale);
+		JPanel jPanelScale = new JPanelScale(font, titleColor, scaleFactor, this);
+		jPanelActions.add(jPanelScale);
 		jPanelActions.add(Box.createHorizontalStrut(10));
 
-		//
-		// Selection fonctions
-		JPanel jPanelActionSelection = new JPanel();
-		jPanelActionSelection.setLayout(new BoxLayout(jPanelActionSelection,
-				BoxLayout.Y_AXIS));
+		// Functions Selection
+		jPanelSelection = new JPanelSelection(font, titleColor, matrixValues, this);
+		jPanelActions.add(jPanelSelection);
 
-		TitledBorder tBorderSelection = BorderFactory
-				.createTitledBorder(" Fonctions affichées");
-		tBorderSelection.setTitleFont(font);
-		tBorderSelection.setTitleColor(titleColor);
-		// tBorderProjection.setBorder(BorderFactory.createLineBorder(bgColor));
-
-		jPanelActionSelection.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createRaisedBevelBorder(), tBorderSelection));
-
-		ActionListener selectionListener = new ActionListener() {
-			public void actionPerformed(ActionEvent event) {
-				JCheckBox src = (JCheckBox) event.getSource();
-				int index = 0;
-				if (src == jCheckFct[1])
-					index = 1;
-				else if (src == jCheckFct[2])
-					index = 2;
-
-				if (src.isSelected()) {
-					plansTogetherBranch.addChild(plansBranch[index]);
-				} else {
-					plansTogetherBranch.removeChild(plansBranch[index]);
-				}
-			}
-		};
-
-		JPanel jPanelSelection = new JPanel();
-		jPanelSelection.setLayout(new BoxLayout(jPanelSelection,
-				BoxLayout.Y_AXIS));
-		// jPanelSelection.setAlignmentY(Component.TOP_ALIGNMENT);
 		
-	
-
-		jCheckFct[0].setForeground(plansColor[0]);
-		jCheckFct[1].setForeground(plansColor[1]);
-		jCheckFct[2].setForeground(plansColor[2]);
-		
-		jPanelSelection.add(Box.createVerticalStrut(5));
-
-		for (JCheckBox jCheck : jCheckFct) {
-			jCheck.setFont(font);
-			jCheck.addActionListener(selectionListener);
-			jPanelSelection.add(jCheck);
-			jPanelSelection.add(Box.createVerticalStrut(5));
-			
-		}
-		// jCheckFct[].setForeground(bgColor);
-		// jCheckFct[].setAlignmentX(Component.LEFT_ALIGNMENT);
-
-		jPanelActionSelection.add(jPanelSelection);
-
-		jPanelActions.add(jPanelActionSelection);
-
-		//
 
 		jPanelBaseY.add(jPanelActions);
 		jPanelBaseY.add(Box.createVerticalStrut(10));
@@ -872,5 +731,38 @@ final public class JPanel3D extends JPanel {
 			projMode = View.PERSPECTIVE_PROJECTION;
 
 		orbitBehInterim.setProjectionMode(projMode);
+	}
+	
+	public void rescale(){
+		TG1.removeChild(plansTogetherBranch);
+		TG1.removeChild(labelsBranch);
+
+		drawPlans();
+		drawAxisLabels();
+	}
+	
+	public void displayPlan(boolean isDisplayed, int index){
+		if (isDisplayed) {
+			plansTogetherBranch.addChild(plansBranch[index]);
+		} else {
+			plansTogetherBranch.removeChild(plansBranch[index]);
+		}
+	}
+	
+	
+	//
+	//	GETTERS	&	SETTERS
+	//
+	
+	public float getScaleFactor() {
+		return scaleFactor;
+	}
+
+	public void setScaleFactor(float scaleFactor) {
+		this.scaleFactor = scaleFactor;
+	}
+	
+	public Color getPlanColor(int index){
+		return plansColor[index];
 	}
 }
