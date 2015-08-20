@@ -48,7 +48,7 @@ public class JPanelProjection extends JPanel
 				public void actionPerformed(ActionEvent event)
 					{
 
-					if (jRadioParallel.isSelected())
+					if (jRadioPerspective.isSelected())
 						{
 						jPanel3d.setPerspective(true);
 						}

@@ -108,7 +108,8 @@ public class ControllerMain
 					break;
 
 				case RESULT_3D:
-					if (controllerEquation.getNumberEquation() == 3 && controllerEquation.getNumberVar() == 3)
+					if ( (controllerEquation.getNumberEquation() == 3 && controllerEquation.getNumberVar() == 3)
+					|| (controllerEquation.getNumberEquation() == 2 && controllerEquation.getNumberVar() == 2) )
 						{
 						jpanel = new JPanel3D(controllerEquation.getMatrix(0));
 						jDialogMain.setPanel("Vue 3D du système", jpanel);
@@ -117,7 +118,7 @@ public class ControllerMain
 						}
 					else
 						{
-						JOptionPane.showMessageDialog(jFrameMain, "Seules les matrices 3x3 (3x4 avec les réponses) peuvent être affichés graphiquement.", "", JOptionPane.WARNING_MESSAGE);
+						JOptionPane.showMessageDialog(jFrameMain, "Seules les matrices 2x2 ou 3x3 (3x4 avec les réponses) peuvent être affichés graphiquement.", "", JOptionPane.WARNING_MESSAGE);
 						}
 				}
 

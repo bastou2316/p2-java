@@ -35,11 +35,11 @@ public class JPanelSelection extends JPanel {
 		ActionListener selectionListener = new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				JCheckBox src = (JCheckBox) event.getSource();
-				int index = 0;
+				int index = 2;
 				if (src == jCheckFct[1])
 					index = 1;
-				else if (src == jCheckFct[2])
-					index = 2;
+				else if (src == jCheckFct[0])
+					index = 0;
 
 				jPanel3d.displayPlan(src.isSelected(), index);
 			}
@@ -50,18 +50,15 @@ public class JPanelSelection extends JPanel {
 				BoxLayout.Y_AXIS));
 		// jPanelSelection.setAlignmentY(Component.TOP_ALIGNMENT);
 		
-	
-
-		jCheckFct[0].setForeground(jPanel3d.getPlanColor(0));
-		jCheckFct[1].setForeground(jPanel3d.getPlanColor(1));
-		jCheckFct[2].setForeground(jPanel3d.getPlanColor(2));
 		
 		jPanelSelection.add(Box.createVerticalStrut(5));
 
-		for (JCheckBox jCheck : jCheckFct) {
-			jCheck.setFont(font);
-			jCheck.addActionListener(selectionListener);
-			jPanelSelection.add(jCheck);
+		for (int i = 0; i < jCheckFct.length; i++) {
+			jCheckFct[i].setFont(font);
+			jCheckFct[i].addActionListener(selectionListener);
+			jCheckFct[i].setForeground(jPanel3d.getPlanColor(i));
+
+			jPanelSelection.add(jCheckFct[i]);
 			jPanelSelection.add(Box.createVerticalStrut(5));
 			
 		}
@@ -76,10 +73,14 @@ public class JPanelSelection extends JPanel {
 	}
 	
 	private void initCheckBoxes(double[][] matrixValues) {
-		String[] fcts_str = new String[3];
-		for (int i = 0; i < 3; i++) {
+		int nbEqu = matrixValues.length;
+		int nbVar = matrixValues[0].length-1;
+		String[] fcts_str = new String[nbEqu];
+		jCheckFct = new JCheckBox[nbEqu];
+		
+		for (int i = 0; i < nbEqu; i++) {
 			fcts_str[i] = "";
-			for (int j = 0; j < 3; j++) {
+			for (int j = 0; j < nbVar; j++) {
 				if (matrixValues[i][j] > 0)
 					fcts_str[i] += " + " + matrixValues[i][j] + ""
 							+ (char) (120 + j);
@@ -89,12 +90,9 @@ public class JPanelSelection extends JPanel {
 
 			}
 			fcts_str[i] = " " + fcts_str[i].substring(2) + " = "
-					+ matrixValues[i][3];
+					+ matrixValues[i][nbVar];
+			jCheckFct[i] = new JCheckBox(fcts_str[i], true);
 		}
-		jCheckFct = new JCheckBox[3];
-		jCheckFct[0] = new JCheckBox(fcts_str[0], true);
-		jCheckFct[1] = new JCheckBox(fcts_str[1], true);
-		jCheckFct[2] = new JCheckBox(fcts_str[2], true);
 		
 	}
 
