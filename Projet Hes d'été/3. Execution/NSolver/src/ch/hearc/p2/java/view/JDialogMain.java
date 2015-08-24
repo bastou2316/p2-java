@@ -2,8 +2,6 @@
 package ch.hearc.p2.java.view;
 
 import java.awt.BorderLayout;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 import javax.swing.JDialog;
 import javax.swing.JPanel;
@@ -22,8 +20,6 @@ public class JDialogMain extends JDialog
 		{
 		super();
 
-		this.controllerMain = controllerMain;
-
 		geometry();
 		control();
 		appearance();
@@ -32,12 +28,6 @@ public class JDialogMain extends JDialog
 	/*------------------------------------------------------------------*\
 	|*							Methodes Public							*|
 	\*------------------------------------------------------------------*/
-
-	public void close()
-		{
-		setVisible(false);
-		dispose();
-		}
 
 	/*------------------------------*\
 	|*				Set				*|
@@ -65,6 +55,12 @@ public class JDialogMain extends JDialog
 		revalidate();
 		}
 
+	public void showDialog()
+		{
+		setVisible(true);
+		//retourne quelque chose?
+		}
+
 	/*------------------------------------------------------------------*\
 	|*							Methodes Private						*|
 	\*------------------------------------------------------------------*/
@@ -84,25 +80,25 @@ public class JDialogMain extends JDialog
 	private void control()
 		{
 		//Changement de comportement du bouton fermé des dialogues
-		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-		addWindowListener(new WindowAdapter()
-			{
-
-				@Override
-				public void windowClosing(WindowEvent e)
-					{
-//					if (controllerMain.isEquationSetted())
-//						{
-						//controllerMain.avoidNewEquation();
-						controllerMain.stopCreating();
-						controllerMain.closeDialog();
-//						}
-//					else
-//						{
-//						JOptionPane.showMessageDialog(JDialogMain.this, "Veuillez définir l'équation et la matrice.");
-//						}
-					}
-			});
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		//		addWindowListener(new WindowAdapter()
+		//			{
+		//
+		//				@Override
+		//				public void windowClosing(WindowEvent e)
+		//					{
+		////					if (controllerMain.isEquationSetted())
+		////						{
+		//						//controllerMain.avoidNewEquation();
+		//						controllerMain.stopCreating();
+		//						controllerMain.closeDialog();
+		////						}
+		////					else
+		////						{
+		////						JOptionPane.showMessageDialog(JDialogMain.this, "Veuillez définir l'équation et la matrice.");
+		////						}
+		//					}
+		//			});
 		}
 
 	private void appearance()
@@ -114,7 +110,5 @@ public class JDialogMain extends JDialog
 	/*------------------------------------------------------------------*\
 	|*							Attributs Private						*|
 	\*------------------------------------------------------------------*/
-
-	private ControllerMain controllerMain;
 
 	}

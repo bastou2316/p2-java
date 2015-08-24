@@ -18,8 +18,8 @@ import javax.swing.event.ChangeListener;
 import ch.hearc.p2.java.view.jpanel3d.JPanel3D;
 
 public class JPanelScale extends JPanel{
-	
-	public JPanelScale(Font font, Color titleColor, float scaleFactor, JPanel3D jPanel3d) {
+
+	public JPanelScale(Font font, Color titleColor, float scaleFactor, final JPanel3D jPanel3d) {
 		this.setLayout(new BoxLayout(this,
 				BoxLayout.Y_AXIS));
 
@@ -60,7 +60,7 @@ public class JPanelScale extends JPanel{
 				// if (!jSliderScale.getValueIsAdjusting()) {
 				float newScaleFactor = 0f;
 				if (jSliderScale.getValue() >= 0) {
-					newScaleFactor = (float) Math.round(Math.pow(10,
+					newScaleFactor = Math.round(Math.pow(10,
 							jSliderScale.getValue() / 10.0));
 				} else {
 					newScaleFactor = (float) Math.pow(10,

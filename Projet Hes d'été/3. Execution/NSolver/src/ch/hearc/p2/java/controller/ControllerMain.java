@@ -10,6 +10,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import ch.hearc.p2.java.model.Equation;
 import ch.hearc.p2.java.model.Matrix;
+import ch.hearc.p2.java.view.JDialogMain;
 import ch.hearc.p2.java.view.JDialogSetEquation;
 import ch.hearc.p2.java.view.JDialogSetMatrix;
 import ch.hearc.p2.java.view.JFrameMain;
@@ -17,6 +18,7 @@ import ch.hearc.p2.java.view.jpanel.JPanelMenu;
 import ch.hearc.p2.java.view.jpanel.JPanelResultStep;
 import ch.hearc.p2.java.view.jpanel.JPanelSetEquation;
 import ch.hearc.p2.java.view.jpanel.JPanelSetMatrix;
+import ch.hearc.p2.java.view.jpanel3d.JPanel3D;
 
 public class ControllerMain
 	{
@@ -81,7 +83,7 @@ public class ControllerMain
 		currentView = dialog;
 
 		int result;
-		JDialogSetEquation jDialog;
+		JDialogSetEquation jDialogEquation;
 		JDialogSetMatrix jDialogMatrix;
 
 		switch(dialog)
@@ -92,10 +94,10 @@ public class ControllerMain
 					equationTemp = new Equation();
 					}
 
-				jDialog = new JDialogSetEquation(new JPanelSetEquation(equationTemp));
+				jDialogEquation = new JDialogSetEquation(new JPanelSetEquation(equationTemp));
 				//jDialog.setPanel("Création de problème", , 300, 300);//a combiner avec constr
 
-				result = jDialog.showDialog();
+				result = jDialogEquation.showDialog();
 				if (result == 1)//si pas annulé
 					{
 					showDialog(DIALOG.SET_MATRIX);
@@ -105,9 +107,9 @@ public class ControllerMain
 
 			case SET_EQUATION:
 				equationTemp = new Equation(equation);//copie de l'equ
-				jDialog = new JDialogSetEquation(new JPanelSetEquation(equationTemp));
+				jDialogEquation = new JDialogSetEquation(new JPanelSetEquation(equationTemp));
 
-				result = jDialog.showDialog();
+				result = jDialogEquation.showDialog();
 
 				if (result == 1)//si pas annulé
 					{
@@ -132,11 +134,11 @@ public class ControllerMain
 					{
 					matrixTemp = equation.getMatrix(0);
 					}
-				else					//Matrice en création
+				else
+					//Matrice en création
 					{
 					matrixTemp = new Matrix(equationTemp.getMatrixNumberEquation(), equationTemp.getMatrixNumberVariable() + 1);
 					}
-
 
 				jDialogMatrix = new JDialogSetMatrix(new JPanelSetMatrix(matrixTemp));//passer en temporaire
 
@@ -164,19 +166,20 @@ public class ControllerMain
 					}
 				break;
 
-			//			case RESULT_3D:
-//							if ( controllerEquation.getNumberEquation() >= 1  && controllerEquation.getNumberEquation() <= 4
-//							&& (controllerEquation.getNumberVar() == 2 || controllerEquation.getNumberVar() == 3) )
-			//					{
-			//					jpanel = new JPanel3D(equation.getMatrix(0));
-			//					jDialogMain.setPanel("Vue 3D du système", jpanel);
-			//					jDialogMain.setLocation(0, 0);
-			//					jDialogMain.pack();
-			//					}
-			//				else
-			//					{
-			//					JOptionPane.showMessageDialog(jFrameMain, "Seuls les systèmes de 1-4 équation(s) comprenant 2 à 3 inconnues, peuvent être affichés graphiquement.", "", JOptionPane.WARNING_MESSAGE);
-			//					}
+			case RESULT_3D:
+				if (equation.getMatrixNumberEquation() >= 1 && equation.getMatrixNumberEquation() <= 4 && (equation.getMatrixNumberVariable() == 2 || equation.getMatrixNumberVariable() == 3))
+					{
+					JPanel3D jpanel = new JPanel3D(equation.getMatrix(0));
+					JDialogMain jDialogMain = new JDialogMain(this);
+					jDialogMain.setPanel("Vue 3D du système", jpanel);
+					jDialogMain.setLocation(0, 0);
+					jDialogMain.pack();
+					jDialogMain.showDialog();
+					}
+				else
+					{
+					JOptionPane.showMessageDialog(jFrameMain, "Seuls les systèmes de 1-4 équation(s) comprenant 2 à 3 inconnues, peuvent être affichés graphiquement.", "", JOptionPane.WARNING_MESSAGE);
+					}
 			}
 		}
 
