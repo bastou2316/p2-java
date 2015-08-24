@@ -13,7 +13,6 @@ import java.awt.event.ActionListener;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
@@ -22,7 +21,6 @@ import javax.swing.border.TitledBorder;
 
 import ch.hearc.p2.java.controller.ControllerMain;
 import ch.hearc.p2.java.controller.ControllerMain.DIALOG;
-import ch.hearc.p2.java.view.strings.Strings;
 
 public class JPanelMenu extends JPanel
 	{
@@ -72,7 +70,7 @@ public class JPanelMenu extends JPanel
 //		add(buttonNew);
 //		add(labelLoad);
 //		add(buttonLoad);
-		
+
 		JPanel panelGeneral = new JPanel();
 		add(panelGeneral, BorderLayout.CENTER);
 		panelGeneral.setLayout(new BorderLayout(0, 0));
@@ -170,8 +168,8 @@ public class JPanelMenu extends JPanel
 		panelHistorique.add(panelCbHistorique);
 		panelCbHistorique.setLayout(new BorderLayout(0, 0));
 
-		JComboBox comboBox = new JComboBox();
-		panelCbHistorique.add(comboBox, BorderLayout.NORTH);
+//		JComboBox comboBox = new JComboBox();
+//		panelCbHistorique.add(comboBox, BorderLayout.NORTH);
 
 		JPanel panelLoad = new JPanel();
 		panelCbHistorique.add(panelLoad, BorderLayout.SOUTH);
@@ -180,7 +178,6 @@ public class JPanelMenu extends JPanel
 		buttonLoad = new JButton("Charger");
 		buttonLoad.setFont(new Font("Courier New", Font.PLAIN, 11));
 		panelLoad.add(buttonLoad);
-		
 
 		Component horizontalStrut = Box.createHorizontalStrut(20);
 		panelHistorique.add(horizontalStrut);
@@ -199,7 +196,7 @@ public class JPanelMenu extends JPanel
 				@Override
 				public void actionPerformed(ActionEvent e)
 					{
-					controllerMain.showDialog(DIALOG.SET_EQUATION);
+					controllerMain.showDialog(DIALOG.NEW_EQUATION);
 					}
 			});
 

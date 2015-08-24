@@ -15,11 +15,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 
-import ch.hearc.p2.java.controller.ControllerEquation;
-import ch.hearc.p2.java.controller.ControllerMain;
-import ch.hearc.p2.java.controller.ControllerMain.DIALOG;
-import ch.hearc.p2.java.controller.ControllerMain.PANEL;
 import ch.hearc.p2.java.model.Matrix;
+import ch.hearc.p2.java.view.JDialogSetMatrix;
 
 public class JPanelSetMatrix extends JPanel
 	{
@@ -28,16 +25,17 @@ public class JPanelSetMatrix extends JPanel
 	|*							Constructeurs							*|
 	\*------------------------------------------------------------------*/
 
-	public JPanelSetMatrix(ControllerMain controllerMain, ControllerEquation controllerEquation)
+	public JPanelSetMatrix(Matrix matrix)
 		{
 		super();
 
-		this.controllerMain = controllerMain;
-		this.controllerEquation = controllerEquation;
+		this.choice = 0;
 
-		this.n = controllerEquation.getNumberEquation();
-		this.m = controllerEquation.getNumberVar();
-		prepareTabNameVar( m, n, method);
+		this.matrix = matrix;
+		this.n = matrix.rowCount();//attention inversion ptetre
+		this.m = matrix.columnCount();
+
+		prepareTabNameVar(n, m, 2); //remplacer 2 par methodVar
 
 		// Composition du panel
 		geometry();
@@ -64,8 +62,8 @@ public class JPanelSetMatrix extends JPanel
 		tabTextField = new JTextField[n][];
 		for(int i = 1; i <= n; i++)
 			{
-			tabTextField[i - 1] = new JTextField[m + 1];
-			for(int j = 1; j <= m + 1; j++)
+			tabTextField[i - 1] = new JTextField[m];// + 1];
+			for(int j = 1; j <= m ; j++)// + 1; j++)
 				{
 				JPanel panMatrice = new JPanel();
 				panMatrice.setLayout(new GridLayout(0, 2));
@@ -78,7 +76,7 @@ public class JPanelSetMatrix extends JPanel
 					}
 				else
 					{
-					if (j == m + 1)
+					if (j == m) //+ 1)
 						{
 						string = "";
 						}
@@ -93,9 +91,9 @@ public class JPanelSetMatrix extends JPanel
 				tabTextField[i - 1][j - 1] = textfield;
 				textfield.setPreferredSize(new Dimension(50, 30));
 
-				if (controllerEquation.isEquationSolved() && !controllerEquation.isCreating())
+				if (matrix.getHistLength() > 1)
 					{
-					textfield.setText(String.valueOf(controllerEquation.getEquation().getMatrix(0).get(i - 1, j - 1)));
+					textfield.setText(String.valueOf(matrix.get(i - 1, j - 1)));
 					}
 
 				panMatrice.add(textfield);
@@ -126,11 +124,11 @@ public class JPanelSetMatrix extends JPanel
 				public void actionPerformed(ActionEvent e)
 					{
 					//Remplissage de la matrice
-					Matrix matrix = new Matrix(n, m + 1);
+					//matrix = new Matrix(n, m + 1);
 
 					for(int i = 0; i < n; i++)
 						{
-						for(int j = 0; j < m + 1; j++)
+						for(int j = 0; j < m; j++) // m + 1; j++)
 							{
 							//System.out.println(Float.parseFloat(tabTextField[i][j].getText()));
 							float value = (tabTextField[i][j].getText().isEmpty()) ? 0 : Float.parseFloat(tabTextField[i][j].getText());
@@ -138,19 +136,9 @@ public class JPanelSetMatrix extends JPanel
 							}
 						}
 
-					controllerEquation.setMatrix(matrix);
-					controllerEquation.applyTempEquation();//Fin de la version provisoire
-					controllerEquation.solveEquation();
-
-					//Changement de fenêtre
-					if (controllerEquation.getStepMode())
-						{
-						controllerMain.changeView(PANEL.RESULT_STEP);
-						}
-					else
-						{
-						controllerMain.changeView(PANEL.RESULT);
-						}
+					choice = 1;
+					JDialogSetMatrix jdialog = (JDialogSetMatrix) getRootPane().getParent();
+					jdialog.close();
 					}
 			});
 
@@ -160,7 +148,10 @@ public class JPanelSetMatrix extends JPanel
 				@Override
 				public void actionPerformed(ActionEvent e)
 					{
-					controllerMain.showDialog(DIALOG.SET_EQUATION);
+					choice = 2;
+					JDialogSetMatrix jdialog = (JDialogSetMatrix) getRootPane().getParent();
+					jdialog.close();
+//					controllerMain.showDialog(DIALOG.SET_EQUATION);
 					}
 			});
 		}
@@ -182,7 +173,7 @@ public class JPanelSetMatrix extends JPanel
 					}
 				else
 					{
-					controllerEquation.setVariableName("x");
+//					equation.setVariableName("x");
 					tabString = new String[3];
 					tabString[0] = "X";
 					tabString[1] = "Y";
@@ -190,7 +181,7 @@ public class JPanelSetMatrix extends JPanel
 					}
 				break;
 			case 1:
-				controllerEquation.setVariableName("a");
+//				equation.setVariableName("a");
 				tabString = new String[27];
 				tabString[0] = "A";
 				tabString[1] = "B";
@@ -220,8 +211,8 @@ public class JPanelSetMatrix extends JPanel
 				tabString[25] = "Z";
 				break;
 			case 2:
-				tabString = new String[n + 1];
-				controllerEquation.setVariableName("x1");
+				tabString = new String[n]; // + 1];
+//				equation.setVariableName("x1");
 				for(int i = 1; i <= n; i++)
 					{
 					tabString[i - 1] = "X";
@@ -235,12 +226,21 @@ public class JPanelSetMatrix extends JPanel
 		}
 
 	/*------------------------------------------------------------------*\
+	|*							Methodes Public							*|
+	\*------------------------------------------------------------------*/
+
+	public int getChoice()
+		{
+		return choice;
+		}
+
+	/*------------------------------------------------------------------*\
 	|*							Attributs Private						*|
 	\*------------------------------------------------------------------*/
 
 	// Inputs
-	private ControllerMain controllerMain;
-	private ControllerEquation controllerEquation;
+	private Matrix matrix;
+	private int choice;
 
 	// Tools
 	private JButton solveButton, previousButton;
@@ -249,5 +249,6 @@ public class JPanelSetMatrix extends JPanel
 	private int m;
 	private int method;
 	private static String[] tabString;
+
 
 	}

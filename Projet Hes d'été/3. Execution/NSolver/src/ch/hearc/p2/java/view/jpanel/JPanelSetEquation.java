@@ -19,10 +19,8 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
-import ch.hearc.p2.java.controller.ControllerEquation;
-import ch.hearc.p2.java.controller.ControllerMain;
-import ch.hearc.p2.java.controller.ControllerMain.DIALOG;
 import ch.hearc.p2.java.model.Equation;
+import ch.hearc.p2.java.view.JDialogSetEquation;
 
 public class JPanelSetEquation extends JPanel
 	{
@@ -31,20 +29,27 @@ public class JPanelSetEquation extends JPanel
 	|*							Constructeurs							*|
 	\*------------------------------------------------------------------*/
 
-	public JPanelSetEquation(ControllerMain controllerMain, ControllerEquation controllerEquation)
+	public JPanelSetEquation(Equation equation)
 		{
 		super();
 
-		this.controllerMain = controllerMain;
-		this.controllerEquation = controllerEquation;
-
-		equation = controllerEquation.getEquation();
+		this.choice = 0;
+		this.equation = equation;
 
 		// Composition du panel
 		geometry();
 		control();
 		appearance();
 
+		}
+
+	/*------------------------------------------------------------------*\
+	|*							Methodes Public							*|
+	\*------------------------------------------------------------------*/
+
+	public int getChoice()
+		{
+		return choice;
 		}
 
 	/*------------------------------------------------------------------*\
@@ -149,33 +154,43 @@ public class JPanelSetEquation extends JPanel
 					{
 					equation.setName(textFieldName.getText());
 					equation.setSpeed((Integer)spinSpeed.getValue());
+					equation.setNumberVar((Integer)numberVar.getValue());
+					equation.setNumberEquation((Integer)numberEquation.getValue());
+					equation.setModeStep(methodStep.isSelected());
 
-					int newNumberEqu = (Integer)numberEquation.getValue();
-					int newNumberVar = (Integer)numberVar.getValue();
+					choice = 1;
 
-					if (controllerEquation.isCreating() || !equation.isSolved() || newNumberVar != equation.getMatrixNumberVariable() || newNumberEqu != equation.getMatrixNumberEquation())
-						{
-						//Changement de matrix
-						equation.setNumberVar(newNumberVar);
-						equation.setNumberEquation(newNumberEqu);
-						equation.setModeStep(methodStep.isSelected());
+					JDialogSetEquation jdialog = (JDialogSetEquation) getRootPane().getParent();
+					jdialog.close();
 
-						controllerEquation.setEquation(equation);
-						controllerMain.showDialog(DIALOG.SET_MATRIX);
-						}
-					else if(equation.isStepMode() != methodStep.isSelected())
-						{
-						//Changement de mode
-						equation.setModeStep(methodStep.isSelected());
-						controllerEquation.reInitMatrix();//On reinitialise la matrix
-						controllerEquation.solveEquation();//On recalcule avec l'autre méthode
-						controllerMain.closeDialog();//On ferme aussi directement le dialogue
-						}
-					else
-						{
-						controllerEquation.setEquation(equation);
-						controllerMain.closeDialog();//On ferme aussi directement le dialogue
-						}
+					//controllerMain.closeDialog();//fermeture externe pour la récup !?
+					//
+					//					int newNumberEqu = (Integer)numberEquation.getValue();
+					//					int newNumberVar = (Integer)numberVar.getValue();
+					//
+					//					if (equation.isCreating() || !equation.isSolved() || newNumberVar != equation.getMatrixNumberVariable() || newNumberEqu != equation.getMatrixNumberEquation())
+					//						{
+					//						//Changement de matrix
+					//						equation.setNumberVar(newNumberVar);
+					//						equation.setNumberEquation(newNumberEqu);
+					//						equation.setModeStep(methodStep.isSelected());
+					//
+					//						controllerEquation.setEquation(equation);
+					//						controllerMain.showDialog(DIALOG.SET_MATRIX);
+					//						}
+					//					else if(equation.isStepMode() != methodStep.isSelected())
+					//						{
+					//						//Changement de mode
+					//						equation.setModeStep(methodStep.isSelected());
+					//						controllerEquation.reInitMatrix();//On reinitialise la matrix
+					//						controllerEquation.solveEquation();//On recalcule avec l'autre méthode
+					//						controllerMain.closeDialog();//On ferme aussi directement le dialogue
+					//						}
+					//					else
+					//						{
+					//						equation = ;
+					//						controllerMain.closeDialog();//On ferme aussi directement le dialogue
+					//						}
 					}
 			});
 		}
@@ -190,12 +205,12 @@ public class JPanelSetEquation extends JPanel
 	\*------------------------------------------------------------------*/
 
 	// Inputs
-	private ControllerMain controllerMain;
-	private ControllerEquation controllerEquation;
+	//	private ControllerMain controllerMain;
+	//private ControllerEquation controllerEquation;
+	private Equation equation;
+	private int choice;
 
 	// Tools
-	Equation equation;
-
 	private JLabel labelName, labelNumberEquation, labelNumberVar, labelVarStyle, labelSpeed;
 	private JRadioButton methodStep, methodDirect;
 	private JComboBox<String> varStyle;
