@@ -35,8 +35,10 @@ public class JPanelSelection extends JPanel {
 		ActionListener selectionListener = new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				JCheckBox src = (JCheckBox) event.getSource();
-				int index = 2;
-				if (src == jCheckFct[1])
+				int index = 3;
+				if (matrixValues.length >= 3 && src == jCheckFct[2])
+					index = 2;
+				else if (matrixValues.length >= 2 && src == jCheckFct[1])
 					index = 1;
 				else if (src == jCheckFct[0])
 					index = 0;

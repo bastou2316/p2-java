@@ -7,6 +7,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GraphicsConfiguration;
 import java.awt.Toolkit;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.media.j3d.Appearance;
 import javax.media.j3d.Background;
@@ -96,10 +98,11 @@ final public class JPanel3D extends JPanel {
 		scaleFactor = 10f;
 		jPanelSelection = null;
 
-		plansColor = new Color[3];
+		plansColor = new Color[4];
 		plansColor[0] = new Color(0.1f, 0.15f, 0.9f);
 		plansColor[1] = new Color(0.95f, 0.05f, 0.05f);
 		plansColor[2] = new Color(0.1f, 1.0f, 0.1f);
+		plansColor[3] = new Color(0.9f,0.06f, 0.78f);
 
 		createUniverse();
 
@@ -305,7 +308,7 @@ final public class JPanel3D extends JPanel {
 		if (app.getPolygonAttributes() == null)
 			app.setPolygonAttributes(pa);
 
-		if (matrixValues.length == 2) {
+		if (matrixValues[0].length == 3) {			//2D
 			// dessin de 2 lignes
 			drawLines();
 			
@@ -315,7 +318,8 @@ final public class JPanel3D extends JPanel {
 			// dessin de repères pour l'échelle
 			drawTicks2D();
 			drawAxisScaleLabels2D();
-		} else {
+		} 
+		else {										//3D lenght == 4
 			LineArray axisZ = new LineArray(2, LineArray.COORDINATES
 					| LineArray.COLOR_3);
 			axisZ.setCoordinate(0, new Point3f(0f, 0f, 0f));
@@ -518,21 +522,8 @@ final public class JPanel3D extends JPanel {
 		PolygonAttributes polyAttr = new PolygonAttributes();
 		polyAttr.setCullFace(PolygonAttributes.CULL_NONE);
 		polyAttr.setBackFaceNormalFlip(true);
-
-		double[] equ1 = matrixValues[0];
-		double[] equ2 = matrixValues[1];
-
-		plansTogetherBranch = new BranchGroup();
-		plansTogetherBranch.setCapability(BranchGroup.ALLOW_DETACH);
-		plansTogetherBranch.setCapability(TransformGroup.ALLOW_CHILDREN_WRITE);
-		plansTogetherBranch.setCapability(TransformGroup.ALLOW_CHILDREN_EXTEND);
-		plansBranch = new BranchGroup[2];
-		plansBranch[0] = new BranchGroup();
-		plansBranch[1] = new BranchGroup();
-		plansBranch[0].setCapability(BranchGroup.ALLOW_DETACH);
-		plansBranch[1].setCapability(BranchGroup.ALLOW_DETACH);
-
-		// ligne 1
+		
+		
 		LineAttributes lineAttr = new LineAttributes(2f, 0, true);		
 		Appearance app1 = new Appearance();
 		app1.setLineAttributes(lineAttr);
@@ -541,47 +532,36 @@ final public class JPanel3D extends JPanel {
 		app1.setTransparencyAttributes(new TransparencyAttributes(
 				TransparencyAttributes.NONE, 0.5f));
 		app1.setPolygonAttributes(polyAttr);
-		LineArray lineArrTest1 = createLine((float) equ1[0], (float) equ1[1],
-				(float) equ1[2]);
-		lineArrTest1.setColor(0, new Color3f(
-				plansColor[0]));
-		lineArrTest1.setColor(1, new Color3f(
-				plansColor[0]));
-		plansBranch[0].addChild(new Shape3D(lineArrTest1, app1));
-		plansTogetherBranch.addChild(plansBranch[0]);
-
-		// Appearance app1bis = new Appearance();
-		// app1bis.setColoringAttributes(new ColoringAttributes(new
-		// Color3f(0.0f,
-		// 0.0f, 1.0f), ColoringAttributes.SHADE_GOURAUD));
-		// app1bis.setTransparencyAttributes(new TransparencyAttributes(
-		// TransparencyAttributes.NICEST, transparancy));
-		// app1bis.setPolygonAttributes(polyAttr);
-		// QuadArray quadArrTest1bis = createPlan(1.0f, -1.0f, 3.0f, 5f, 10f);
-		// TG1.addChild(new Shape3D(quadArrTest1bis, app1bis));
-
-		// ligne 2	
-		Appearance app2 = new Appearance();
-		app2.setLineAttributes(lineAttr);
-		app2.setColoringAttributes(new ColoringAttributes(new Color3f(
-				plansColor[1]), ColoringAttributes.SHADE_GOURAUD));
-		app2.setTransparencyAttributes(new TransparencyAttributes(
-				TransparencyAttributes.NONE, 0.5f));
-		app2.setPolygonAttributes(polyAttr);
-		LineArray lineArrTest2 = createLine((float) equ2[0], (float) equ2[1],
-				(float) equ2[2]);
-		lineArrTest2.setColor(0, new Color3f(
-				plansColor[1]));
-		lineArrTest2.setColor(1, new Color3f(
-				plansColor[1]));
-		plansBranch[1].addChild(new Shape3D(lineArrTest2, app2));
-		plansTogetherBranch.addChild(plansBranch[1]);
-
+		
+		
+		plansTogetherBranch = new BranchGroup();
+		plansTogetherBranch.setCapability(BranchGroup.ALLOW_DETACH);
+		plansTogetherBranch.setCapability(TransformGroup.ALLOW_CHILDREN_WRITE);
+		plansTogetherBranch.setCapability(TransformGroup.ALLOW_CHILDREN_EXTEND);
+		
+		plansBranch = new BranchGroup[matrixValues.length];
+		
+		
+		LineArray temp;
+		
+		for (int i = 0; i < matrixValues.length; i++){
+			temp = createLine((float) matrixValues[i][0], (float) matrixValues[i][1],
+					(float) matrixValues[i][2]);
+			temp.setColor(0, new Color3f(
+					plansColor[i]));
+			temp.setColor(1, new Color3f(
+					plansColor[i]));
+			
+			plansBranch[i] = new BranchGroup();
+			plansBranch[i].setCapability(BranchGroup.ALLOW_DETACH);
+			plansBranch[i].addChild(new Shape3D(temp, app1));
+			plansTogetherBranch.addChild(plansBranch[i]);
+		}
 		
 
 		// construction mais pas d'affichage si checkbox non selectionnee
 		if (jPanelSelection != null) {
-			for (int i = 0; i < 2; i++) {
+			for (int i = 0; i < matrixValues.length; i++) {
 				if (!jPanelSelection.isCheckBoxSelected(i))
 					plansTogetherBranch.removeChild(plansBranch[i]);
 			}
@@ -669,72 +649,39 @@ final public class JPanel3D extends JPanel {
 		PolygonAttributes polyAttr = new PolygonAttributes();
 		polyAttr.setCullFace(PolygonAttributes.CULL_NONE);
 		polyAttr.setBackFaceNormalFlip(true);
-
-		double[] equ1 = matrixValues[0];
-		double[] equ2 = matrixValues[1];
-		double[] equ3 = matrixValues[2];
-
+		
+		Appearance apparence = new Appearance();
+//		app1.setColoringAttributes(new ColoringAttributes(new Color3f(
+//				plansColor[0]), ColoringAttributes.SHADE_GOURAUD));
+		apparence.setTransparencyAttributes(new TransparencyAttributes(
+				TransparencyAttributes.NONE, 0.5f));
+		apparence.setPolygonAttributes(polyAttr);
+		
 		plansTogetherBranch = new BranchGroup();
 		plansTogetherBranch.setCapability(BranchGroup.ALLOW_DETACH);
 		plansTogetherBranch.setCapability(TransformGroup.ALLOW_CHILDREN_WRITE);
 		plansTogetherBranch.setCapability(TransformGroup.ALLOW_CHILDREN_EXTEND);
-		plansBranch = new BranchGroup[3];
-		plansBranch[0] = new BranchGroup();
-		plansBranch[1] = new BranchGroup();
-		plansBranch[2] = new BranchGroup();
-		plansBranch[0].setCapability(BranchGroup.ALLOW_DETACH);
-		plansBranch[1].setCapability(BranchGroup.ALLOW_DETACH);
-		plansBranch[2].setCapability(BranchGroup.ALLOW_DETACH);
-
-		// plan1
-		Appearance app1 = new Appearance();
-		app1.setColoringAttributes(new ColoringAttributes(new Color3f(
-				plansColor[0]), ColoringAttributes.SHADE_GOURAUD));
-		app1.setTransparencyAttributes(new TransparencyAttributes(
-				TransparencyAttributes.NONE, 0.5f));
-		app1.setPolygonAttributes(polyAttr);
-		QuadArray quadArrTest1 = createPlan((float) equ1[0], (float) equ1[1],
-				(float) equ1[2], (float) equ1[3]);
-		plansBranch[0].addChild(new Shape3D(quadArrTest1, app1));
-		plansTogetherBranch.addChild(plansBranch[0]);
-
-		// Appearance app1bis = new Appearance();
-		// app1bis.setColoringAttributes(new ColoringAttributes(new
-		// Color3f(0.0f,
-		// 0.0f, 1.0f), ColoringAttributes.SHADE_GOURAUD));
-		// app1bis.setTransparencyAttributes(new TransparencyAttributes(
-		// TransparencyAttributes.NICEST, transparancy));
-		// app1bis.setPolygonAttributes(polyAttr);
-		// QuadArray quadArrTest1bis = createPlan(1.0f, -1.0f, 3.0f, 5f, 10f);
-		// TG1.addChild(new Shape3D(quadArrTest1bis, app1bis));
-
-		// plan2
-		Appearance app2 = new Appearance();
-		app2.setColoringAttributes(new ColoringAttributes(new Color3f(
-				plansColor[1]), ColoringAttributes.SHADE_GOURAUD));
-		app2.setTransparencyAttributes(new TransparencyAttributes(
-				TransparencyAttributes.NONE, 0.5f));
-		app2.setPolygonAttributes(polyAttr);
-		QuadArray quadArrTest2 = createPlan((float) equ2[0], (float) equ2[1],
-				(float) equ2[2], (float) equ2[3]);
-		plansBranch[1].addChild(new Shape3D(quadArrTest2, app2));
-		plansTogetherBranch.addChild(plansBranch[1]);
-
-		// plan3
-		Appearance app3 = new Appearance();
-		app3.setColoringAttributes(new ColoringAttributes(new Color3f(
-				plansColor[2]), ColoringAttributes.SHADE_GOURAUD));
-		app3.setTransparencyAttributes(new TransparencyAttributes(
-				TransparencyAttributes.NONE, 0.5f));
-		app3.setPolygonAttributes(polyAttr);
-		QuadArray quadArrTest3 = createPlan((float) equ3[0], (float) equ3[1],
-				(float) equ3[2], (float) equ3[3]);
-		plansBranch[2].addChild(new Shape3D(quadArrTest3, app3));
-		plansTogetherBranch.addChild(plansBranch[2]);
-
+		plansBranch = new BranchGroup[matrixValues.length];
+		
+		QuadArray quadArrayTemp;
+		
+		for(int i = 0; i < matrixValues.length; i++){
+			quadArrayTemp = createPlan((float) matrixValues[i][0], (float) matrixValues[i][1],
+					(float) matrixValues[i][2], (float) matrixValues[i][3]);
+			//pour la couleur de chaque extrémité (4)
+			for(int j = 0; j < 4; j++){
+				quadArrayTemp.setColor(j,new Color3f(plansColor[i]));
+			}
+			
+			plansBranch[i] = new BranchGroup();
+			plansBranch[i].setCapability(BranchGroup.ALLOW_DETACH);
+			plansBranch[i].addChild(new Shape3D(quadArrayTemp, apparence));
+			plansTogetherBranch.addChild(plansBranch[i]);
+		}
+		
 		// construction mais pas d'affichage si checkbox non selectionnee
 		if (jPanelSelection != null) {
-			for (int i = 0; i < 3; i++) {
+			for (int i = 0; i < matrixValues.length; i++) {
 				if (!jPanelSelection.isCheckBoxSelected(i))
 					plansTogetherBranch.removeChild(plansBranch[i]);
 			}
@@ -770,10 +717,11 @@ final public class JPanel3D extends JPanel {
 	 * @return
 	 */
 	private QuadArray createPlan(float a, float b, float c, float d, float scale) {
-		QuadArray quadArray = new QuadArray(4, GeometryArray.COORDINATES);
+		QuadArray quadArray = new QuadArray(4, GeometryArray.COORDINATES | GeometryArray.COLOR_3);
+			
 		Point3f[] coords = new Point3f[4];
 
-		// Point3f(y,z,x)
+		// Point3f => (y,z,x)
 		if (c != 0) {
 			// On a : ax + by + cz = d
 			// Donc : z = (d - ax - by) / c
@@ -999,7 +947,7 @@ final public class JPanel3D extends JPanel {
 		TG1.removeChild(plansTogetherBranch);
 		TG1.removeChild(labelsBranch);
 
-		if(matrixValues.length == 3){
+		if(matrixValues[0].length == 4){	// soit 3 inconnues
 			drawPlans();
 			drawAxisScaleLabels3D();
 		}
