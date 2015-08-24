@@ -82,106 +82,18 @@ public class ControllerMain
 		{
 		currentView = dialog;
 
-		JDialogMain jDialog;
-		int result;
-
-		Matrix matrixTemp;
-
 		switch(dialog)
 			{
 			case NEW_EQUATION:
-				//En cas d'annulation de remplissage, charge l'equation
-				if (equationTemp == null)
-					{
-					equationTemp = new Equation();
-					}
-
-				jDialog = new JDialogSetEquation(new JPanelSetEquation(equationTemp));
-				//jDialog.setPanel("Création de problème", , 300, 300);//a combiner avec constr
-
-				//Récupération du résultat
-				result = jDialog.showDialog();
-				if (result == 1)//si pas annulé
-					{
-					showDialog(DIALOG.NEW_MATRIX);
-					}
-
-				break;
-
-			case NEW_MATRIX:
-				matrixTemp = new Matrix(equationTemp.getMatrixNumberEquation(), equationTemp.getMatrixNumberVariable() + 1);
-
-				jDialog = new JDialogSetMatrix(new JPanelSetMatrix(matrixTemp));
-
-				result = jDialog.showDialog();
-				if (result == 1)//Appliqué (annulé renvoi 0)
-					{
-					equationTemp.setMatrix(matrixTemp);
-					equation = equationTemp;
-					equationTemp = null;
-
-					if (equation.isStepMode())
-						{
-						equation.solve();
-						changeView(PANEL.RESULT_STEP);
-						}
-					else
-						{
-						//equation.solve() //attention pas bonne méthode de res. directe
-						changeView(PANEL.RESULT);
-						}
-					}
-				else if (result == 2)//Précédent
-					{
-					showDialog(DIALOG.NEW_EQUATION);
-					}
+				showNewEquationDialog();
 				break;
 
 			case SET_EQUATION:
-				equationTemp = new Equation(equation);//copie de l'equ
-				jDialog = new JDialogSetEquation(new JPanelSetEquation(equationTemp));
-
-				result = jDialog.showDialog();
-				if (result == 1)//si pas annulé
-					{
-					if (equationTemp.getMatrixNumberEquation() == equation.getMatrixNumberEquation() && equationTemp.getMatrixNumberVariable() == equation.getMatrixNumberVariable())
-						{
-						//Matrice de meme taille, on applique les changements
-						equation = equationTemp;
-						equationTemp = null;
-						}
-					else
-						{
-						//On doit entrer une nouvelle matrice
-						showDialog(DIALOG.SET_MATRIX);
-						}
-					}
+				showSetEquationDialog();
 				break;
 
 			case SET_MATRIX:
-				matrixTemp = equation.getMatrix(0);
-				jDialog = new JDialogSetMatrix(new JPanelSetMatrix(matrixTemp));
-
-				result = jDialog.showDialog();
-				if (result == 1)//Appliqué (annulé renvoi 0)
-					{
-					equation.setMatrix(matrixTemp);
-
-					if (equation.isStepMode())
-						{
-						equation.solve();
-						changeView(PANEL.RESULT_STEP);
-						}
-					else
-						{
-						//equation.solve() //attention pas bonne méthode de res. directe
-						changeView(PANEL.RESULT);
-						}
-					}
-				else if (result == 2)//Précédent
-					{
-					//Rien dans ce cas
-					}
+				showSetMatrixDialog();
 				break;
 
 			case RESULT_3D:
@@ -194,6 +106,109 @@ public class ControllerMain
 					{
 					JOptionPane.showMessageDialog(jFrame, "Seuls les systèmes de 1-4 équation(s) comprenant 2 à 3 inconnues, peuvent être affichés graphiquement.", "", JOptionPane.WARNING_MESSAGE);
 					}
+			}
+		}
+
+	public void showNewEquationDialog()
+		{
+		//Si l'equation n'a pas deja ete commencé (suivant puis précédent),
+		//on en crée une nouvelle
+		if (equationTemp == null)
+			{
+			equationTemp = new Equation();
+			}
+
+		//Affichage du dialogue
+		JDialogMain jDialog = new JDialogSetEquation(new JPanelSetEquation(equationTemp));
+		int result = jDialog.showDialog();
+
+		//Traitement du résultat
+		if (result == 1)//si pas annulé
+			{
+			showNewMatrixDialog();//showDialog(DIALOG.NEW_MATRIX);
+			}
+		}
+
+	public void showNewMatrixDialog()
+		{
+		Matrix matrixTemp = new Matrix(equationTemp.getMatrixNumberEquation(), equationTemp.getMatrixNumberVariable() + 1);
+
+		JDialogMain jDialog = new JDialogSetMatrix(new JPanelSetMatrix(matrixTemp));
+
+		int result = jDialog.showDialog();
+		if (result == 1)//Appliqué (annulé renvoi 0)
+			{
+			equationTemp.setMatrix(matrixTemp);
+			equation = equationTemp;
+			equationTemp = null;
+
+			if (equation.isStepMode())
+				{
+				equation.solve();
+				changeView(PANEL.RESULT_STEP);
+				}
+			else
+				{
+				//equation.solve() //attention pas bonne méthode de res. directe
+				changeView(PANEL.RESULT);
+				}
+			}
+		else if (result == 2)//Précédent
+			{
+			showNewEquationDialog();//showDialog(DIALOG.NEW_EQUATION);
+			}
+		}
+
+	public void showSetEquationDialog()
+		{
+		//Copie de l'equation
+		equationTemp = new Equation(equation);
+
+		//Affichage
+		JDialogMain jDialog = new JDialogSetEquation(new JPanelSetEquation(equationTemp));
+		int result = jDialog.showDialog();
+
+		//Traitement du resultat
+		if (result == 1)//si pas annulé
+			{
+			if (equationTemp.getMatrixNumberEquation() == equation.getMatrixNumberEquation() && equationTemp.getMatrixNumberVariable() == equation.getMatrixNumberVariable())
+				{
+				//Matrice de meme taille, on applique les changements
+				equation = equationTemp;
+				equationTemp = null;
+				}
+			else
+				{
+				//On doit entrer une nouvelle matrice
+				showDialog(DIALOG.SET_MATRIX);
+				}
+			}
+		}
+
+	public void showSetMatrixDialog()
+		{
+		Matrix matrixTemp = equation.getMatrix(0);
+		JDialogMain jDialog = new JDialogSetMatrix(new JPanelSetMatrix(matrixTemp));
+
+		int result = jDialog.showDialog();
+		if (result == 1)//Appliqué (annulé renvoi 0)
+			{
+			equation.setMatrix(matrixTemp);
+
+			if (equation.isStepMode())
+				{
+				equation.solve();
+				changeView(PANEL.RESULT_STEP);
+				}
+			else
+				{
+				//equation.solve() //attention pas bonne méthode de res. directe
+				changeView(PANEL.RESULT);
+				}
+			}
+		else if (result == 2)//Précédent
+			{
+			//Rien dans ce cas
 			}
 		}
 
@@ -257,6 +272,7 @@ public class ControllerMain
 	/*------------------------------------------------------------------*\
 	|*							Attributs Private						*|
 	\*------------------------------------------------------------------*/
+
 	//Tools
 	private Equation equation;
 	private Equation equationTemp;
@@ -277,7 +293,7 @@ public class ControllerMain
 
 	public enum DIALOG implements VIEW
 		{
-		NEW_EQUATION, SET_EQUATION, SET_MATRIX, RESULT_3D, NEW_MATRIX
+		NEW_EQUATION, SET_EQUATION, SET_MATRIX, RESULT_3D//, NEW_MATRIX
 		}
 
 	}
