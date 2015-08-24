@@ -7,8 +7,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GraphicsConfiguration;
 import java.awt.Toolkit;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.media.j3d.Appearance;
 import javax.media.j3d.Background;
@@ -19,6 +17,7 @@ import javax.media.j3d.Canvas3D;
 import javax.media.j3d.ColoringAttributes;
 import javax.media.j3d.DirectionalLight;
 import javax.media.j3d.GeometryArray;
+import javax.media.j3d.Group;
 import javax.media.j3d.LineArray;
 import javax.media.j3d.LineAttributes;
 import javax.media.j3d.PickInfo;
@@ -39,29 +38,30 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
 
+import com.sun.j3d.utils.geometry.Text2D;
+import com.sun.j3d.utils.pickfast.PickCanvas;
+import com.sun.j3d.utils.universe.SimpleUniverse;
+
 import ch.hearc.p2.java.model.Matrix;
+import ch.hearc.p2.java.view.jpanel.dialog.JPanelDialog;
 import ch.hearc.p2.java.view.jpanel3d.actions.JPanelHomeTransform;
 import ch.hearc.p2.java.view.jpanel3d.actions.JPanelProjection;
 import ch.hearc.p2.java.view.jpanel3d.actions.JPanelScale;
 import ch.hearc.p2.java.view.jpanel3d.actions.JPanelSelection;
 import ch.hearc.p2.java.view.jpanel3d.actions.JPanelSolutionHighlight;
 
-import com.sun.j3d.utils.geometry.Text2D;
-import com.sun.j3d.utils.pickfast.PickCanvas;
-import com.sun.j3d.utils.universe.SimpleUniverse;
-
 /**
  * Mateli program based on the following sample program:
- * 
+ *
  * http://interactivemesh.org/testspace/orbitbehavior.html
  *
  * Version: 2.0 Date: 2009/04/08
  *
  * Copyright (c) 2009 August Lammersdorf, InteractiveMesh e.K. Kolomanstrasse
  * 2a, 85737 Ismaning Germany / Munich Area www.InteractiveMesh.com/org *
- * 
+ *
  */
-final public class JPanel3D extends JPanel {
+final public class JPanel3D extends JPanelDialog {
 
 	private BoundingSphere globalBounds = null;
 
@@ -211,8 +211,8 @@ final public class JPanel3D extends JPanel {
 	private void drawScene() {
 
 		TG1 = new TransformGroup();
-		TG1.setCapability(TransformGroup.ALLOW_CHILDREN_WRITE);
-		TG1.setCapability(TransformGroup.ALLOW_CHILDREN_EXTEND);
+		TG1.setCapability(Group.ALLOW_CHILDREN_WRITE);
+		TG1.setCapability(Group.ALLOW_CHILDREN_EXTEND);
 		// ------------ début de création des axes ------------
 
 		LineAttributes lineAttr = new LineAttributes(4f, 0, true);
@@ -220,24 +220,24 @@ final public class JPanel3D extends JPanel {
 		lineApp.setLineAttributes(lineAttr);
 
 		// axe des X
-		LineArray axisX = new LineArray(2, LineArray.COORDINATES
-				| LineArray.COLOR_3);
+		LineArray axisX = new LineArray(2, GeometryArray.COORDINATES
+				| GeometryArray.COLOR_3);
 		axisX.setCoordinate(0, new Point3f(0f, 0f, 0f));
 		axisX.setCoordinate(1, new Point3f(0f, 0f, 4f));
 		axisX.setColor(0, new Color3f(0.2f, 0.2f, 0.2f));
 		axisX.setColor(1, new Color3f(0.2f, 0.2f, 0.2f));
 		TG1.addChild(new Shape3D(axisX, lineApp));
-		
-		LineArray arrowLeftX = new LineArray(2, LineArray.COORDINATES
-				| LineArray.COLOR_3);
+
+		LineArray arrowLeftX = new LineArray(2, GeometryArray.COORDINATES
+				| GeometryArray.COLOR_3);
 		arrowLeftX.setCoordinate(0, new Point3f(0f, 0f, 4f));
 		arrowLeftX.setCoordinate(1, new Point3f(-0.1f, 0f, 3.8f));
 		arrowLeftX.setColor(0, new Color3f(0.2f, 0.2f, 0.2f));
 		arrowLeftX.setColor(1, new Color3f(0.2f, 0.2f, 0.2f));
 		TG1.addChild(new Shape3D(arrowLeftX, lineApp));
-		
-		LineArray arrowRightX = new LineArray(2, LineArray.COORDINATES
-				| LineArray.COLOR_3);
+
+		LineArray arrowRightX = new LineArray(2, GeometryArray.COORDINATES
+				| GeometryArray.COLOR_3);
 		arrowRightX.setCoordinate(0, new Point3f(0f, 0f, 4f));
 		arrowRightX.setCoordinate(1, new Point3f(0.1f, 0f, 3.8f));
 		arrowRightX.setColor(0, new Color3f(0.2f, 0.2f, 0.2f));
@@ -245,30 +245,30 @@ final public class JPanel3D extends JPanel {
 		TG1.addChild(new Shape3D(arrowRightX, lineApp));
 
 		// axe des Y
-		LineArray axisY = new LineArray(2, LineArray.COORDINATES
-				| LineArray.COLOR_3);
+		LineArray axisY = new LineArray(2, GeometryArray.COORDINATES
+				| GeometryArray.COLOR_3);
 		axisY.setCoordinate(0, new Point3f(0f, 0f, 0f));
 		axisY.setCoordinate(1, new Point3f(4f, 0f, 0f));
 		axisY.setColor(0, new Color3f(0.2f, 0.2f, 0.2f));
-		axisY.setColor(1, new Color3f(0.2f, 0.2f, 0.2f));		
+		axisY.setColor(1, new Color3f(0.2f, 0.2f, 0.2f));
 		TG1.addChild(new Shape3D(axisY, lineApp));
-		
-		LineArray arrowLeftY = new LineArray(2, LineArray.COORDINATES
-				| LineArray.COLOR_3);
+
+		LineArray arrowLeftY = new LineArray(2, GeometryArray.COORDINATES
+				| GeometryArray.COLOR_3);
 		arrowLeftY.setCoordinate(0, new Point3f(4f, 0f, 0f));
 		arrowLeftY.setCoordinate(1, new Point3f(3.8f, 0f, -0.1f));
 		arrowLeftY.setColor(0, new Color3f(0.2f, 0.2f, 0.2f));
 		arrowLeftY.setColor(1, new Color3f(0.2f, 0.2f, 0.2f));
 		TG1.addChild(new Shape3D(arrowLeftY, lineApp));
-		
-		LineArray arrowRightY = new LineArray(2, LineArray.COORDINATES
-				| LineArray.COLOR_3);
+
+		LineArray arrowRightY = new LineArray(2, GeometryArray.COORDINATES
+				| GeometryArray.COLOR_3);
 		arrowRightY.setCoordinate(0, new Point3f(4f, 0f, 0f));
 		arrowRightY.setCoordinate(1, new Point3f(3.8f, 0f, 0.1f));
 		arrowRightY.setColor(0, new Color3f(0.2f, 0.2f, 0.2f));
 		arrowRightY.setColor(1, new Color3f(0.2f, 0.2f, 0.2f));
 		TG1.addChild(new Shape3D(arrowRightY, lineApp));
-		
+
 
 		// création des labels des axes
 		// Axe X
@@ -285,10 +285,14 @@ final public class JPanel3D extends JPanel {
 		Appearance app = textObject.getAppearance();
 		PolygonAttributes pa = app.getPolygonAttributes();
 		if (pa == null)
-			pa = new PolygonAttributes();
+			{
+				pa = new PolygonAttributes();
+				}
 		pa.setCullFace(PolygonAttributes.CULL_NONE);
 		if (app.getPolygonAttributes() == null)
-			app.setPolygonAttributes(pa);
+			{
+				app.setPolygonAttributes(pa);
+				}
 
 		/* Axe Y */
 		textObject = new Text2D("Y", new Color3f(0.2f, 0.2f, 0.2f), "Serif",
@@ -303,41 +307,45 @@ final public class JPanel3D extends JPanel {
 		app = textObject.getAppearance();
 		pa = app.getPolygonAttributes();
 		if (pa == null)
-			pa = new PolygonAttributes();
+			{
+				pa = new PolygonAttributes();
+				}
 		pa.setCullFace(PolygonAttributes.CULL_NONE);
 		if (app.getPolygonAttributes() == null)
-			app.setPolygonAttributes(pa);
+			{
+				app.setPolygonAttributes(pa);
+				}
 
 		if (matrixValues[0].length == 3) {			//2D
 			// dessin de 2 lignes
 			drawLines();
-			
+
 			//dessin du carré
 			drawSquare();
 
 			// dessin de repères pour l'échelle
 			drawTicks2D();
 			drawAxisScaleLabels2D();
-		} 
+		}
 		else {										//3D lenght == 4
-			LineArray axisZ = new LineArray(2, LineArray.COORDINATES
-					| LineArray.COLOR_3);
+			LineArray axisZ = new LineArray(2, GeometryArray.COORDINATES
+					| GeometryArray.COLOR_3);
 			axisZ.setCoordinate(0, new Point3f(0f, 0f, 0f));
 			axisZ.setCoordinate(1, new Point3f(0f, 4f, 0f));
 			axisZ.setColor(0, new Color3f(0.2f, 0.2f, 0.2f));
 			axisZ.setColor(1, new Color3f(0.2f, 0.2f, 0.2f));
 			TG1.addChild(new Shape3D(axisZ, lineApp));
-			
-			LineArray arrowLeftZ = new LineArray(2, LineArray.COORDINATES
-					| LineArray.COLOR_3);
+
+			LineArray arrowLeftZ = new LineArray(2, GeometryArray.COORDINATES
+					| GeometryArray.COLOR_3);
 			arrowLeftZ.setCoordinate(0, new Point3f(0f, 4f, 0f));
 			arrowLeftZ.setCoordinate(1, new Point3f(-0.07f, 3.8f, 0.07f));
 			arrowLeftZ.setColor(0, new Color3f(0.2f, 0.2f, 0.2f));
 			arrowLeftZ.setColor(1, new Color3f(0.2f, 0.2f, 0.2f));
 			TG1.addChild(new Shape3D(arrowLeftZ, lineApp));
-			
-			LineArray arrowRightZ = new LineArray(2, LineArray.COORDINATES
-					| LineArray.COLOR_3);
+
+			LineArray arrowRightZ = new LineArray(2, GeometryArray.COORDINATES
+					| GeometryArray.COLOR_3);
 			arrowRightZ.setCoordinate(0, new Point3f(0f, 4f, 0f));
 			arrowRightZ.setCoordinate(1, new Point3f(0.07f, 3.8f, -0.07f));
 			arrowRightZ.setColor(0, new Color3f(0.2f, 0.2f, 0.2f));
@@ -356,14 +364,18 @@ final public class JPanel3D extends JPanel {
 			app = textObject.getAppearance();
 			pa = app.getPolygonAttributes();
 			if (pa == null)
-				pa = new PolygonAttributes();
+				{
+					pa = new PolygonAttributes();
+					}
 			pa.setCullFace(PolygonAttributes.CULL_NONE);
 			if (app.getPolygonAttributes() == null)
-				app.setPolygonAttributes(pa);
+				{
+					app.setPolygonAttributes(pa);
+					}
 
 			// dessin de 3 plans
 			drawPlans();
-			
+
 			//dessin du cube
 			drawCube();
 
@@ -382,8 +394,8 @@ final public class JPanel3D extends JPanel {
 		lineApp.setLineAttributes(lineAttr);
 
 		// Axe X
-		LineArray tickX = new LineArray(2, LineArray.COORDINATES
-				| LineArray.COLOR_3);
+		LineArray tickX = new LineArray(2, GeometryArray.COORDINATES
+				| GeometryArray.COLOR_3);
 		tickX.setCoordinate(0, new Point3f(1.0f, 0f, -0.08f));
 		tickX.setCoordinate(1, new Point3f(1.0f, 0f, 0.08f));
 		tickX.setColor(0, new Color3f(0.2f, 0.2f, 0.2f));
@@ -391,8 +403,8 @@ final public class JPanel3D extends JPanel {
 		TG1.addChild(new Shape3D(tickX, lineApp));
 
 		/* Axe Y */
-		LineArray tickY = new LineArray(2, LineArray.COORDINATES
-				| LineArray.COLOR_3);
+		LineArray tickY = new LineArray(2, GeometryArray.COORDINATES
+				| GeometryArray.COLOR_3);
 		tickY.setCoordinate(0, new Point3f(-0.08f, 0f, 1f));
 		tickY.setCoordinate(1, new Point3f(0.08f, 0f, 1f));
 		tickY.setColor(0, new Color3f(0.2f, 0.2f, 0.2f));
@@ -430,10 +442,14 @@ final public class JPanel3D extends JPanel {
 		Appearance appTick = tickValue.getAppearance();
 		PolygonAttributes paTick = appTick.getPolygonAttributes();
 		if (paTick == null)
-			paTick = new PolygonAttributes();
+			{
+				paTick = new PolygonAttributes();
+				}
 		paTick.setCullFace(PolygonAttributes.CULL_NONE);
 		if (appTick.getPolygonAttributes() == null)
-			appTick.setPolygonAttributes(paTick);
+			{
+				appTick.setPolygonAttributes(paTick);
+				}
 
 		TG1.addChild(labelsBranch);
 	}
@@ -444,8 +460,8 @@ final public class JPanel3D extends JPanel {
 		lineApp.setLineAttributes(lineAttr);
 
 		// Axe X
-		LineArray tickX = new LineArray(2, LineArray.COORDINATES
-				| LineArray.COLOR_3);
+		LineArray tickX = new LineArray(2, GeometryArray.COORDINATES
+				| GeometryArray.COLOR_3);
 		tickX.setCoordinate(0, new Point3f(1.0f, 0f, -0.08f));
 		tickX.setCoordinate(1, new Point3f(1.0f, 0f, 0.08f));
 		tickX.setColor(0, new Color3f(0.2f, 0.2f, 0.2f));
@@ -454,8 +470,8 @@ final public class JPanel3D extends JPanel {
 		TG1.addChild(new Shape3D(tickX, lineApp));
 
 		/* Axe Y */
-		LineArray tickY = new LineArray(2, LineArray.COORDINATES
-				| LineArray.COLOR_3);
+		LineArray tickY = new LineArray(2, GeometryArray.COORDINATES
+				| GeometryArray.COLOR_3);
 		tickY.setCoordinate(0, new Point3f(-0.08f, 0f, 1f));
 		tickY.setCoordinate(1, new Point3f(0.08f, 0f, 1f));
 		tickY.setColor(0, new Color3f(0.2f, 0.2f, 0.2f));
@@ -463,8 +479,8 @@ final public class JPanel3D extends JPanel {
 		TG1.addChild(new Shape3D(tickY, lineApp));
 
 		/* Axe Z */
-		LineArray tickZ = new LineArray(2, LineArray.COORDINATES
-				| LineArray.COLOR_3);
+		LineArray tickZ = new LineArray(2, GeometryArray.COORDINATES
+				| GeometryArray.COLOR_3);
 		tickZ.setCoordinate(0, new Point3f(0f, 1f, -0.08f));
 		tickZ.setCoordinate(1, new Point3f(0f, 1f, 0.08f));
 		tickZ.setColor(0, new Color3f(0.2f, 0.2f, 0.2f));
@@ -510,10 +526,14 @@ final public class JPanel3D extends JPanel {
 		Appearance appTick = tickValue.getAppearance();
 		PolygonAttributes paTick = appTick.getPolygonAttributes();
 		if (paTick == null)
-			paTick = new PolygonAttributes();
+			{
+				paTick = new PolygonAttributes();
+				}
 		paTick.setCullFace(PolygonAttributes.CULL_NONE);
 		if (appTick.getPolygonAttributes() == null)
-			appTick.setPolygonAttributes(paTick);
+			{
+				appTick.setPolygonAttributes(paTick);
+				}
 
 		TG1.addChild(labelsBranch);
 	}
@@ -522,9 +542,9 @@ final public class JPanel3D extends JPanel {
 		PolygonAttributes polyAttr = new PolygonAttributes();
 		polyAttr.setCullFace(PolygonAttributes.CULL_NONE);
 		polyAttr.setBackFaceNormalFlip(true);
-		
-		
-		LineAttributes lineAttr = new LineAttributes(2f, 0, true);		
+
+
+		LineAttributes lineAttr = new LineAttributes(2f, 0, true);
 		Appearance app1 = new Appearance();
 		app1.setLineAttributes(lineAttr);
 		app1.setColoringAttributes(new ColoringAttributes(new Color3f(
@@ -532,18 +552,18 @@ final public class JPanel3D extends JPanel {
 		app1.setTransparencyAttributes(new TransparencyAttributes(
 				TransparencyAttributes.NONE, 0.5f));
 		app1.setPolygonAttributes(polyAttr);
-		
-		
+
+
 		plansTogetherBranch = new BranchGroup();
 		plansTogetherBranch.setCapability(BranchGroup.ALLOW_DETACH);
-		plansTogetherBranch.setCapability(TransformGroup.ALLOW_CHILDREN_WRITE);
-		plansTogetherBranch.setCapability(TransformGroup.ALLOW_CHILDREN_EXTEND);
-		
+		plansTogetherBranch.setCapability(Group.ALLOW_CHILDREN_WRITE);
+		plansTogetherBranch.setCapability(Group.ALLOW_CHILDREN_EXTEND);
+
 		plansBranch = new BranchGroup[matrixValues.length];
-		
-		
+
+
 		LineArray temp;
-		
+
 		for (int i = 0; i < matrixValues.length; i++){
 			temp = createLine((float) matrixValues[i][0], (float) matrixValues[i][1],
 					(float) matrixValues[i][2]);
@@ -551,19 +571,21 @@ final public class JPanel3D extends JPanel {
 					plansColor[i]));
 			temp.setColor(1, new Color3f(
 					plansColor[i]));
-			
+
 			plansBranch[i] = new BranchGroup();
 			plansBranch[i].setCapability(BranchGroup.ALLOW_DETACH);
 			plansBranch[i].addChild(new Shape3D(temp, app1));
 			plansTogetherBranch.addChild(plansBranch[i]);
 		}
-		
+
 
 		// construction mais pas d'affichage si checkbox non selectionnee
 		if (jPanelSelection != null) {
 			for (int i = 0; i < matrixValues.length; i++) {
 				if (!jPanelSelection.isCheckBoxSelected(i))
-					plansTogetherBranch.removeChild(plansBranch[i]);
+					{
+						plansTogetherBranch.removeChild(plansBranch[i]);
+						}
 			}
 		}
 
@@ -571,8 +593,8 @@ final public class JPanel3D extends JPanel {
 	}
 
 	/**
-	 * create line that fits inside the "square" 
-	 * 
+	 * create line that fits inside the "square"
+	 *
 	 * @param a
 	 * @param b
 	 * @param c
@@ -584,7 +606,7 @@ final public class JPanel3D extends JPanel {
 
 	/**
 	 * create plan : ax + by = d
-	 * 
+	 *
 	 * @param a
 	 * @param b
 	 * @param c
@@ -595,17 +617,17 @@ final public class JPanel3D extends JPanel {
 	 * @return
 	 */
 	private LineArray createLine(float a, float b, float c, float scale) {
-		LineArray lineArray = new LineArray(2, LineArray.COORDINATES
-				| LineArray.COLOR_3);		
+		LineArray lineArray = new LineArray(2, GeometryArray.COORDINATES
+				| GeometryArray.COLOR_3);
 
-		if (b != 0) { 
+		if (b != 0) {
 			// On a : ax + by = c
 			// Donc : y = (c - ax) / b
 			lineArray.setCoordinate(0, new Point3f((c - a * -scaleFactor * scale)
 					/ (scaleFactor * b), 0, -scale));
 			lineArray.setCoordinate(1, new Point3f((c - a * scaleFactor * scale)
 					/ (scaleFactor * b), 0, scale));
-			
+
 		} else if (a != 0) { // plan vertical
 			// On a : ax = c
 			// Donc : x = c/a
@@ -616,20 +638,20 @@ final public class JPanel3D extends JPanel {
 					.println("equation error : cannot display this line (0x + 0y "
 							+ c + ")");
 		}
-		
-		
+
+
 
 		return lineArray;
 	}
-	
+
 	private void drawSquare() {
 		// Bounding square
 		LineAttributes squareAttr = new LineAttributes(2f, 0, true);
 		Appearance squareApp = new Appearance();
 		squareApp.setLineAttributes(squareAttr);
 
-		LineArray square = new LineArray(8, LineArray.COORDINATES
-				| LineArray.COLOR_3);
+		LineArray square = new LineArray(8, GeometryArray.COORDINATES
+				| GeometryArray.COLOR_3);
 		square.setCoordinate(0, new Point3f(1f, 0f, 1f));
 		square.setCoordinate(1, new Point3f(1f, 0f, -1f));
 
@@ -640,7 +662,7 @@ final public class JPanel3D extends JPanel {
 		square.setCoordinate(5, new Point3f(-1f, 0f, 1f));
 
 		square.setCoordinate(6, new Point3f(-1f, 0f, 1f));
-		square.setCoordinate(7, new Point3f(1f, 0f, 1f));		
+		square.setCoordinate(7, new Point3f(1f, 0f, 1f));
 
 		TG1.addChild(new Shape3D(square, squareApp));
 	}
@@ -649,22 +671,22 @@ final public class JPanel3D extends JPanel {
 		PolygonAttributes polyAttr = new PolygonAttributes();
 		polyAttr.setCullFace(PolygonAttributes.CULL_NONE);
 		polyAttr.setBackFaceNormalFlip(true);
-		
+
 		Appearance apparence = new Appearance();
 //		app1.setColoringAttributes(new ColoringAttributes(new Color3f(
 //				plansColor[0]), ColoringAttributes.SHADE_GOURAUD));
 		apparence.setTransparencyAttributes(new TransparencyAttributes(
 				TransparencyAttributes.NONE, 0.5f));
 		apparence.setPolygonAttributes(polyAttr);
-		
+
 		plansTogetherBranch = new BranchGroup();
 		plansTogetherBranch.setCapability(BranchGroup.ALLOW_DETACH);
-		plansTogetherBranch.setCapability(TransformGroup.ALLOW_CHILDREN_WRITE);
-		plansTogetherBranch.setCapability(TransformGroup.ALLOW_CHILDREN_EXTEND);
+		plansTogetherBranch.setCapability(Group.ALLOW_CHILDREN_WRITE);
+		plansTogetherBranch.setCapability(Group.ALLOW_CHILDREN_EXTEND);
 		plansBranch = new BranchGroup[matrixValues.length];
-		
+
 		QuadArray quadArrayTemp;
-		
+
 		for(int i = 0; i < matrixValues.length; i++){
 			quadArrayTemp = createPlan((float) matrixValues[i][0], (float) matrixValues[i][1],
 					(float) matrixValues[i][2], (float) matrixValues[i][3]);
@@ -672,18 +694,20 @@ final public class JPanel3D extends JPanel {
 			for(int j = 0; j < 4; j++){
 				quadArrayTemp.setColor(j,new Color3f(plansColor[i]));
 			}
-			
+
 			plansBranch[i] = new BranchGroup();
 			plansBranch[i].setCapability(BranchGroup.ALLOW_DETACH);
 			plansBranch[i].addChild(new Shape3D(quadArrayTemp, apparence));
 			plansTogetherBranch.addChild(plansBranch[i]);
 		}
-		
+
 		// construction mais pas d'affichage si checkbox non selectionnee
 		if (jPanelSelection != null) {
 			for (int i = 0; i < matrixValues.length; i++) {
 				if (!jPanelSelection.isCheckBoxSelected(i))
-					plansTogetherBranch.removeChild(plansBranch[i]);
+					{
+						plansTogetherBranch.removeChild(plansBranch[i]);
+						}
 			}
 		}
 
@@ -693,7 +717,7 @@ final public class JPanel3D extends JPanel {
 	/**
 	 * create plan that fits that stays inside the "box" (x and y axis ok, but z
 	 * axis might go out of the box)
-	 * 
+	 *
 	 * @param a
 	 * @param b
 	 * @param c
@@ -706,7 +730,7 @@ final public class JPanel3D extends JPanel {
 
 	/**
 	 * create plan : ax + by + cz = d
-	 * 
+	 *
 	 * @param a
 	 * @param b
 	 * @param c
@@ -718,7 +742,7 @@ final public class JPanel3D extends JPanel {
 	 */
 	private QuadArray createPlan(float a, float b, float c, float d, float scale) {
 		QuadArray quadArray = new QuadArray(4, GeometryArray.COORDINATES | GeometryArray.COLOR_3);
-			
+
 		Point3f[] coords = new Point3f[4];
 
 		// Point3f => (y,z,x)
@@ -774,8 +798,8 @@ final public class JPanel3D extends JPanel {
 		Appearance cubeApp = new Appearance();
 		cubeApp.setLineAttributes(cubeAttr);
 
-		LineArray cube = new LineArray(24, LineArray.COORDINATES
-				| LineArray.COLOR_3);
+		LineArray cube = new LineArray(24, GeometryArray.COORDINATES
+				| GeometryArray.COLOR_3);
 		cube.setCoordinate(0, new Point3f(1f, 1f, 1f));
 		cube.setCoordinate(1, new Point3f(1f, 1f, -1f));
 
@@ -827,9 +851,13 @@ final public class JPanel3D extends JPanel {
 
 		int fontSize = 14;
 		if (screenDim.height < 1024)
-			fontSize = 11;
+			{
+				fontSize = 11;
+				}
 		else if (screenDim.height < 1200)
-			fontSize = 12;
+			{
+				fontSize = 12;
+				}
 
 		font = new Font("SansSerif", Font.BOLD, fontSize);
 
@@ -932,13 +960,15 @@ final public class JPanel3D extends JPanel {
 
 	/**
 	 * true : perspective false: parallele
-	 * 
+	 *
 	 * @param perspective
 	 */
 	public void setPerspective(boolean perspective) {
 		int projMode = View.PARALLEL_PROJECTION;
 		if (perspective)
-			projMode = View.PERSPECTIVE_PROJECTION;
+			{
+				projMode = View.PERSPECTIVE_PROJECTION;
+				}
 
 		orbitBehInterim.setProjectionMode(projMode);
 	}
@@ -955,7 +985,7 @@ final public class JPanel3D extends JPanel {
 			drawLines();
 			drawAxisScaleLabels2D();
 		}
-		
+
 	}
 
 	public void displayPlan(boolean isDisplayed, int index) {

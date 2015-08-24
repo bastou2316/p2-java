@@ -1,5 +1,5 @@
 
-package ch.hearc.p2.java.view.jpanel;
+package ch.hearc.p2.java.view.jpanel.dialog;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -16,9 +16,9 @@ import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 
 import ch.hearc.p2.java.model.Matrix;
-import ch.hearc.p2.java.view.JDialogSetMatrix;
+import ch.hearc.p2.java.view.dialog.JDialogSetMatrix;
 
-public class JPanelSetMatrix extends JPanel
+public class JPanelSetMatrix extends JPanelDialog
 	{
 
 	/*------------------------------------------------------------------*\
@@ -28,8 +28,6 @@ public class JPanelSetMatrix extends JPanel
 	public JPanelSetMatrix(Matrix matrix)
 		{
 		super();
-
-		this.choice = 0;
 
 		this.matrix = matrix;
 		this.n = matrix.rowCount();//attention inversion ptetre
@@ -226,28 +224,17 @@ public class JPanelSetMatrix extends JPanel
 		}
 
 	/*------------------------------------------------------------------*\
-	|*							Methodes Public							*|
-	\*------------------------------------------------------------------*/
-
-	public int getChoice()
-		{
-		return choice;
-		}
-
-	/*------------------------------------------------------------------*\
 	|*							Attributs Private						*|
 	\*------------------------------------------------------------------*/
 
 	// Inputs
 	private Matrix matrix;
-	private int choice;
 
 	// Tools
 	private JButton solveButton, previousButton;
 	private JTextField[][] tabTextField;
 	private int n;
 	private int m;
-	private int method;
 	private static String[] tabString;
 
 

@@ -1,5 +1,5 @@
 
-package ch.hearc.p2.java.view.jpanel;
+package ch.hearc.p2.java.view.jpanel.dialog;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -20,9 +20,9 @@ import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
 import ch.hearc.p2.java.model.Equation;
-import ch.hearc.p2.java.view.JDialogSetEquation;
+import ch.hearc.p2.java.view.dialog.JDialogSetEquation;
 
-public class JPanelSetEquation extends JPanel
+public class JPanelSetEquation extends JPanelDialog
 	{
 
 	/*------------------------------------------------------------------*\
@@ -33,7 +33,6 @@ public class JPanelSetEquation extends JPanel
 		{
 		super();
 
-		this.choice = 0;
 		this.equation = equation;
 
 		// Composition du panel
@@ -46,11 +45,6 @@ public class JPanelSetEquation extends JPanel
 	/*------------------------------------------------------------------*\
 	|*							Methodes Public							*|
 	\*------------------------------------------------------------------*/
-
-	public int getChoice()
-		{
-		return choice;
-		}
 
 	/*------------------------------------------------------------------*\
 	|*							Methodes Private						*|
@@ -162,35 +156,6 @@ public class JPanelSetEquation extends JPanel
 
 					JDialogSetEquation jdialog = (JDialogSetEquation) getRootPane().getParent();
 					jdialog.close();
-
-					//controllerMain.closeDialog();//fermeture externe pour la récup !?
-					//
-					//					int newNumberEqu = (Integer)numberEquation.getValue();
-					//					int newNumberVar = (Integer)numberVar.getValue();
-					//
-					//					if (equation.isCreating() || !equation.isSolved() || newNumberVar != equation.getMatrixNumberVariable() || newNumberEqu != equation.getMatrixNumberEquation())
-					//						{
-					//						//Changement de matrix
-					//						equation.setNumberVar(newNumberVar);
-					//						equation.setNumberEquation(newNumberEqu);
-					//						equation.setModeStep(methodStep.isSelected());
-					//
-					//						controllerEquation.setEquation(equation);
-					//						controllerMain.showDialog(DIALOG.SET_MATRIX);
-					//						}
-					//					else if(equation.isStepMode() != methodStep.isSelected())
-					//						{
-					//						//Changement de mode
-					//						equation.setModeStep(methodStep.isSelected());
-					//						controllerEquation.reInitMatrix();//On reinitialise la matrix
-					//						controllerEquation.solveEquation();//On recalcule avec l'autre méthode
-					//						controllerMain.closeDialog();//On ferme aussi directement le dialogue
-					//						}
-					//					else
-					//						{
-					//						equation = ;
-					//						controllerMain.closeDialog();//On ferme aussi directement le dialogue
-					//						}
 					}
 			});
 		}
@@ -205,10 +170,7 @@ public class JPanelSetEquation extends JPanel
 	\*------------------------------------------------------------------*/
 
 	// Inputs
-	//	private ControllerMain controllerMain;
-	//private ControllerEquation controllerEquation;
 	private Equation equation;
-	private int choice;
 
 	// Tools
 	private JLabel labelName, labelNumberEquation, labelNumberVar, labelVarStyle, labelSpeed;
