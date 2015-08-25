@@ -29,17 +29,9 @@ public class Equation implements Serializable
 		this.saved = false;
 		}
 
-	public Equation(Equation src)
-		{
-		this(src.getName(), src.getMatrixNumberVariable(), src.getMatrixNumberEquation(), src.getSpeedSec(), src.isStepMode());
-		this.setMatrix(src.getMatrix(0));
-//		this.solve();
-		}
-
 	/*------------------------------------------------------------------*\
 	|*							Methodes Public							*|
 	\*------------------------------------------------------------------*/
-
 	public void solve()
 		{
 		Matrix matrix = new Matrix(listMatrix.get(ORIGIN));
@@ -70,7 +62,6 @@ public class Equation implements Serializable
 		{
 		return variableName;
 		}
-
 	public String getName()
 		{
 		return name;
@@ -127,7 +118,7 @@ public class Equation implements Serializable
 
 	public void setVariableName(String variableName)
 		{
-		listMatrix.get(listMatrix.size() - 1).setVariableName(variableName);
+		listMatrix.get(listMatrix.size()-1).setVariableName(variableName);
 		}
 
 	public void setMatrix(Matrix matrix)
