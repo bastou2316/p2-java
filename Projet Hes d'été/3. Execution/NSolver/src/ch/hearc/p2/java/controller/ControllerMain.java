@@ -146,11 +146,7 @@ public class ControllerMain
 			try
 				{
 				equation = controllerIO.load(jfilechooser.getSelectedFile());
-//				equation.solve();
-				//				controllerEquation.setEquation(equation);
-				//				controllerEquation.applyTempEquation();
-				//				controllerEquation.reInitMatrix();
-				//				controllerEquation.solveEquation();
+				//equation.solve();//voir si deja solve
 				changeView(PANEL.RESULT);
 				}
 			catch (ClassNotFoundException e)
