@@ -109,109 +109,6 @@ public class ControllerMain
 			}
 		}
 
-	public void showNewEquationDialog()
-		{
-		//Si l'equation n'a pas deja ete commencé (suivant puis précédent),
-		//on en crée une nouvelle
-		if (equationTemp == null)
-			{
-			equationTemp = new Equation();
-			}
-
-		//Affichage du dialogue
-		JDialogMain jDialog = new JDialogSetEquation(new JPanelSetEquation(equationTemp));
-		int result = jDialog.showDialog();
-
-		//Traitement du résultat
-		if (result == 1)//si pas annulé
-			{
-			showNewMatrixDialog();//showDialog(DIALOG.NEW_MATRIX);
-			}
-		}
-
-	public void showNewMatrixDialog()
-		{
-		Matrix matrixTemp = new Matrix(equationTemp.getMatrixNumberEquation(), equationTemp.getMatrixNumberVariable() + 1);
-
-		JDialogMain jDialog = new JDialogSetMatrix(new JPanelSetMatrix(matrixTemp));
-
-		int result = jDialog.showDialog();
-		if (result == 1)//Appliqué (annulé renvoi 0)
-			{
-			equationTemp.setMatrix(matrixTemp);
-			equation = equationTemp;
-			equationTemp = null;
-
-			if (equation.isStepMode())
-				{
-				equation.solve();
-				changeView(PANEL.RESULT_STEP);
-				}
-			else
-				{
-				//equation.solve() //attention pas bonne méthode de res. directe
-				changeView(PANEL.RESULT);
-				}
-			}
-		else if (result == 2)//Précédent
-			{
-			showNewEquationDialog();//showDialog(DIALOG.NEW_EQUATION);
-			}
-		}
-
-	public void showSetEquationDialog()
-		{
-		//Copie de l'equation
-		equationTemp = new Equation(equation);
-
-		//Affichage
-		JDialogMain jDialog = new JDialogSetEquation(new JPanelSetEquation(equationTemp));
-		int result = jDialog.showDialog();
-
-		//Traitement du resultat
-		if (result == 1)//si pas annulé
-			{
-			if (equationTemp.getMatrixNumberEquation() == equation.getMatrixNumberEquation() && equationTemp.getMatrixNumberVariable() == equation.getMatrixNumberVariable())
-				{
-				//Matrice de meme taille, on applique les changements
-				equation = equationTemp;
-				equationTemp = null;
-				}
-			else
-				{
-				//On doit entrer une nouvelle matrice
-				showDialog(DIALOG.SET_MATRIX);
-				}
-			}
-		}
-
-	public void showSetMatrixDialog()
-		{
-		Matrix matrixTemp = equation.getMatrix(0);
-		JDialogMain jDialog = new JDialogSetMatrix(new JPanelSetMatrix(matrixTemp));
-
-		int result = jDialog.showDialog();
-		if (result == 1)//Appliqué (annulé renvoi 0)
-			{
-			equation.setMatrix(matrixTemp);
-
-			if (equation.isStepMode())
-				{
-				equation.solve();
-				changeView(PANEL.RESULT_STEP);
-				}
-			else
-				{
-				//equation.solve() //attention pas bonne méthode de res. directe
-				changeView(PANEL.RESULT);
-				}
-			}
-		else if (result == 2)//Précédent
-			{
-			//Rien dans ce cas
-			}
-		}
-
 	public void save()
 		{
 		JFileChooser jfilechooser = new JFileChooser();
@@ -249,7 +146,7 @@ public class ControllerMain
 			try
 				{
 				equation = controllerIO.load(jfilechooser.getSelectedFile());
-				equation.solve();
+//				equation.solve();
 				//				controllerEquation.setEquation(equation);
 				//				controllerEquation.applyTempEquation();
 				//				controllerEquation.reInitMatrix();
@@ -266,6 +163,113 @@ public class ControllerMain
 				JOptionPane.showMessageDialog(jFrame, "Error while loading file : " + jfilechooser.getSelectedFile().getAbsolutePath(), e.getClass().getSimpleName(), JOptionPane.ERROR_MESSAGE);
 				e.printStackTrace();
 				}
+			}
+		}
+
+	/*------------------------------------------------------------------*\
+	|*							Methodes Private						*|
+	\*------------------------------------------------------------------*/
+
+	private void showNewEquationDialog()
+		{
+		//Si l'equation n'a pas deja ete commencé (suivant puis précédent),
+		//on en crée une nouvelle
+		if (equationTemp == null)
+			{
+			equationTemp = new Equation();
+			}
+
+		//Affichage du dialogue
+		JDialogMain jDialog = new JDialogSetEquation(new JPanelSetEquation(equationTemp));
+		int result = jDialog.showDialog();
+
+		//Traitement du résultat
+		if (result == 1)//si pas annulé
+			{
+			showNewMatrixDialog();//showDialog(DIALOG.NEW_MATRIX);
+			}
+		}
+
+	private void showNewMatrixDialog()
+		{
+		Matrix matrixTemp = new Matrix(equationTemp.getMatrixNumberEquation(), equationTemp.getMatrixNumberVariable() + 1);
+
+		JDialogMain jDialog = new JDialogSetMatrix(new JPanelSetMatrix(matrixTemp));
+
+		int result = jDialog.showDialog();
+		if (result == 1)//Appliqué (annulé renvoi 0)
+			{
+			equationTemp.setMatrix(matrixTemp);
+			equation = equationTemp;
+			equationTemp = null;
+
+			if (equation.isStepMode())
+				{
+				equation.solve();
+				changeView(PANEL.RESULT_STEP);
+				}
+			else
+				{
+				//equation.solve() //attention pas bonne méthode de res. directe
+				changeView(PANEL.RESULT);
+				}
+			}
+		else if (result == 2)//Précédent
+			{
+			showNewEquationDialog();//showDialog(DIALOG.NEW_EQUATION);
+			}
+		}
+
+	private void showSetEquationDialog()
+		{
+		//Copie de l'equation
+		equationTemp = new Equation(equation);
+
+		//Affichage
+		JDialogMain jDialog = new JDialogSetEquation(new JPanelSetEquation(equationTemp));
+		int result = jDialog.showDialog();
+
+		//Traitement du resultat
+		if (result == 1)//si pas annulé
+			{
+			if (equationTemp.getMatrixNumberEquation() == equation.getMatrixNumberEquation() && equationTemp.getMatrixNumberVariable() == equation.getMatrixNumberVariable())
+				{
+				//Matrice de meme taille, on applique les changements
+				equation = equationTemp;
+				equationTemp = null;
+				}
+			else
+				{
+				//On doit entrer une nouvelle matrice
+				showDialog(DIALOG.SET_MATRIX);
+				}
+			}
+		}
+
+	private void showSetMatrixDialog()
+		{
+		Matrix matrixTemp = equation.getMatrix(0);
+		JDialogMain jDialog = new JDialogSetMatrix(new JPanelSetMatrix(matrixTemp));
+
+		int result = jDialog.showDialog();
+		if (result == 1)//Appliqué (annulé renvoi 0)
+			{
+			equation.setMatrix(matrixTemp);
+
+			if (equation.isStepMode())
+				{
+				equation.solve();
+				changeView(PANEL.RESULT_STEP);
+				}
+			else
+				{
+				//equation.solve() //attention pas bonne méthode de res. directe
+				changeView(PANEL.RESULT);
+				}
+			}
+		else if (result == 2)//Précédent
+			{
+			//Rien dans ce cas
 			}
 		}
 
