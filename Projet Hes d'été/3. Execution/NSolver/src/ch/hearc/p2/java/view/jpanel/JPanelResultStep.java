@@ -52,7 +52,7 @@ public class JPanelResultStep extends JPanel
 		isFini = false;
 		isRunning = false;
 
-		updateDisplay();
+		updateDisplayedMatrix();
 		}
 
 	/*------------------------------------------------------------------*\
@@ -66,7 +66,7 @@ public class JPanelResultStep extends JPanel
 			isFini = false;
 			isRunning = true;
 
-			updateDisplay();
+			updateDisplayedMatrix();
 			thread = new Thread(new Runnable()
 				{
 					@Override
@@ -75,7 +75,7 @@ public class JPanelResultStep extends JPanel
 						while(!isFini && equation.hasMatrixIndex(actualStep + 1))
 							{
 							equation.getMatrix(++actualStep);
-							updateDisplay();
+							updateDisplayedMatrix();
 							sleep(equation.getSpeedMs());
 							}
 						isRunning = false;
@@ -88,18 +88,18 @@ public class JPanelResultStep extends JPanel
 
 	public synchronized void stop()
 		{
-		updateDisplay();
+		updateDisplayedMatrix();
 		isFini = true;
 		thread = null;
 		}
 
 	public void next()
 		{
-		if (actualStep < tabHistory.length - 2)
+		if (actualStep < tabHistory.length - 1)
 			{
 			++actualStep;
 			}
-		updateDisplay();
+		updateDisplayedMatrix();
 		}
 
 	public void previous()
@@ -108,27 +108,18 @@ public class JPanelResultStep extends JPanel
 			{
 			--actualStep;
 			}
-		updateDisplay();
+		updateDisplayedMatrix();
 		}
 
 	/*------------------------------------------------------------------*\
 	|*							Methodes Private						*|
 	\*------------------------------------------------------------------*/
 
-	private void updateDisplay()
+	private void updateDisplayedMatrix()
 		{
-		//		int currentStep = controllerEquation.getCurrentStep();
-		//		if (!controllerEquation.isFinalStep())
-		//			{
-		//			textMatrix.setText(equation.getMatrix(actualStep).toString());
-		//			graphicListHistory.setSelectedIndex(actualStep);
-		//			}
-		//		else
-		//			{
-		//			equation.getMatrix(actualStep).setVariableName(controllerEquation.getEquation().getVariableName());
+		//Affichage de la matrix en fonction de l'étape
 		textMatrix.setText(equation.getMatrix(actualStep).showResult());
 		graphicListHistory.setSelectedIndex(actualStep);
-		//			}
 
 		//Blocage et libération des boutons
 		graphicListHistory.setEnabled(!isRunning);
@@ -241,21 +232,13 @@ public class JPanelResultStep extends JPanel
 				@Override
 				public void actionPerformed(ActionEvent e)
 					{
+					//Récupération de l'étape sélectionnée
 					JList<String> list = (JList<String>) e.getSource();
-//					if (list.getSelectedIndex() < tabHistory.length - 1)//Si ne sort pas des index possible
-//						{
-//						equation.getMatrix(list.getSelectedIndex());
-//						//equation.setIsFinalStep(false);
-//						}
-//					if (list.getSelectedIndex() == tabHistory.length - 1)
-//						{
-//						//controllerEquation.setIsFinalStep(true);
-//						}
-
 					actualStep = list.getSelectedIndex();
-
 					//System.out.println(idSelected);
-					updateDisplay();
+
+					//Maj de la page des résultats
+					updateDisplayedMatrix();
 					}
 			};
 		new ListAction(graphicListHistory, changeAction);
@@ -306,12 +289,22 @@ public class JPanelResultStep extends JPanel
 				@Override
 				public void mouseWheelMoved(MouseWheelEvent e)
 					{
-					if (actualTextSize > 0)
-						{
+//					if (actualTextSize > 0)
+//						{
 						actualTextSize += e.getWheelRotation();
 						//System.out.println(actualTextSize);
 						textMatrix.setFont(new Font("Sans-Serif", Font.PLAIN, actualTextSize));
-						}
+//						}
+					}
+			});
+
+		graphicListHistory.addMouseWheelListener(new MouseWheelListener()
+			{
+
+				@Override
+				public void mouseWheelMoved(MouseWheelEvent e)
+					{
+
 					}
 			});
 		}
