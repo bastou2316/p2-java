@@ -12,7 +12,6 @@ import ch.hearc.p2.java.tools.MathTools;
 
 public class Log
 	{
-
 	// tools
 	private List<Matrix> listMatrix;
 	private Map<String, Matrix> mapCoeficient;
@@ -410,7 +409,7 @@ public class Log
 		int freeVariableNumber = 0;
 		boolean isOne;
 		boolean isPivot;
-		int rows = rowCount();
+		int rows = getRows();
 		int cols = columnCount() - 1;
 		int currentCol;
 		int currentRow, pivotRow;

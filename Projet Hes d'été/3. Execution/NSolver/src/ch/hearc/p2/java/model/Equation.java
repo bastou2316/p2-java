@@ -2,7 +2,6 @@
 package ch.hearc.p2.java.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Equation implements Serializable
@@ -19,40 +18,47 @@ public class Equation implements Serializable
 
 	public Equation(String name, int numberVar, int numberEquation, int speedSec, boolean modeStep)
 		{
-		listMatrix = new ArrayList<Matrix>();
-		listOperation = new ArrayList<String>();
 		this.name = name;
 		this.numberVar = numberVar;
 		this.numberEquation = numberEquation;
+
 		this.speedMs = speedSec * 1000;
 		this.modeStep = modeStep;
+
+		this.solved = false;
 		this.saved = false;
+		}
+
+	public Equation(Equation source)
+		{
+		this(source.getName(), source.getMatrixNumberVariable(), source.getMatrixNumberEquation(), source.getSpeedSec(), source.isStepMode());
 		}
 
 	/*------------------------------------------------------------------*\
 	|*							Methodes Public							*|
 	\*------------------------------------------------------------------*/
-	public void solve()
-		{
-		Matrix matrix = new Matrix(listMatrix.get(ORIGIN));
-		if (modeStep)
-			{
-			matrix.reducedRowEchelonForm();
-			for(int i = 1; i < matrix.getHistLength() - 1; ++i)
-				{
-				listMatrix.add(new Matrix(matrix.getStep(i)));
-				listOperation.add(matrix.getOperation(i));
-				}
-			listOperation.add("Final");
-			}
-		else
-			{
-			listMatrix.add(new QRDecomposition(matrix.getMatrix(0, matrix.rowCount() - 1, 0, matrix.columnCount() - 2)).solve(matrix.getMatrix(0, matrix.rowCount() - 1, matrix.columnCount() - 1, matrix.columnCount() - 1)));
-			listOperation.add("Final");
-			}
 
-		solved = true;
-		}
+//	public void solve()
+//		{
+//		Matrix matrix = new Matrix(listMatrix.get(ORIGIN));
+//		if (modeStep)
+//			{
+//			matrix.reducedRowEchelonForm();
+//			for(int i = 1; i < matrix.getHistLength() - 1; ++i)
+//				{
+//				listMatrix.add(new Matrix(matrix.getStep(i)));
+//				listOperation.add(matrix.getOperation(i));
+//				}
+//			listOperation.add("Final");
+//			}
+//		else
+//			{
+//			listMatrix.add(new QRDecomposition(matrix.getMatrix(0, matrix.rowCount() - 1, 0, matrix.columnCount() - 2)).solve(matrix.getMatrix(0, matrix.rowCount() - 1, matrix.columnCount() - 1, matrix.columnCount() - 1)));
+//			listOperation.add("Final");
+//			}
+//
+//		solved = true;
+//		}
 
 	/*------------------------------*\
 	|*				Get				*|
@@ -62,6 +68,7 @@ public class Equation implements Serializable
 		{
 		return variableName;
 		}
+
 	public String getName()
 		{
 		return name;
@@ -87,47 +94,42 @@ public class Equation implements Serializable
 		return speedMs;
 		}
 
-	public Matrix getMatrix(int pos)
+	public Matrix getMatrix()
+	{
+		return log.getOriginalMatrix();
+	}
+
+	public String[][] getMatrix(int pos)
 		{
-		if (listMatrix.isEmpty()) { return null; }
+//		if (listMatrix.isEmpty()) { return null; }
+//
+//		return listMatrix.get(pos);
 
-		return listMatrix.get(pos);
-
-		}
-
-	public String getOperation(int pos)
-		{
-		if (!listOperation.isEmpty())
-			{
-			return listOperation.get(pos);
-			}
-		else
-			{
-			return null;
-			}
+		return log.getMatrix(pos);
 		}
 
 	public List<String> getOperations()
 		{
-		return listOperation;
+		return log.getListOperation();
 		}
 
 	/*------------------------------*\
 	|*				Set				*|
 	\*------------------------------*/
 
-	public void setVariableName(String variableName)
-		{
-		listMatrix.get(listMatrix.size()-1).setVariableName(variableName);
-		}
+//	public void setVariableName(String variableName)
+//		{
+//		listMatrix.get(listMatrix.size() - 1).setVariableName(variableName);
+//		}
 
 	public void setMatrix(Matrix matrix)
 		{
-		listMatrix.clear();
-		listOperation.clear();
-
-		listMatrix.add(ORIGIN, matrix);
-		listOperation.add(ORIGIN, "Origine");
+		log = new Log(matrix);
+//		listMatrix.clear();
+//		listOperation.clear();
+//
+//		listMatrix.add(ORIGIN, matrix);
+//		listOperation.add(ORIGIN, "Origine");
 		}
 
 	public void setName(String name)
@@ -166,7 +168,7 @@ public class Equation implements Serializable
 
 	public boolean hasMatrixIndex(int index)
 		{
-		return index < listMatrix.size();
+		return index < log.getNbStep()-1;
 		}
 
 	public boolean isStepMode()
@@ -183,18 +185,19 @@ public class Equation implements Serializable
 	|*							Attributs Private						*|
 	\*------------------------------------------------------------------*/
 
-	// Tools
+	//Inputs
 	private String name;
-	private List<Matrix> listMatrix;
-	private List<String> listOperation;
+	public String variableName;
 	private int numberVar;
 	private int numberEquation;
+
 	private int speedMs;
 	private boolean modeStep;
+
+	// Tools
+	private Log log;
 	private boolean solved;
 	private boolean saved;
-
-	public String variableName;
 
 	public final static int ORIGIN = 0;
 

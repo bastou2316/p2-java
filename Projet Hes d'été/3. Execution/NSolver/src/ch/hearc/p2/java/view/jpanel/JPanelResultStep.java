@@ -39,7 +39,7 @@ public class JPanelResultStep extends JPanel
 		this.actualStep = 0;
 
 		List<String> listHistory = equation.getOperations();
-		//Collections.reverse(listHistory);
+		//Collections.reverse(listHistory);f
 		tabHistory = new String[listHistory.size()];
 		tabHistory = listHistory.toArray(tabHistory);
 
@@ -118,7 +118,7 @@ public class JPanelResultStep extends JPanel
 	private void updateDisplayedMatrix()
 		{
 		//Affichage de la matrix en fonction de l'étape
-		textMatrix.setText(equation.getMatrix(actualStep).showResult());
+		textMatrix.setText(stepToString(equation.getMatrix(actualStep), equation.getMatrixNumberEquation(), equation.getMatrixNumberVariable()));
 		graphicListHistory.setSelectedIndex(actualStep);
 
 		//Blocage et libération des boutons
@@ -312,6 +312,25 @@ public class JPanelResultStep extends JPanel
 	private void appearance()
 		{
 		// rien
+		}
+
+	private static String stepToString(String[][] tabMatrix, int rowCount, int columnCount)
+		{
+		StringBuilder builder = new StringBuilder();
+		int rows = rowCount;
+		int cols = columnCount;
+		for(int i = 0; i < rows; i++)
+			{
+			for(int j = 0; j < cols - 1; j++)
+				{
+				builder.append(tabMatrix[i][j]);
+				builder.append(" ");
+				}
+			builder.append("= ");
+			builder.append(tabMatrix[i][cols - 1]);
+			builder.append(System.getProperty("line.separator"));
+			}
+		return builder.toString();
 		}
 
 	/*------------------------------------------------------------------*\

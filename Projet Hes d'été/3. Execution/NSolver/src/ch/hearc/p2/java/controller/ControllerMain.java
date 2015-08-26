@@ -99,7 +99,7 @@ public class ControllerMain
 			case RESULT_3D:
 				if (equation.getMatrixNumberEquation() >= 1 && equation.getMatrixNumberEquation() <= 4 && (equation.getMatrixNumberVariable() == 2 || equation.getMatrixNumberVariable() == 3))
 					{
-					JDialog3D jDialogMain = new JDialog3D(new JPanel3D(equation.getMatrix(0)));
+					JDialog3D jDialogMain = new JDialog3D(new JPanel3D(equation.getMatrix()));
 					jDialogMain.showDialog();
 					}
 				else
@@ -195,18 +195,18 @@ public class ControllerMain
 		int result = jDialog.showDialog();
 		if (result == 1)//Appliqué (annulé renvoi 0)
 			{
-			equationTemp.setMatrix(matrixTemp);
-			equation = equationTemp;
-			equationTemp = null;
-
 			if (equation.isStepMode())
 				{
-				equation.solve();
+				equationTemp.setMatrix(matrixTemp);
+				equation = equationTemp;
+				equationTemp = null;
 				changeView(PANEL.RESULT_STEP);
 				}
 			else
 				{
-				//equation.solve() //attention pas bonne méthode de res. directe
+//				equationTemp.setMatrix(matrixTemp, true);
+//				equation = equationTemp;
+//				equationTemp = null;
 				changeView(PANEL.RESULT);
 				}
 			}
@@ -244,22 +244,20 @@ public class ControllerMain
 
 	private void showSetMatrixDialog()
 		{
-		Matrix matrixTemp = equation.getMatrix(0);
+		Matrix matrixTemp = equation.getMatrix();
 		JDialogMain jDialog = new JDialogSetMatrix(new JPanelSetMatrix(matrixTemp));
 
 		int result = jDialog.showDialog();
 		if (result == 1)//Appliqué (annulé renvoi 0)
 			{
-			equation.setMatrix(matrixTemp);
-
 			if (equation.isStepMode())
 				{
-				equation.solve();
+				equation.setMatrix(matrixTemp);
 				changeView(PANEL.RESULT_STEP);
 				}
 			else
 				{
-				//equation.solve() //attention pas bonne méthode de res. directe
+//				equation.setMatrix(matrixTemp, true);
 				changeView(PANEL.RESULT);
 				}
 			}
