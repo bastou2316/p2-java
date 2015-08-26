@@ -58,14 +58,19 @@ public class Log
 	|*				Get				*|
 	\*------------------------------*/
 
+	public Matrix getOriginalMatrix()
+		{
+		return listMatrix.get(0);
+		}
+
 	public String[][] getMatrix(int step)
 		{
 		return listTabMatrix.get(step);
 		}
 
-	public String getOperation(int step)
+	public List<String> getListOperation()
 		{
-		return listOperation.get(step);
+		return listOperation;
 		}
 
 	public int getNbStep()
@@ -307,8 +312,6 @@ public class Log
 		int currentCol;
 		int currentRow, pivotRow;
 
-		fillVariableNameStructures();
-
 		//Recherche des variables dépendantes
 		for(currentCol = cols - 1; currentCol >= 0; --currentCol)//commence à droite de la matrice. Parcours les colonnes.
 			{
@@ -347,7 +350,6 @@ public class Log
 				}
 			if (isPivot == false)
 				{
-				mapIndexVariableName.replace(currentCol, "u" + freeVariableNumber);
 				freeVariableNumber++;
 				}
 
