@@ -83,7 +83,8 @@ public final class TestUnitMatrix
 	private static void testReduceMatrix(double[][] in, double[][] out)
 		{
 		Matrix mat = new Matrix(in.length, in[0].length);
-		mat.setVariableName("x1");
+		//mat.setVariableName("x1");
+
 		for(int i = 0; i < out.length; i++)
 			{
 			for(int j = 0; j < out[i].length; j++)
@@ -91,10 +92,10 @@ public final class TestUnitMatrix
 				mat.set(i, j, in[i][j]);
 				}
 			}
+		Log log = new Log(mat);
 		System.out.println("Initial matrix");
-		System.out.println(mat.toString());
+		stepToString(log.getMatrix(0), log.getRows(), log.getCols());
 
-		mat.reducedRowEchelonForm();
 		for(int i = 0; i < out.length; i++)
 			{
 			for(int j = 0; j < out[i].length; j++)
@@ -103,11 +104,18 @@ public final class TestUnitMatrix
 				}
 			}
 		System.out.println("Solution matrix");
-		System.out.println(mat.toString());
-		System.out.println("Solution de l'equation");
-		System.out.println(mat.showResult());
+		stepToString(log.getMatrix(log.getNbStep()-1), log.getRows(), log.getCols());
+		System.out.println("TODO: Solution de l'equation");
+		//System.out.println(mat.showResult());
+		if(log.getNbStep()!=0)
+			{
 		System.out.println("Details des operations");
-		mat.showOperations();
+		for(int i = 0; i < log.getNbStep()-1; i++)
+			{
+			System.out.println(log.getOperation(i));
+			stepToString(log.getMatrix(i), log.getRows(), log.getCols());
+			}
+			}
 		System.out.println("-------------------------------------------");
 		System.out.println();
 		}
@@ -156,5 +164,25 @@ public final class TestUnitMatrix
 			System.out.println();
 			}
 
+		}
+
+	public static void stepToString(String[][] tabMatrix, int rowCount, int columnCount)
+		{
+
+		StringBuilder builder = new StringBuilder();
+		int rows = rowCount;
+		int cols = columnCount;
+		for(int i = 0; i < rows; i++)
+			{
+			for(int j = 0; j < cols - 1; j++)
+				{
+				builder.append(tabMatrix[i][j]);
+				builder.append(" ");
+				}
+			builder.append("= ");
+			builder.append(tabMatrix[i][cols - 1]);
+			builder.append(System.getProperty("line.separator"));
+			}
+		System.out.println(builder.toString());
 		}
 	}
