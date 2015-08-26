@@ -3,10 +3,6 @@ package ch.hearc.p2.java.model;
 
 import java.io.Serializable;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 import ch.hearc.p2.java.tools.MathTools;
 
@@ -22,38 +18,11 @@ public final class Matrix implements Serializable
 		if (rows <= 0 || cols <= 0) { throw new IllegalArgumentException("Invalid number of rows or columns"); }
 
 		values = new double[rows][cols];
-		currentStep = 0;
-		hist = new double[50][rows][cols];
-		tabOperations = new String[50];
-		histLength = 0;
-		mapIndexVariableName = new TreeMap<Integer, String>();
-		this.variableName = "a";
-		listVariableName = new ArrayList<String>();
-		}
-
-	public Matrix(double[][] values, String variableToken)
-		{
-		mapIndexVariableName = new TreeMap<Integer, String>();
-		this.variableName = variableToken;
-
-		this.values = values;
-		currentStep = 0;
-		hist = new double[20][values.length][values[0].length];
-		tabOperations = new String[20];
-		histLength = 0;
-		listVariableName = new ArrayList<String>();
 		}
 
 	public Matrix(double[][] values)
 		{
-		mapIndexVariableName = new TreeMap<Integer, String>();
-		listVariableName = new ArrayList<String>();
-		this.variableName = "a";
 		this.values = values;
-		currentStep = 0;
-		hist = new double[20][values.length][values[0].length];
-		tabOperations = new String[20];
-		histLength = 0;
 		}
 
 	public Matrix cloneOf()
@@ -90,8 +59,6 @@ public final class Matrix implements Serializable
 		{
 		return values[0].length;
 		}
-
-
 
 	/*------------------------------------------------------------------*\
 	|*							Elementary Operations				    *|
@@ -165,10 +132,6 @@ public final class Matrix implements Serializable
 			}
 		}
 
-	public void setVariableName(String name){
-		variableName=name;
-	}
-
 	/*------------------------------*\
 	|*				Get				*|
 	\*------------------------------*/
@@ -182,38 +145,16 @@ public final class Matrix implements Serializable
 
 		for(int i = 0; i < rows; i++)
 			{
-			for(int j = 0; j < cols-1; j++)
+			for(int j = 0; j < cols - 1; j++)
 				{
 				builder.append(formatter.format(get(i, j)));
 				builder.append(" ");
 				}
 			builder.append("= ");
-			builder.append(formatter.format(get(i,cols-1)));
+			builder.append(formatter.format(get(i, cols - 1)));
 			builder.append(System.getProperty("line.separator"));
 			}
 		builder.append(System.getProperty("line.separator"));
-		return builder.toString();
-		}
-
-	public String stepToString(int step)
-		{
-		DecimalFormat formatter = new DecimalFormat("0.##");
-		StringBuilder builder = new StringBuilder();
-		int rows = rowCount();
-		int cols = columnCount();
-		double[][] tabStep = getStep(step);
-		for(int i = 0; i < rows; i++)
-			{
-			for(int j = 0; j < cols-1; j++)
-				{
-				builder.append(formatter.format(tabStep[i][j]));
-				builder.append(" ");
-				}
-			builder.append("= ");
-			builder.append(formatter.format(tabStep[i][cols-1]));
-			builder.append(System.getProperty("line.separator"));
-			}
-		System.out.println(new Matrix(hist[0], variableName).toString());
 		return builder.toString();
 		}
 
@@ -286,63 +227,46 @@ public final class Matrix implements Serializable
 		return tabCopie;
 		}
 
-	public String getOperation(int step)
-		{
-		return tabOperations[step];
-		}
-
-	public double[][] getStep(int step)
-		{
-		return hist[step];
-		}
-
-	public int getHistLength()
-		{
-		return histLength;
-		}
-
 	/*------------------------------------------------------------------*\
 	|*							Methodes Private						*|
 	\*------------------------------------------------------------------*/
-
-
 
 	/*------------------------------------------------------------------*\
 	|*							Methode Private	Static					*|
 	\*------------------------------------------------------------------*/
 
-	private void fillVariableNameStructures()
-		{
-		boolean isVariableCount = false;
-		int tokenStartIndex = 97;
-//		//Fill the list of name for the variable.
-//		if (variableName.equals("a"))
-//			{
-//			tokenStartIndex = 97; //a,b,c
-//			}
-//		else if (variableName.equals("x"))
-//			{
-//			tokenStartIndex = 120; //x,y,z
-//			}
-//		else
-//			{
-//			tokenStartIndex = 120; //x1,x2,x3
-//			isVariableCount = true;
-//			}
-		for(int i = 0; i < columnCount(); ++i)
-			{
-			if (isVariableCount)
-				{
-				mapIndexVariableName.put(i, String.valueOf(Character.toChars(tokenStartIndex))+(i+1));
-				listVariableName.add(String.valueOf(Character.toChars(tokenStartIndex))+(i+1));
-				}
-			else
-				{
-				mapIndexVariableName.put(i, String.valueOf(Character.toChars(tokenStartIndex + i)));
-				listVariableName.add(String.valueOf(Character.toChars(tokenStartIndex + i)));
-				}
-			}
-		}
+	//	private void fillVariableNameStructures()
+	//		{
+	//		boolean isVariableCount = false;
+	//		int tokenStartIndex = 97;
+	//		//Fill the list of name for the variable.
+	//		if (variableName.equals("a"))
+	//			{
+	//			tokenStartIndex = 97; //a,b,c
+	//			}
+	//		else if (variableName.equals("x"))
+	//			{
+	//			tokenStartIndex = 120; //x,y,z
+	//			}
+	//		else
+	//			{
+	//			tokenStartIndex = 120; //x1,x2,x3
+	//			isVariableCount = true;
+	//			}
+	//		for(int i = 0; i < columnCount(); ++i)
+	//			{
+	//			if (isVariableCount)
+	//				{
+	//				mapIndexVariableName.put(i, String.valueOf(Character.toChars(tokenStartIndex))+(i+1));
+	//				listVariableName.add(String.valueOf(Character.toChars(tokenStartIndex))+(i+1));
+	//				}
+	//			else
+	//				{
+	//				mapIndexVariableName.put(i, String.valueOf(Character.toChars(tokenStartIndex + i)));
+	//				listVariableName.add(String.valueOf(Character.toChars(tokenStartIndex + i)));
+	//				}
+	//			}
+	//		}
 
 	/*------------------------------------------------------------------*\
 	|*							Attributs Private						*|
@@ -350,11 +274,4 @@ public final class Matrix implements Serializable
 
 	// The values of the matrix stored in row-major order, with each element initially null
 	private double[][] values;
-	private int currentStep;
-	private double[][][] hist;
-	private String[] tabOperations;
-	private int histLength;
-	private String variableName;
-	Map<Integer, String> mapIndexVariableName;//avec variables dépendantes
-	List<String> listVariableName; //sans variable dépendante
 	}
