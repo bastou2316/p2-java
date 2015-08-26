@@ -38,28 +38,6 @@ public class Equation implements Serializable
 	|*							Methodes Public							*|
 	\*------------------------------------------------------------------*/
 
-//	public void solve()
-//		{
-//		Matrix matrix = new Matrix(listMatrix.get(ORIGIN));
-//		if (modeStep)
-//			{
-//			matrix.reducedRowEchelonForm();
-//			for(int i = 1; i < matrix.getHistLength() - 1; ++i)
-//				{
-//				listMatrix.add(new Matrix(matrix.getStep(i)));
-//				listOperation.add(matrix.getOperation(i));
-//				}
-//			listOperation.add("Final");
-//			}
-//		else
-//			{
-//			listMatrix.add(new QRDecomposition(matrix.getMatrix(0, matrix.rowCount() - 1, 0, matrix.columnCount() - 2)).solve(matrix.getMatrix(0, matrix.rowCount() - 1, matrix.columnCount() - 1, matrix.columnCount() - 1)));
-//			listOperation.add("Final");
-//			}
-//
-//		solved = true;
-//		}
-
 	/*------------------------------*\
 	|*				Get				*|
 	\*------------------------------*/
@@ -122,14 +100,10 @@ public class Equation implements Serializable
 //		listMatrix.get(listMatrix.size() - 1).setVariableName(variableName);
 //		}
 
-	public void setMatrix(Matrix matrix)
+	public void setMatrix(Matrix matrix, boolean gaussResolution)
 		{
-		log = new Log(matrix);
-//		listMatrix.clear();
-//		listOperation.clear();
-//
-//		listMatrix.add(ORIGIN, matrix);
-//		listOperation.add(ORIGIN, "Origine");
+		log = new Log(matrix, gaussResolution);
+		solved = true;
 		}
 
 	public void setName(String name)

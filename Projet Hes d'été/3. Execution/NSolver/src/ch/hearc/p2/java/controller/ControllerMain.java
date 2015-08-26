@@ -190,23 +190,21 @@ public class ControllerMain
 		{
 		Matrix matrixTemp = new Matrix(equationTemp.getMatrixNumberEquation(), equationTemp.getMatrixNumberVariable() + 1);
 
-		JDialogMain jDialog = new JDialogSetMatrix(new JPanelSetMatrix(matrixTemp));
+		JDialogMain jDialog = new JDialogSetMatrix(new JPanelSetMatrix(matrixTemp, equationTemp.isSolved()));
 
 		int result = jDialog.showDialog();
 		if (result == 1)//Appliqué (annulé renvoi 0)
 			{
+			equationTemp.setMatrix(matrixTemp, equationTemp.isStepMode());
+			equation = equationTemp;
+			equationTemp = null;
+
 			if (equation.isStepMode())
 				{
-				equationTemp.setMatrix(matrixTemp);
-				equation = equationTemp;
-				equationTemp = null;
 				changeView(PANEL.RESULT_STEP);
 				}
 			else
 				{
-//				equationTemp.setMatrix(matrixTemp, true);
-//				equation = equationTemp;
-//				equationTemp = null;
 				changeView(PANEL.RESULT);
 				}
 			}
@@ -245,14 +243,14 @@ public class ControllerMain
 	private void showSetMatrixDialog()
 		{
 		Matrix matrixTemp = equation.getMatrix();
-		JDialogMain jDialog = new JDialogSetMatrix(new JPanelSetMatrix(matrixTemp));
+		JDialogMain jDialog = new JDialogSetMatrix(new JPanelSetMatrix(matrixTemp, equation.isSolved()));
 
 		int result = jDialog.showDialog();
 		if (result == 1)//Appliqué (annulé renvoi 0)
 			{
 			if (equation.isStepMode())
 				{
-				equation.setMatrix(matrixTemp);
+				equation.setMatrix(matrixTemp, equation.isStepMode());
 				changeView(PANEL.RESULT_STEP);
 				}
 			else

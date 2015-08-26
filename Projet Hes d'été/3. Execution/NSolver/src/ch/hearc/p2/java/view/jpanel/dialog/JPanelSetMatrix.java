@@ -25,13 +25,14 @@ public class JPanelSetMatrix extends JPanelDialog
 	|*							Constructeurs							*|
 	\*------------------------------------------------------------------*/
 
-	public JPanelSetMatrix(Matrix matrix)
+	public JPanelSetMatrix(Matrix matrix, boolean solved)
 		{
 		super();
 
 		this.matrix = matrix;
 		this.n = matrix.rowCount();//attention inversion ptetre
 		this.m = matrix.columnCount();
+		this.isMatrixSolved = solved;
 
 		prepareTabNameVar(n, m, 2); //remplacer 2 par methodVar
 
@@ -89,7 +90,7 @@ public class JPanelSetMatrix extends JPanelDialog
 				tabTextField[i - 1][j - 1] = textfield;
 				textfield.setPreferredSize(new Dimension(50, 30));
 
-				if (matrix.getHistLength() > 1)
+				if (isMatrixSolved)
 					{
 					textfield.setText(String.valueOf(matrix.get(i - 1, j - 1)));
 					}
@@ -229,6 +230,7 @@ public class JPanelSetMatrix extends JPanelDialog
 
 	// Inputs
 	private Matrix matrix;
+	private boolean isMatrixSolved;
 
 	// Tools
 	private JButton solveButton, previousButton;
