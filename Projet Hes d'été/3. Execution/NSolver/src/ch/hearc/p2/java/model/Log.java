@@ -4,7 +4,6 @@ package ch.hearc.p2.java.model;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -13,16 +12,6 @@ import ch.hearc.p2.java.tools.MathTools;
 public class Log
 	{
 
-	// tools
-	private List<Matrix> listMatrix;
-	private Map<String, Matrix> mapCoeficient;
-	private int rows;
-	private int cols;
-
-	//output
-	private List<String[][]> listTabMatrix;
-	private List<String> listOperation;
-
 	/*------------------------------------------------------------------*\
 	|*							Constructeurs							*|
 	\*------------------------------------------------------------------*/
@@ -30,11 +19,11 @@ public class Log
 		{
 		mapCoeficient = new HashMap<String, Matrix>();
 		listTabMatrix = new ArrayList<String[][]>();
-		listMatrix = new LinkedList<Matrix>();
+		listMatrix = new ArrayList<Matrix>();
 		listMatrix.add(matrix);
 		rows = matrix.rowCount();
 		cols = matrix.columnCount();
-		listOperation = new LinkedList<String>();
+		listOperation = new ArrayList<String>();
 		if (isGauss)
 			{
 			reducedRowEchelonForm(); //fill listOperation
@@ -116,7 +105,7 @@ public class Log
 				continue; // Cannot eliminate on this column
 				}
 			matrix.swapRows(numPivots, pivotRow);
-			if (!isEqual(listMatrix.get(listMatrix.size()), matrix))
+			if (!isEqual(listMatrix.get(listMatrix.size() - 1), matrix))
 				{
 				stringBuilder.append("L");
 				stringBuilder.append(numPivots + 1);
@@ -131,7 +120,7 @@ public class Log
 			// Simplify the pivot row using the reciprocal
 			factorBackup = 1 / matrix.get(pivotRow, j);
 			matrix.multiplyRow(pivotRow, 1 / matrix.get(pivotRow, j));
-			if (!isEqual(listMatrix.get(listMatrix.size()), matrix))
+			if (!isEqual(listMatrix.get(listMatrix.size() - 1), matrix))
 				{
 				stringBuilder.append("L");
 				stringBuilder.append(pivotRow + 1);
@@ -156,7 +145,7 @@ public class Log
 				{
 				factorBackup = -matrix.get(i, j);
 				matrix.addRows(pivotRow, i, -matrix.get(i, j));
-				if (!isEqual(listMatrix.get(listMatrix.size()), matrix))
+				if (!isEqual(listMatrix.get(listMatrix.size() - 1), matrix))
 					{
 					stringBuilder.append("L");
 					stringBuilder.append(i + 1);
@@ -188,7 +177,7 @@ public class Log
 					}
 				}
 			}
-		if (hasSolution())
+		if (hasSolution(matrix))
 			{
 
 			// Compute reduced row echelon form (RREF)
@@ -210,7 +199,7 @@ public class Log
 					{
 					factorBackup = -matrix.get(j, pivotCol);
 					matrix.addRows(i, j, -matrix.get(j, pivotCol));
-					if (!isEqual(listMatrix.get(listMatrix.size()), matrix))
+					if (!isEqual(listMatrix.get(listMatrix.size() - 1), matrix))
 						{
 						stringBuilder.append("L");
 						stringBuilder.append(j + 1);
@@ -242,6 +231,16 @@ public class Log
 						}
 					}
 				}
+			//TODO
+			if (hasOneSolution(matrix))
+				{
+
+				}
+			}
+		else
+			//if the solution has no solution
+			{
+			System.out.println("Log: the equation has no solution");
 			}
 		//substitution arrière algébrique
 
@@ -304,11 +303,10 @@ public class Log
 
 	private void findDependentVariables()
 		{
+		Matrix matrix = getOriginalMatrix();
 		int freeVariableNumber = 0;
 		boolean isOne;
 		boolean isPivot;
-		int rows = rowCount();
-		int cols = columnCount() - 1;
 		int currentCol;
 		int currentRow, pivotRow;
 
@@ -320,7 +318,7 @@ public class Log
 			pivotRow = 0;
 			for(currentRow = rows - 1; currentRow >= 0; --currentRow)//parcours les lignes
 				{
-				if (MathTools.isEquals(values[currentRow][currentCol], 1))
+				if (MathTools.isEquals(matrix.get(currentRow, currentCol), 1))
 					{
 					//vérifie qu'il y ait un pivot dans la colonne
 					if (isOne == false)
@@ -342,25 +340,39 @@ public class Log
 				{
 				for(int i = currentCol - 1; i > 0; --i)
 					{
-					if (!MathTools.isEquals(values[pivotRow][i], 0))
+					if (!MathTools.isEquals(matrix.get(pivotRow, i), 0))
 						{
 						isPivot = false;
 						}
 					}
 				}
+			//traitement de la variable libre
 			if (isPivot == false)
 				{
-				freeVariableNumber++;
+				//listMatrix
+				//freeVariableNumber++;
 				}
 
 			}
 		}
 
+	private boolean hasOneSolution(Matrix matrix)
+		{
+		if (rows != cols)
+			{
+
+			}
+		for(int i = 0; i < rows; i++)
+			{
+			if (!MathTools.isEquals(matrix.get(i, i), 1)) { return false; }
+			}
+		return true;
+		}
+
 	//return vrai si le sytème est consistant
-	private boolean hasSolution()
+	private boolean hasSolution(Matrix matrix)
 		{
 		int zeroCount = 0;
-		Matrix matrix = listMatrix.get(0);
 		for(int i = 0; i < rows; ++i)// pour chaque ligne
 
 			{
@@ -476,22 +488,20 @@ public class Log
 	//			}
 	//		return stringBuilder.toString();
 	//		}
-
-	//Affiche les opérations dans la console pour le débug
-	public void showOperations()
-		{
-		System.out.println(new Matrix(hist[0], variableName).toString());
-		System.out.println();
-		for(int i = 1; i < histLength - 1; ++i)
-			{
-			System.out.println(tabOperations[i]);
-			System.out.println();
-			System.out.println(new Matrix(hist[i], variableName).toString());
-			System.out.println();
-			}
-		}
+	//		}
 
 	/*------------------------------------------------------------------*\
 	|*							Attributs Private						*|
 	\*------------------------------------------------------------------*/
+
+	//output
+	private List<String[][]> listTabMatrix;
+	private List<String> listOperation;
+
+	// tools
+	private List<Matrix> listMatrix;
+	private Map<String, Matrix> mapCoeficient;
+	private int rows;
+	private int cols;
+
 	}

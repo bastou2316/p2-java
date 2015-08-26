@@ -1,6 +1,8 @@
 
 package ch.hearc.p2.java.model;
 
+import java.util.ArrayList;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -95,7 +97,7 @@ public final class TestUnitMatrix
 				mat.set(i, j, in[i][j]);
 				}
 			}
-		Log log = new Log(mat);
+		Log log = new Log(mat,true);
 		System.out.println("Initial matrix");
 		stepToString(log.getMatrix(0), log.getRows(), log.getCols());
 
@@ -113,9 +115,11 @@ public final class TestUnitMatrix
 		if(log.getNbStep()!=0)
 			{
 		System.out.println("Details des operations");
+		ArrayList<String> listOperation= new ArrayList<String>();
+		listOperation=(ArrayList<String>)log.getListOperation();
 		for(int i = 0; i < log.getNbStep()-1; i++)
 			{
-			System.out.println(log.getOperation(i));
+			System.out.println(listOperation.get(i));
 			stepToString(log.getMatrix(i), log.getRows(), log.getCols());
 			}
 			}
