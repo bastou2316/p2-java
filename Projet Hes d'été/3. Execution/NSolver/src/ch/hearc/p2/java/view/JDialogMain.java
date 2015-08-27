@@ -2,14 +2,11 @@
 package ch.hearc.p2.java.view;
 
 import java.awt.BorderLayout;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 import javax.swing.JDialog;
-import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
-import ch.hearc.p2.java.controller.ControllerMain;
+import ch.hearc.p2.java.view.jpanel.dialog.JPanelDialog;
 
 public class JDialogMain extends JDialog
 	{
@@ -18,11 +15,11 @@ public class JDialogMain extends JDialog
 	|*							Constructeurs							*|
 	\*------------------------------------------------------------------*/
 
-	public JDialogMain(ControllerMain controllerMain)
+	public JDialogMain(JPanelDialog jPanel)
 		{
 		super();
 
-		this.controllerMain = controllerMain;
+		this.jPanel = jPanel;
 
 		geometry();
 		control();
@@ -33,88 +30,50 @@ public class JDialogMain extends JDialog
 	|*							Methodes Public							*|
 	\*------------------------------------------------------------------*/
 
+	public int showDialog()
+		{
+		setVisible(true);
+		return jPanel.getChoice();
+		}
+
 	public void close()
 		{
 		setVisible(false);
 		dispose();
 		}
 
-	/*------------------------------*\
-	|*				Set				*|
-	\*------------------------------*/
-
-	public void setPanelAndShow(String title, JPanel jpanel)
-		{
-		setPanel(title, jpanel, 600, 400);
-		}
-
-	public void setPanel(String title, JPanel jpanel, int sizeX, int sizeY)
-		{
-		setSize(sizeX, sizeY);
-		setLocationRelativeTo(null);
-
-		setPanel(title, jpanel);
-		}
-
-	public void setPanel(String title, JPanel jpanel)
-		{
-		setTitle(title);
-
-		setContentPane(jpanel);
-
-		revalidate();
-		}
-
 	/*------------------------------------------------------------------*\
 	|*							Methodes Private						*|
 	\*------------------------------------------------------------------*/
 
-	private void geometry()
+	protected void geometry()
 		{
 		setModal(true);
 
 		//setMinimumSize(new Dimension(300, 300));
 		//setResizable(true);
 
-		// Layout : Specification
 		BorderLayout borderLayout = new BorderLayout();
 		setLayout(borderLayout);
+
+		add(jPanel);
 		}
 
-	private void control()
+	protected void control()
 		{
-		//Changement de comportement du bouton fermé des dialogues
-		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-		addWindowListener(new WindowAdapter()
-			{
-
-				@Override
-				public void windowClosing(WindowEvent e)
-					{
-//					if (controllerMain.isEquationSetted())
-//						{
-						//controllerMain.avoidNewEquation();
-						controllerMain.stopCreating();
-						controllerMain.closeDialog();
-//						}
-//					else
-//						{
-//						JOptionPane.showMessageDialog(JDialogMain.this, "Veuillez définir l'équation et la matrice.");
-//						}
-					}
-			});
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		}
 
-	private void appearance()
+	protected void appearance()
 		{
-		//setSize(600, 400);
-		//setLocationRelativeTo(null);
+		setLocationRelativeTo(null);
 		}
 
 	/*------------------------------------------------------------------*\
 	|*							Attributs Private						*|
 	\*------------------------------------------------------------------*/
 
-	private ControllerMain controllerMain;
+	//Inputs
+	protected JPanelDialog jPanel;
 
 	}

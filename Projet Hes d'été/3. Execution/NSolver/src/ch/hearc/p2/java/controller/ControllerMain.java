@@ -9,12 +9,16 @@ import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import ch.hearc.p2.java.model.Equation;
+import ch.hearc.p2.java.model.Matrix;
 import ch.hearc.p2.java.view.JDialogMain;
 import ch.hearc.p2.java.view.JFrameMain;
+import ch.hearc.p2.java.view.dialog.JDialog3D;
+import ch.hearc.p2.java.view.dialog.JDialogSetEquation;
+import ch.hearc.p2.java.view.dialog.JDialogSetMatrix;
 import ch.hearc.p2.java.view.jpanel.JPanelMenu;
 import ch.hearc.p2.java.view.jpanel.JPanelResultStep;
-import ch.hearc.p2.java.view.jpanel.JPanelSetEquation;
-import ch.hearc.p2.java.view.jpanel.JPanelSetMatrix;
+import ch.hearc.p2.java.view.jpanel.dialog.JPanelSetEquation;
+import ch.hearc.p2.java.view.jpanel.dialog.JPanelSetMatrix;
 import ch.hearc.p2.java.view.jpanel3d.JPanel3D;
 
 public class ControllerMain
@@ -27,11 +31,9 @@ public class ControllerMain
 	public ControllerMain()
 		{
 		super();
-		this.controllerEquation = new ControllerEquation();
-		this.controllerIO = new ControllerIO();
 
-		this.jFrameMain = new JFrameMain(this);
-		this.jDialogMain = new JDialogMain(this);
+		jFrame = new JFrameMain(this);
+		controllerIO = new ControllerIO();
 
 		changeView(PANEL.MENU);
 		}
@@ -43,42 +45,30 @@ public class ControllerMain
 	//Affichage de la vue appropriée
 	public void changeView(PANEL panel)
 		{
-
 		if (currentView != panel)//Empeche le double affichage
 			{
-			lastFrame = panel;
-
 			currentView = panel;
 			JPanel jpanel;
-
-			if (jDialogMain.isShowing())
-				{
-				jDialogMain.close();
-				}
 
 			switch(panel)
 				{
 				case MENU:
 					jpanel = new JPanelMenu(this);
-					jFrameMain.setPanel("Menu", jpanel);
-					jFrameMain.enableAlternativeMenu(false);
+					jFrame.setPanel("Menu", jpanel);
+					jFrame.enableAlternativeMenu(false);
 					break;
 
 				case RESULT:
-					jpanel = new JPanelResultStep(controllerEquation);
-
-					jFrameMain.setPanel("Résolution directe", jpanel, 600, 600);
-					jFrameMain.enableAlternativeMenu(true);
-
+					jpanel = new JPanelResultStep(equation);
+					jFrame.setPanel("Résolution directe", jpanel, 600, 600);
+					jFrame.enableAlternativeMenu(true);
 					break;
 
 				case RESULT_STEP:
-					jpanel = new JPanelResultStep(controllerEquation);
-
-					jFrameMain.setPanel("Résolution étape par étape", jpanel, 600, 600);
-					jFrameMain.pack();
-					jFrameMain.enableAlternativeMenu(true);
-
+					jpanel = new JPanelResultStep(equation);
+					jFrame.setPanel("Résolution étape par étape", jpanel, 600, 600);
+					jFrame.pack();
+					jFrame.enableAlternativeMenu(true);
 					break;
 
 				default:
@@ -90,65 +80,33 @@ public class ControllerMain
 
 	public void showDialog(DIALOG dialog)
 		{
-		if (currentView != dialog)
+		currentView = dialog;
+
+		switch(dialog)
 			{
-			currentView = dialog;
-			JPanel jpanel;
+			case NEW_EQUATION:
+				showNewEquationDialog();
+				break;
 
-			switch(dialog)
-				{
-				case SET_EQUATION:
-					jpanel = new JPanelSetEquation(this, controllerEquation);
-					jDialogMain.setPanel("Création de problème", jpanel, 300, 300);
-					break;
+			case SET_EQUATION:
+				showSetEquationDialog();
+				break;
 
-				case SET_MATRIX:
-					jpanel = new JPanelSetMatrix(this, controllerEquation);
-					jDialogMain.setPanel("Remplissage de la matrice", jpanel, 500, 300);
-					break;
+			case SET_MATRIX:
+				showSetMatrixDialog();
+				break;
 
-				case RESULT_3D:	// 1-4 équations de 2 ou 3 inconnues
-					if ( controllerEquation.getNumberEquation() >= 1  && controllerEquation.getNumberEquation() <= 4
-					&& (controllerEquation.getNumberVar() == 2 || controllerEquation.getNumberVar() == 3) )
-						{
-						jpanel = new JPanel3D(controllerEquation.getMatrix(0));
-						jDialogMain.setPanel("Vue 3D du système", jpanel);
-						jDialogMain.setLocation(0, 0);
-						jDialogMain.pack();
-						}
-					else
-						{
-						JOptionPane.showMessageDialog(jFrameMain, "Seuls les systèmes de 1-4 équation(s) comprenant 2 à 3 inconnues, peuvent être affichés graphiquement.", "", JOptionPane.WARNING_MESSAGE);
-						}
-				}
-
-			if (!jDialogMain.isShowing())
-				{
-				jDialogMain.setVisible(true);
-				}
+			case RESULT_3D:
+				if (equation.getMatrixNumberEquation() >= 1 && equation.getMatrixNumberEquation() <= 4 && (equation.getMatrixNumberVariable() == 2 || equation.getMatrixNumberVariable() == 3))
+					{
+					JDialog3D jDialogMain = new JDialog3D(new JPanel3D(equation.getMatrix()));
+					jDialogMain.showDialog();
+					}
+				else
+					{
+					JOptionPane.showMessageDialog(jFrame, "Seuls les systèmes de 1-4 équation(s) comprenant 2 à 3 inconnues, peuvent être affichés graphiquement.", "", JOptionPane.WARNING_MESSAGE);
+					}
 			}
-		}
-
-	public void closeDialog()
-		{
-		changeView(lastFrame);
-		}
-
-	public void createNewEquation()
-		{
-		//Sauvegarde de l'équation actuelle
-		//TODO: JBox demande de sauvegarde
-		//save();
-
-		//Création de l'équation
-		controllerEquation.setCreating(true);
-		showDialog(DIALOG.SET_EQUATION);
-		}
-
-	public void stopCreating()
-		{
-		//Equation temporaire non appliquée
-		controllerEquation.setCreating(false);
 		}
 
 	public void save()
@@ -159,19 +117,19 @@ public class ControllerMain
 
 		//jfilechooser.setSelectedFile(controller)
 		jfilechooser.setFileFilter(new FileNameExtensionFilter("NSolver extension", "nso"));
-		int returnOption = jfilechooser.showSaveDialog(jFrameMain);
+		int returnOption = jfilechooser.showSaveDialog(jFrame);
 
 		try
 			{
 			if (returnOption == JFileChooser.APPROVE_OPTION)
 				{
-				controllerIO.save(controllerEquation.getEquation(), jfilechooser.getSelectedFile());
-				controllerEquation.getEquation().setSaved();
+				controllerIO.save(equation, jfilechooser.getSelectedFile());
+				equation.setSaved();
 				}
 			}
 		catch (IOException e)
 			{
-			JOptionPane.showMessageDialog(jFrameMain, "Error while saving file : " + jfilechooser.getSelectedFile().getAbsolutePath(), e.getClass().getSimpleName(), JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(jFrame, "Error while saving file : " + jfilechooser.getSelectedFile().getAbsolutePath(), e.getClass().getSimpleName(), JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 			}
 		}
@@ -181,44 +139,144 @@ public class ControllerMain
 		JFileChooser jfilechooser = new JFileChooser();
 		jfilechooser.setDialogTitle("Choisissez un fichier à charger");
 		jfilechooser.setFileFilter(new FileNameExtensionFilter("NSolver extension", "nso"));
-		int returnOption = jfilechooser.showOpenDialog(jFrameMain);
+		int returnOption = jfilechooser.showOpenDialog(jFrame);
 
 		if (returnOption == JFileChooser.APPROVE_OPTION)
 			{
 			try
 				{
-				Equation equation = controllerIO.load(jfilechooser.getSelectedFile());
-				controllerEquation.setEquation(equation);
-				controllerEquation.applyTempEquation();
-				controllerEquation.reInitMatrix();
-				controllerEquation.solveEquation();
+				equation = controllerIO.load(jfilechooser.getSelectedFile());
+				//equation.solve();//voir si deja solve
 				changeView(PANEL.RESULT);
 				}
 			catch (ClassNotFoundException e)
 				{
-				JOptionPane.showMessageDialog(jFrameMain, "Didn't found \"Equation.class\".", e.getClass().getSimpleName(), JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(jFrame, "Didn't found \"Equation.class\".", e.getClass().getSimpleName(), JOptionPane.ERROR_MESSAGE);
 				e.printStackTrace();
 				}
 			catch (IOException e)
 				{
-				JOptionPane.showMessageDialog(jFrameMain, "Error while loading file : " + jfilechooser.getSelectedFile().getAbsolutePath(), e.getClass().getSimpleName(), JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(jFrame, "Error while loading file : " + jfilechooser.getSelectedFile().getAbsolutePath(), e.getClass().getSimpleName(), JOptionPane.ERROR_MESSAGE);
 				e.printStackTrace();
 				}
 			}
 		}
 
 	/*------------------------------------------------------------------*\
+	|*							Methodes Private						*|
+	\*------------------------------------------------------------------*/
+
+	private void showNewEquationDialog()
+		{
+		//Si l'equation n'a pas deja ete commencé (suivant puis précédent),
+		//on en crée une nouvelle
+		if (equationTemp == null)
+			{
+			equationTemp = new Equation();
+			}
+
+		//Affichage du dialogue
+		JDialogMain jDialog = new JDialogSetEquation(new JPanelSetEquation(equationTemp));
+		int result = jDialog.showDialog();
+
+		//Traitement du résultat
+		if (result == 1)//si pas annulé
+			{
+			showNewMatrixDialog();//showDialog(DIALOG.NEW_MATRIX);
+			}
+		}
+
+	private void showNewMatrixDialog()
+		{
+		Matrix matrixTemp = new Matrix(equationTemp.getMatrixNumberEquation(), equationTemp.getMatrixNumberVariable() + 1);
+
+		JDialogMain jDialog = new JDialogSetMatrix(new JPanelSetMatrix(matrixTemp, equationTemp.isSolved()));
+
+		int result = jDialog.showDialog();
+		if (result == 1)//Appliqué (annulé renvoi 0)
+			{
+			equationTemp.setMatrix(matrixTemp, equationTemp.isStepMode());
+			equation = equationTemp;
+			equationTemp = null;
+
+			if (equation.isStepMode())
+				{
+				changeView(PANEL.RESULT_STEP);
+				}
+			else
+				{
+				changeView(PANEL.RESULT);
+				}
+			}
+		else if (result == 2)//Précédent
+			{
+			showNewEquationDialog();//showDialog(DIALOG.NEW_EQUATION);
+			}
+		}
+
+	private void showSetEquationDialog()
+		{
+		//Copie de l'equation
+		equationTemp = new Equation(equation);
+
+		//Affichage
+		JDialogMain jDialog = new JDialogSetEquation(new JPanelSetEquation(equationTemp));
+		int result = jDialog.showDialog();
+
+		//Traitement du resultat
+		if (result == 1)//si pas annulé
+			{
+			if (equationTemp.getMatrixNumberEquation() == equation.getMatrixNumberEquation() && equationTemp.getMatrixNumberVariable() == equation.getMatrixNumberVariable())
+				{
+				//Matrice de meme taille, on applique les changements
+				equation = equationTemp;
+				equationTemp = null;
+				}
+			else
+				{
+				//On doit entrer une nouvelle matrice
+				showDialog(DIALOG.SET_MATRIX);
+				}
+			}
+		}
+
+	private void showSetMatrixDialog()
+		{
+		Matrix matrixTemp = equation.getMatrix();
+		JDialogMain jDialog = new JDialogSetMatrix(new JPanelSetMatrix(matrixTemp, equation.isSolved()));
+
+		int result = jDialog.showDialog();
+		if (result == 1)//Appliqué (annulé renvoi 0)
+			{
+			if (equation.isStepMode())
+				{
+				equation.setMatrix(matrixTemp, equation.isStepMode());
+				changeView(PANEL.RESULT_STEP);
+				}
+			else
+				{
+//				equation.setMatrix(matrixTemp, true);
+				changeView(PANEL.RESULT);
+				}
+			}
+		else if (result == 2)//Précédent
+			{
+			//Rien dans ce cas
+			}
+		}
+
+	/*------------------------------------------------------------------*\
 	|*							Attributs Private						*|
 	\*------------------------------------------------------------------*/
+
 	//Tools
-	private ControllerEquation controllerEquation;
+	private Equation equation;
+	private Equation equationTemp;
 	private ControllerIO controllerIO;
 
-	private JFrameMain jFrameMain;
-	private JDialogMain jDialogMain;
-
+	//Vues
+	private JFrameMain jFrame;
 	private VIEW currentView;
-	private PANEL lastFrame;
 
 	private interface VIEW
 		{
@@ -231,7 +289,7 @@ public class ControllerMain
 
 	public enum DIALOG implements VIEW
 		{
-		SET_EQUATION, SET_MATRIX, RESULT_3D
+		NEW_EQUATION, SET_EQUATION, SET_MATRIX, RESULT_3D//, NEW_MATRIX
 		}
 
 	}
