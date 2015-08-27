@@ -12,7 +12,7 @@ public class Equation implements Serializable
 	\*------------------------------------------------------------------*/
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 4044778703986450246L;
 
@@ -37,6 +37,7 @@ public class Equation implements Serializable
 	public Equation(Equation source)
 		{
 		this(source.getName(), source.getMatrixNumberVariable(), source.getMatrixNumberEquation(), source.getSpeedSec(), source.isStepMode());
+		setMatrix(source.getMatrix(), source.isStepMode());
 		}
 
 	/*------------------------------------------------------------------*\
@@ -78,16 +79,12 @@ public class Equation implements Serializable
 		}
 
 	public Matrix getMatrix()
-	{
+		{
 		return log.getOriginalMatrix();
-	}
+		}
 
 	public String[][] getMatrix(int pos)
 		{
-//		if (listMatrix.isEmpty()) { return null; }
-//
-//		return listMatrix.get(pos);
-
 		return log.getMatrix(pos);
 		}
 
@@ -100,10 +97,10 @@ public class Equation implements Serializable
 	|*				Set				*|
 	\*------------------------------*/
 
-//	public void setVariableName(String variableName)
-//		{
-//		listMatrix.get(listMatrix.size() - 1).setVariableName(variableName);
-//		}
+	//	public void setVariableName(String variableName)
+	//		{
+	//		listMatrix.get(listMatrix.size() - 1).setVariableName(variableName);
+	//		}
 
 	public void setMatrix(Matrix matrix, boolean gaussResolution)
 		{
@@ -147,7 +144,7 @@ public class Equation implements Serializable
 
 	public boolean hasMatrixIndex(int index)
 		{
-		return index < log.getNbStep()-1;
+		return index < log.getNbStep() - 1;
 		}
 
 	public boolean isStepMode()
