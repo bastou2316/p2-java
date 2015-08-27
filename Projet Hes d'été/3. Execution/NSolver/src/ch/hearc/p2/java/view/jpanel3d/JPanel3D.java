@@ -87,6 +87,7 @@ final public class JPanel3D extends JPanelDialog {
 	private PickCanvas pickCanvas = null;
 
 	private Font font = null;
+	private int fontsize;
 	private Color bgColor = Color.WHITE;
 	private Color titleColor = Color.BLUE.darker();
 	private Color[] plansColor;
@@ -103,6 +104,7 @@ final public class JPanel3D extends JPanelDialog {
 		matrixValues = mat.getValuesCopy();
 		scaleFactor = 10f;
 		space = 1f;
+		fontsize = 40;
 		jPanelSelection = null;
 
 		plansColor = new Color[4];
@@ -230,23 +232,23 @@ final public class JPanel3D extends JPanelDialog {
 		LineArray axisX = new LineArray(2, LineArray.COORDINATES
 				| LineArray.COLOR_3);
 		axisX.setCoordinate(0, new Point3f(0f, 0f, 0f));
-		axisX.setCoordinate(1, new Point3f(0f, 0f, 4f));
+		axisX.setCoordinate(1, new Point3f(0f, 0f, 3f));
 		axisX.setColor(0, new Color3f(0.2f, 0.2f, 0.2f));
 		axisX.setColor(1, new Color3f(0.2f, 0.2f, 0.2f));
 		TG1.addChild(new Shape3D(axisX, lineApp));
 
 		LineArray arrowLeftX = new LineArray(2, LineArray.COORDINATES
 				| LineArray.COLOR_3);
-		arrowLeftX.setCoordinate(0, new Point3f(0f, 0f, 4f));
-		arrowLeftX.setCoordinate(1, new Point3f(-0.1f, 0f, 3.8f));
+		arrowLeftX.setCoordinate(0, new Point3f(0f, 0f, 3f));
+		arrowLeftX.setCoordinate(1, new Point3f(-0.1f, 0f, 2.8f));
 		arrowLeftX.setColor(0, new Color3f(0.2f, 0.2f, 0.2f));
 		arrowLeftX.setColor(1, new Color3f(0.2f, 0.2f, 0.2f));
 		TG1.addChild(new Shape3D(arrowLeftX, lineApp));
 
 		LineArray arrowRightX = new LineArray(2, LineArray.COORDINATES
 				| LineArray.COLOR_3);
-		arrowRightX.setCoordinate(0, new Point3f(0f, 0f, 4f));
-		arrowRightX.setCoordinate(1, new Point3f(0.1f, 0f, 3.8f));
+		arrowRightX.setCoordinate(0, new Point3f(0f, 0f, 3f));
+		arrowRightX.setCoordinate(1, new Point3f(0.1f, 0f, 2.8f));
 		arrowRightX.setColor(0, new Color3f(0.2f, 0.2f, 0.2f));
 		arrowRightX.setColor(1, new Color3f(0.2f, 0.2f, 0.2f));
 		TG1.addChild(new Shape3D(arrowRightX, lineApp));
@@ -255,23 +257,23 @@ final public class JPanel3D extends JPanelDialog {
 		LineArray axisY = new LineArray(2, LineArray.COORDINATES
 				| LineArray.COLOR_3);
 		axisY.setCoordinate(0, new Point3f(0f, 0f, 0f));
-		axisY.setCoordinate(1, new Point3f(4f, 0f, 0f));
+		axisY.setCoordinate(1, new Point3f(3f, 0f, 0f));
 		axisY.setColor(0, new Color3f(0.2f, 0.2f, 0.2f));
 		axisY.setColor(1, new Color3f(0.2f, 0.2f, 0.2f));
 		TG1.addChild(new Shape3D(axisY, lineApp));
 
 		LineArray arrowLeftY = new LineArray(2, LineArray.COORDINATES
 				| LineArray.COLOR_3);
-		arrowLeftY.setCoordinate(0, new Point3f(4f, 0f, 0f));
-		arrowLeftY.setCoordinate(1, new Point3f(3.8f, 0f, -0.1f));
+		arrowLeftY.setCoordinate(0, new Point3f(3f, 0f, 0f));
+		arrowLeftY.setCoordinate(1, new Point3f(2.8f, 0f, -0.1f));
 		arrowLeftY.setColor(0, new Color3f(0.2f, 0.2f, 0.2f));
 		arrowLeftY.setColor(1, new Color3f(0.2f, 0.2f, 0.2f));
 		TG1.addChild(new Shape3D(arrowLeftY, lineApp));
 
 		LineArray arrowRightY = new LineArray(2, LineArray.COORDINATES
 				| LineArray.COLOR_3);
-		arrowRightY.setCoordinate(0, new Point3f(4f, 0f, 0f));
-		arrowRightY.setCoordinate(1, new Point3f(3.8f, 0f, 0.1f));
+		arrowRightY.setCoordinate(0, new Point3f(3f, 0f, 0f));
+		arrowRightY.setCoordinate(1, new Point3f(2.8f, 0f, 0.1f));
 		arrowRightY.setColor(0, new Color3f(0.2f, 0.2f, 0.2f));
 		arrowRightY.setColor(1, new Color3f(0.2f, 0.2f, 0.2f));
 		TG1.addChild(new Shape3D(arrowRightY, lineApp));
@@ -281,7 +283,7 @@ final public class JPanel3D extends JPanelDialog {
 		Text2D textObject = new Text2D("X", new Color3f(0.2f, 0.2f, 0.2f),
 				"Serif", 90, Font.BOLD);
 		Transform3D textTranslation = new Transform3D();
-		textTranslation.setTranslation(new Vector3f(-0.3f, 0f, 4.0f));
+		textTranslation.setTranslation(new Vector3f(-0.3f, 0f, 3.0f));
 		TransformGroup textTranslationGroup = new TransformGroup(
 				textTranslation);
 		textTranslationGroup.addChild(textObject);
@@ -300,7 +302,7 @@ final public class JPanel3D extends JPanelDialog {
 		textObject = new Text2D("Y", new Color3f(0.2f, 0.2f, 0.2f), "Serif",
 				90, Font.BOLD);
 		textTranslation = new Transform3D();
-		textTranslation.setTranslation(new Vector3f(4.0f, 0f, 0f));
+		textTranslation.setTranslation(new Vector3f(3.0f, 0f, 0f));
 		textTranslationGroup = new TransformGroup(textTranslation);
 		textTranslationGroup.addChild(textObject);
 		TG1.addChild(textTranslationGroup);
@@ -328,23 +330,23 @@ final public class JPanel3D extends JPanelDialog {
 			LineArray axisZ = new LineArray(2, LineArray.COORDINATES
 					| LineArray.COLOR_3);
 			axisZ.setCoordinate(0, new Point3f(0f, 0f, 0f));
-			axisZ.setCoordinate(1, new Point3f(0f, 4f, 0f));
+			axisZ.setCoordinate(1, new Point3f(0f, 3f, 0f));
 			axisZ.setColor(0, new Color3f(0.2f, 0.2f, 0.2f));
 			axisZ.setColor(1, new Color3f(0.2f, 0.2f, 0.2f));
 			TG1.addChild(new Shape3D(axisZ, lineApp));
 
 			LineArray arrowLeftZ = new LineArray(2, LineArray.COORDINATES
 					| LineArray.COLOR_3);
-			arrowLeftZ.setCoordinate(0, new Point3f(0f, 4f, 0f));
-			arrowLeftZ.setCoordinate(1, new Point3f(-0.07f, 3.8f, 0.07f));
+			arrowLeftZ.setCoordinate(0, new Point3f(0f, 3f, 0f));
+			arrowLeftZ.setCoordinate(1, new Point3f(-0.07f, 2.8f, 0.07f));
 			arrowLeftZ.setColor(0, new Color3f(0.2f, 0.2f, 0.2f));
 			arrowLeftZ.setColor(1, new Color3f(0.2f, 0.2f, 0.2f));
 			TG1.addChild(new Shape3D(arrowLeftZ, lineApp));
 
 			LineArray arrowRightZ = new LineArray(2, LineArray.COORDINATES
 					| LineArray.COLOR_3);
-			arrowRightZ.setCoordinate(0, new Point3f(0f, 4f, 0f));
-			arrowRightZ.setCoordinate(1, new Point3f(0.07f, 3.8f, -0.07f));
+			arrowRightZ.setCoordinate(0, new Point3f(0f, 3f, 0f));
+			arrowRightZ.setCoordinate(1, new Point3f(0.07f, 2.8f, -0.07f));
 			arrowRightZ.setColor(0, new Color3f(0.2f, 0.2f, 0.2f));
 			arrowRightZ.setColor(1, new Color3f(0.2f, 0.2f, 0.2f));
 			TG1.addChild(new Shape3D(arrowRightZ, lineApp));
@@ -352,7 +354,7 @@ final public class JPanel3D extends JPanelDialog {
 			textObject = new Text2D("Z", new Color3f(0.2f, 0.2f, 0.2f),
 					"Serif", 90, Font.BOLD);
 			textTranslation = new Transform3D();
-			textTranslation.setTranslation(new Vector3f(-0.3f, 3.8f, 0f));
+			textTranslation.setTranslation(new Vector3f(-0.3f, 2.8f, 0f));
 			textTranslationGroup = new TransformGroup(textTranslation);
 			textTranslationGroup.addChild(textObject);
 			TG1.addChild(textTranslationGroup);
@@ -381,28 +383,96 @@ final public class JPanel3D extends JPanelDialog {
 		sceneBranch.addChild(TG1);
 	}
 
+	/*
+	 * 2D
+	 */
+
+	/**
+	 * 
+	 */
 	private void drawTicks2D() {
-		LineAttributes lineAttr = new LineAttributes(4f, 0, true);
+		ticksBranch = new BranchGroup();
+		ticksBranch.setCapability(BranchGroup.ALLOW_DETACH);
+
+		LineAttributes lineAttr = new LineAttributes(2f, 0, true);
 		Appearance lineApp = new Appearance();
 		lineApp.setLineAttributes(lineAttr);
+		lineApp.setColoringAttributes(new ColoringAttributes(new Color3f(0.5f,
+				0.3f, 0.3f), ColoringAttributes.SHADE_GOURAUD));
+		lineApp.setTransparencyAttributes(new TransparencyAttributes(
+				TransparencyAttributes.NONE, 0.0f));
 
-		// Axe X
-		LineArray tickX = new LineArray(2, LineArray.COORDINATES
-				| LineArray.COLOR_3);
-		tickX.setCoordinate(0, new Point3f(1.0f, 0f, -0.08f));
-		tickX.setCoordinate(1, new Point3f(1.0f, 0f, 0.08f));
-		tickX.setColor(0, new Color3f(0.2f, 0.2f, 0.2f));
-		tickX.setColor(1, new Color3f(0.2f, 0.2f, 0.2f));
-		TG1.addChild(new Shape3D(tickX, lineApp));
+		float totalSpace = space;
+		float tickSize = 0.05f;
 
-		/* Axe Y */
-		LineArray tickY = new LineArray(2, LineArray.COORDINATES
-				| LineArray.COLOR_3);
-		tickY.setCoordinate(0, new Point3f(-0.08f, 0f, 1f));
-		tickY.setCoordinate(1, new Point3f(0.08f, 0f, 1f));
-		tickY.setColor(0, new Color3f(0.2f, 0.2f, 0.2f));
-		tickY.setColor(1, new Color3f(0.2f, 0.2f, 0.2f));
-		TG1.addChild(new Shape3D(tickY, lineApp));
+		drawTicks2DZeros(tickSize * 3, lineApp);
+		while (totalSpace < scaleFactor) {
+			drawTicks2D(totalSpace, tickSize, lineApp);
+			totalSpace += space;
+		}
+
+		TG1.addChild(ticksBranch);
+
+		// // Axe X
+		// LineArray tickX = new LineArray(2, LineArray.COORDINATES
+		// | LineArray.COLOR_3);
+		// tickX.setCoordinate(0, new Point3f(1.0f, 0f, -0.08f));
+		// tickX.setCoordinate(1, new Point3f(1.0f, 0f, 0.08f));
+		// tickX.setColor(0, new Color3f(0.2f, 0.2f, 0.2f));
+		// tickX.setColor(1, new Color3f(0.2f, 0.2f, 0.2f));
+		// TG1.addChild(new Shape3D(tickX, lineApp));
+		//
+		// /* Axe Y */
+		// LineArray tickY = new LineArray(2, LineArray.COORDINATES
+		// | LineArray.COLOR_3);
+		// tickY.setCoordinate(0, new Point3f(-0.08f, 0f, 1f));
+		// tickY.setCoordinate(1, new Point3f(0.08f, 0f, 1f));
+		// tickY.setColor(0, new Color3f(0.2f, 0.2f, 0.2f));
+		// tickY.setColor(1, new Color3f(0.2f, 0.2f, 0.2f));
+		// TG1.addChild(new Shape3D(tickY, lineApp));
+
+	}
+
+	private void drawTicks2DZeros(float tickSize, Appearance lineApp) {
+		for (int i = -1; i < 2; i += 2) {
+			// Axe X
+			LineArray tickX = new LineArray(4, LineArray.COORDINATES);
+			tickX.setCoordinate(0, new Point3f(0f, 0f, i * (1f - tickSize)));
+			tickX.setCoordinate(3, new Point3f(0f, 0f, i * (1f + tickSize)));
+			ticksBranch.addChild(new Shape3D(tickX, lineApp));
+
+			// Axe Y
+			LineArray tickY = new LineArray(4, LineArray.COORDINATES);
+			tickY.setCoordinate(0, new Point3f(i * (1f + tickSize), 0f, 0f));
+			tickY.setCoordinate(3, new Point3f(i * (1f - tickSize), 0f, 0f));
+			ticksBranch.addChild(new Shape3D(tickY, lineApp));
+
+		}
+	}
+
+	private void drawTicks2D(float totalSpace, float tickSize,
+			Appearance lineApp) {
+		for (int i = -1; i < 2; i += 2) {
+			for (int j = -1; j < 2; j += 2) {
+
+				// Axe X
+				LineArray tickX = new LineArray(4, LineArray.COORDINATES);
+				tickX.setCoordinate(0, new Point3f(
+						i * totalSpace / scaleFactor, 0, j * (1f + tickSize)));
+				tickX.setCoordinate(1, new Point3f(
+						i * totalSpace / scaleFactor, 0, j * (1f - tickSize)));
+				ticksBranch.addChild(new Shape3D(tickX, lineApp));
+
+				// Axe Y
+				LineArray tickY = new LineArray(4, LineArray.COORDINATES);
+				tickY.setCoordinate(0, new Point3f(j * (1f + tickSize), 0, i * totalSpace
+						/ scaleFactor));
+				tickY.setCoordinate(1, new Point3f(j * (1f - tickSize), 0, i
+						* totalSpace / scaleFactor));
+				ticksBranch.addChild(new Shape3D(tickY, lineApp));
+
+			}
+		}
 
 	}
 
@@ -412,9 +482,9 @@ final public class JPanel3D extends JPanelDialog {
 
 		// Axe X
 		Text2D tickValue = new Text2D(scaleFactor + "", new Color3f(0.2f, 0.2f,
-				0.2f), "Serif", 70, Font.ITALIC);
+				0.2f), "Serif", fontsize, Font.ITALIC);
 		Transform3D textTranslation = new Transform3D();
-		textTranslation.setTranslation(new Vector3f(1f, 0f, 0f));
+		textTranslation.setTranslation(new Vector3f(1.05f, 0f, 0f));
 
 		TransformGroup textTranslationGroup = new TransformGroup(
 				textTranslation);
@@ -424,130 +494,9 @@ final public class JPanel3D extends JPanelDialog {
 
 		// Axe Y
 		tickValue = new Text2D(scaleFactor + "", new Color3f(0.2f, 0.2f, 0.2f),
-				"Serif", 70, Font.ITALIC);
+				"Serif", fontsize, Font.ITALIC);
 		textTranslation = new Transform3D();
-		textTranslation.setTranslation(new Vector3f(0f, 0f, 1f));
-		textTranslationGroup = new TransformGroup(textTranslation);
-		textTranslationGroup.addChild(tickValue);
-		labelsBranch.addChild(textTranslationGroup);
-
-		// Apparence (visible des 2 côtés)
-		Appearance appTick = tickValue.getAppearance();
-		PolygonAttributes paTick = appTick.getPolygonAttributes();
-		if (paTick == null)
-			paTick = new PolygonAttributes();
-		paTick.setCullFace(PolygonAttributes.CULL_NONE);
-		if (appTick.getPolygonAttributes() == null)
-			appTick.setPolygonAttributes(paTick);
-
-		TG1.addChild(labelsBranch);
-	}
-
-	private void drawTicks3D() {
-//		LineAttributes lineAttr = new LineAttributes(4f, 0, true);
-//		Appearance lineApp = new Appearance();
-//		lineApp.setLineAttributes(lineAttr);
-//
-//		// Axe X
-//		LineArray tickX = new LineArray(2, LineArray.COORDINATES
-//				| LineArray.COLOR_3);
-//		tickX.setCoordinate(0, new Point3f(1.0f, 0f, -0.08f));
-//		tickX.setCoordinate(1, new Point3f(1.0f, 0f, 0.08f));
-//		tickX.setColor(0, new Color3f(0.2f, 0.2f, 0.2f));
-//		tickX.setColor(1, new Color3f(0.2f, 0.2f, 0.2f));
-//
-//		TG1.addChild(new Shape3D(tickX, lineApp));
-//
-//		/* Axe Y */
-//		LineArray tickY = new LineArray(2, LineArray.COORDINATES
-//				| LineArray.COLOR_3);
-//		tickY.setCoordinate(0, new Point3f(-0.08f, 0f, 1f));
-//		tickY.setCoordinate(1, new Point3f(0.08f, 0f, 1f));
-//		tickY.setColor(0, new Color3f(0.2f, 0.2f, 0.2f));
-//		tickY.setColor(1, new Color3f(0.2f, 0.2f, 0.2f));
-//		TG1.addChild(new Shape3D(tickY, lineApp));
-//
-//		/* Axe Z */
-//		LineArray tickZ = new LineArray(2, LineArray.COORDINATES
-//				| LineArray.COLOR_3);
-//		tickZ.setCoordinate(0, new Point3f(0f, 1f, -0.08f));
-//		tickZ.setCoordinate(1, new Point3f(0f, 1f, 0.08f));
-//		tickZ.setColor(0, new Color3f(0.2f, 0.2f, 0.2f));
-//		tickZ.setColor(1, new Color3f(0.2f, 0.2f, 0.2f));
-//		TG1.addChild(new Shape3D(tickZ, lineApp));
-
-		ticksBranch = new BranchGroup();
-		ticksBranch.setCapability(BranchGroup.ALLOW_DETACH);
-
-		float totalSpace = 0f;
-		int i = 0;
-
-		while (totalSpace < scaleFactor) {
-			totalSpace += space;
-			++i;
-			drawTicks3D(totalSpace, i);
-		}
-
-		TG1.addChild(ticksBranch);
-	}
-
-	private void drawTicks3D(float totalSpace, int i) {
-		LineAttributes lineAttr = new LineAttributes(2f, 0, true);
-		Appearance lineApp = new Appearance();
-		lineApp.setLineAttributes(lineAttr);
-
-		// Axe X
-		LineArray tickXplus = new LineArray(2, LineArray.COORDINATES
-				| LineArray.COLOR_3);
-		tickXplus.setCoordinate(0, new Point3f(i*0.1f, 1.02f, 1f));
-		tickXplus.setCoordinate(1, new Point3f(i*0.1f, 0.98f, 1f));
-		tickXplus.setColor(0, new Color3f(0.2f, 0.2f, 0.2f));
-		tickXplus.setColor(1, new Color3f(0.2f, 0.2f, 0.2f));
-
-		ticksBranch.addChild(new Shape3D(tickXplus, lineApp));
-
-		// Axe X
-		LineArray tickXminus = new LineArray(2, LineArray.COORDINATES
-				| LineArray.COLOR_3);
-		tickXminus.setCoordinate(0, new Point3f(-i*0.1f, 1.02f, 1f));
-		tickXminus.setCoordinate(1, new Point3f(-i*0.1f, 0.98f, 1f));
-		tickXminus.setColor(0, new Color3f(0.2f, 0.2f, 0.2f));
-		tickXminus.setColor(1, new Color3f(0.2f, 0.2f, 0.2f));
-
-		ticksBranch.addChild(new Shape3D(tickXminus, lineApp));
-
-	}
-
-	private void drawAxisScaleLabels3D() {
-		labelsBranch = new BranchGroup();
-		labelsBranch.setCapability(BranchGroup.ALLOW_DETACH);
-
-		// Axe X
-		Text2D tickValue = new Text2D(scaleFactor + "", new Color3f(0.2f, 0.2f,
-				0.2f), "Serif", 70, Font.ITALIC);
-		Transform3D textTranslation = new Transform3D();
-		textTranslation.setTranslation(new Vector3f(1f, 0f, 0f));
-
-		TransformGroup textTranslationGroup = new TransformGroup(
-				textTranslation);
-		textTranslationGroup = new TransformGroup(textTranslation);
-		textTranslationGroup.addChild(tickValue);
-		labelsBranch.addChild(textTranslationGroup);
-
-		// Axe Y
-		tickValue = new Text2D(scaleFactor + "", new Color3f(0.2f, 0.2f, 0.2f),
-				"Serif", 70, Font.ITALIC);
-		textTranslation = new Transform3D();
-		textTranslation.setTranslation(new Vector3f(0f, 0f, 1f));
-		textTranslationGroup = new TransformGroup(textTranslation);
-		textTranslationGroup.addChild(tickValue);
-		labelsBranch.addChild(textTranslationGroup);
-
-		// Axe Z
-		tickValue = new Text2D(scaleFactor + "", new Color3f(0.2f, 0.2f, 0.2f),
-				"Serif", 70, Font.ITALIC);
-		textTranslation = new Transform3D();
-		textTranslation.setTranslation(new Vector3f(0f, 1f, 0f));
+		textTranslation.setTranslation(new Vector3f(0f, 0f, 1.05f));
 		textTranslationGroup = new TransformGroup(textTranslation);
 		textTranslationGroup.addChild(tickValue);
 		labelsBranch.addChild(textTranslationGroup);
@@ -686,6 +635,212 @@ final public class JPanel3D extends JPanelDialog {
 		TG1.addChild(new Shape3D(square, squareApp));
 	}
 
+	/*
+	 * 3D
+	 */
+
+	/**
+	 * Dessin des ticks dans l'espace 3D
+	 */
+	private void drawTicks3D() {
+		ticksBranch = new BranchGroup();
+		ticksBranch.setCapability(BranchGroup.ALLOW_DETACH);
+
+		LineAttributes lineAttr = new LineAttributes(2f, 0, true);
+		Appearance lineApp = new Appearance();
+		lineApp.setLineAttributes(lineAttr);
+		lineApp.setColoringAttributes(new ColoringAttributes(new Color3f(0.5f,
+				0.3f, 0.3f), ColoringAttributes.SHADE_GOURAUD));
+		lineApp.setTransparencyAttributes(new TransparencyAttributes(
+				TransparencyAttributes.NONE, 0.0f));
+
+		float totalSpace = space;
+		float tickSize = 0.05f;
+
+		drawTicks3D(tickSize * 3, lineApp);
+		drawTicks3DZeros(tickSize * 3, lineApp);
+		while (totalSpace < scaleFactor) {
+			drawTicks3D(totalSpace, tickSize, lineApp);
+			totalSpace += space;
+		}
+
+		TG1.addChild(ticksBranch);
+	}
+
+	/**
+	 * Draw ticks on the axes
+	 * 
+	 * @param tickSize
+	 * @param lineApp
+	 */
+	private void drawTicks3D(float tickSize, Appearance lineApp) {
+
+		// Axe X
+		LineArray tickX = new LineArray(4, LineArray.COORDINATES);
+		tickX.setCoordinate(0, new Point3f(1.0f, 0f, -tickSize));
+		tickX.setCoordinate(1, new Point3f(1.0f, 0f, tickSize));
+		tickX.setCoordinate(2, new Point3f(1.0f, tickSize, 0f));
+		tickX.setCoordinate(3, new Point3f(1.0f, -tickSize, 0f));
+		ticksBranch.addChild(new Shape3D(tickX, lineApp));
+
+		// Axe Y
+		LineArray tickY = new LineArray(4, LineArray.COORDINATES);
+		tickY.setCoordinate(0, new Point3f(-tickSize, 0f, 1f));
+		tickY.setCoordinate(1, new Point3f(tickSize, 0f, 1f));
+		tickY.setCoordinate(2, new Point3f(0f, tickSize, 1f));
+		tickY.setCoordinate(3, new Point3f(0f, -tickSize, 1f));
+		ticksBranch.addChild(new Shape3D(tickY, lineApp));
+
+		// Axe Z
+		LineArray tickZ = new LineArray(4, LineArray.COORDINATES);
+		tickZ.setCoordinate(0, new Point3f(0f, 1f, -tickSize));
+		tickZ.setCoordinate(1, new Point3f(0f, 1f, tickSize));
+		tickZ.setCoordinate(2, new Point3f(tickSize, 1f, 0f));
+		tickZ.setCoordinate(3, new Point3f(-tickSize, 1f, 0f));
+		ticksBranch.addChild(new Shape3D(tickZ, lineApp));
+
+	}
+
+	/**
+	 * Draw the 0 ticks on the cube
+	 * 
+	 * @param tickSize
+	 * @param app
+	 */
+	private void drawTicks3DZeros(float tickSize, Appearance app) {
+
+		for (int i = -1; i < 2; i += 2) {
+			for (int j = -1; j < 2; j += 2) {
+				// Axe X
+				LineArray tickX = new LineArray(4, LineArray.COORDINATES);
+				tickX.setCoordinate(0, new Point3f(0f, i, j * (1f - tickSize)));
+				tickX.setCoordinate(1, new Point3f(0f, i, j));
+				tickX.setCoordinate(2, new Point3f(0f, i, j));
+				tickX.setCoordinate(3, new Point3f(0f, i * (1f - tickSize), j));
+				ticksBranch.addChild(new Shape3D(tickX, app));
+
+				// Axe Y
+				LineArray tickY = new LineArray(4, LineArray.COORDINATES);
+				tickY.setCoordinate(0, new Point3f(j * (1f - tickSize), i, 0f));
+				tickY.setCoordinate(1, new Point3f(j, i, 0f));
+				tickY.setCoordinate(2, new Point3f(j, i, 0f));
+				tickY.setCoordinate(3, new Point3f(j, i * (1f - tickSize), 0f));
+				ticksBranch.addChild(new Shape3D(tickY, app));
+
+				// Axe Z
+				LineArray tickZ = new LineArray(4, LineArray.COORDINATES);
+				tickZ.setCoordinate(0, new Point3f(i, 0f, j * (1f - tickSize)));
+				tickZ.setCoordinate(1, new Point3f(i, 0f, j));
+				tickZ.setCoordinate(2, new Point3f(i, 0f, j));
+				tickZ.setCoordinate(3, new Point3f(i * (1f - tickSize), 0f, j));
+				ticksBranch.addChild(new Shape3D(tickZ, app));
+
+			}
+		}
+	}
+
+	/**
+	 * Draw all the ticks on the cube except the "0 ticks"
+	 * 
+	 * @param totalSpace
+	 * @param tickSize
+	 * @param app
+	 */
+	private void drawTicks3D(float totalSpace, float tickSize, Appearance app) {
+
+		for (int i = -1; i < 2; i += 2) {
+			for (int j = -1; j < 2; j += 2) {
+				for (int k = -1; k < 2; k += 2) {
+					// Axe X
+					LineArray tickX = new LineArray(4, LineArray.COORDINATES);
+					tickX.setCoordinate(0, new Point3f(i * totalSpace
+							/ scaleFactor, j, k));
+					tickX.setCoordinate(1, new Point3f(i * totalSpace
+							/ scaleFactor, j * (1f - tickSize), k));
+					tickX.setCoordinate(2, new Point3f(i * totalSpace
+							/ scaleFactor, j, k));
+					tickX.setCoordinate(3, new Point3f(i * totalSpace
+							/ scaleFactor, j, k * (1f - tickSize)));
+					ticksBranch.addChild(new Shape3D(tickX, app));
+
+					// Axe Y
+					LineArray tickY = new LineArray(4, LineArray.COORDINATES);
+					tickY.setCoordinate(0, new Point3f(k, j, i * totalSpace
+							/ scaleFactor));
+					tickY.setCoordinate(1, new Point3f(k, j * (1f - tickSize),
+							i * totalSpace / scaleFactor));
+					tickY.setCoordinate(2, new Point3f(k, j, i * totalSpace
+							/ scaleFactor));
+					tickY.setCoordinate(3, new Point3f(k * (1f - tickSize), j,
+							i * totalSpace / scaleFactor));
+					ticksBranch.addChild(new Shape3D(tickY, app));
+
+					// Axe Z
+					LineArray tickZ = new LineArray(4, LineArray.COORDINATES);
+					tickZ.setCoordinate(0, new Point3f(j, i * totalSpace
+							/ scaleFactor, k));
+					tickZ.setCoordinate(1, new Point3f(j * (1f - tickSize), i
+							* totalSpace / scaleFactor, k));
+					tickZ.setCoordinate(2, new Point3f(j, i * totalSpace
+							/ scaleFactor, k));
+					tickZ.setCoordinate(3, new Point3f(j, i * totalSpace
+							/ scaleFactor, k * (1f - tickSize)));
+					ticksBranch.addChild(new Shape3D(tickZ, app));
+				}
+			}
+		}
+
+	}
+
+	private void drawAxisScaleLabels3D() {
+		labelsBranch = new BranchGroup();
+		labelsBranch.setCapability(BranchGroup.ALLOW_DETACH);
+
+		// Axe X
+		Text2D tickValue = new Text2D(scaleFactor + "", new Color3f(0.2f, 0.2f,
+				0.2f), "Serif", fontsize, Font.ITALIC);
+		Transform3D textTranslation = new Transform3D();
+		textTranslation.setTranslation(new Vector3f(1.05f, 0f, 0f));
+
+		TransformGroup textTranslationGroup = new TransformGroup(
+				textTranslation);
+		textTranslationGroup = new TransformGroup(textTranslation);
+		textTranslationGroup.addChild(tickValue);
+		labelsBranch.addChild(textTranslationGroup);
+
+		// Axe Y
+		tickValue = new Text2D(scaleFactor + "", new Color3f(0.2f, 0.2f, 0.2f),
+				"Serif", fontsize, Font.ITALIC);
+		textTranslation = new Transform3D();
+		textTranslation.setTranslation(new Vector3f(0f, 0f, 1.05f));
+		textTranslationGroup = new TransformGroup(textTranslation);
+		textTranslationGroup.addChild(tickValue);
+		labelsBranch.addChild(textTranslationGroup);
+
+		// Axe Z
+		tickValue = new Text2D(scaleFactor + "", new Color3f(0.2f, 0.2f, 0.2f),
+				"Serif", fontsize, Font.ITALIC);
+		textTranslation = new Transform3D();
+		textTranslation.setTranslation(new Vector3f(0f, 1.05f, 0f));
+		textTranslationGroup = new TransformGroup(textTranslation);
+		textTranslationGroup.addChild(tickValue);
+		labelsBranch.addChild(textTranslationGroup);
+
+		// Apparence (visible des 2 côtés)
+		Appearance appTick = tickValue.getAppearance();
+		PolygonAttributes paTick = appTick.getPolygonAttributes();
+		if (paTick == null)
+			paTick = new PolygonAttributes();
+		paTick.setCullFace(PolygonAttributes.CULL_NONE);
+		if (appTick.getPolygonAttributes() == null)
+			appTick.setPolygonAttributes(paTick);
+
+		TG1.addChild(labelsBranch);
+	}
+
+	/**
+	 * Dessine les plans dans l'espace en 3D
+	 */
 	private void drawPlans() {
 		PolygonAttributes polyAttr = new PolygonAttributes();
 		polyAttr.setCullFace(PolygonAttributes.CULL_NONE);
@@ -1005,6 +1160,7 @@ final public class JPanel3D extends JPanelDialog {
 		} else {
 			drawLines();
 			drawAxisScaleLabels2D();
+			drawTicks2D();
 		}
 
 	}
@@ -1015,6 +1171,21 @@ final public class JPanel3D extends JPanelDialog {
 		} else {
 			plansTogetherBranch.removeChild(plansBranch[index]);
 		}
+	}
+	
+	public void update() {
+
+		// this.repaint();
+		// this.revalidate();
+
+		Dimension dimVps = jPanelActions.getPreferredSize();
+		jPanelBaseY.setPreferredSize(dimVps);
+		jPanelBaseY.setMaximumSize(dimVps);
+
+		// this.revalidate();
+		// this.repaint();
+		// canvas3D.revalidate();
+		// canvas3D.repaint();
 	}
 
 	//
@@ -1031,21 +1202,6 @@ final public class JPanel3D extends JPanelDialog {
 
 	public Color getPlanColor(int index) {
 		return plansColor[index];
-	}
-
-	public void update() {
-
-		// this.repaint();
-		// this.revalidate();
-
-		Dimension dimVps = jPanelActions.getPreferredSize();
-		jPanelBaseY.setPreferredSize(dimVps);
-		jPanelBaseY.setMaximumSize(dimVps);
-
-		// this.revalidate();
-		// this.repaint();
-		// canvas3D.revalidate();
-		// canvas3D.repaint();
 	}
 
 	public void setSpace(float space) {
