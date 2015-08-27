@@ -46,6 +46,8 @@ public class JPanelSolutionHighlight extends JPanel{
 		// jCheckFct[].setForeground(bgColor);
 		// jCheckFct[].setAlignmentX(Component.LEFT_ALIGNMENT);
 
+		this.add(Box.createVerticalGlue());
 		this.add(jPanelSolution);
+		this.add(Box.createVerticalGlue());
 	}
 }

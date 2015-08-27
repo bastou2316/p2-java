@@ -60,7 +60,7 @@
 
 //package com.sun.j3d.utils.behaviors.vp;
 
-package ch.hearc.p2.java.view.jpanel3d;
+package ch.hearc.p2.java.view.jpanel3d.canvasControl;
 
 import java.awt.AWTEvent;
 import java.awt.Component;

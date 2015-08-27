@@ -60,11 +60,11 @@ public class JPanelHomeTransform extends JPanel
 					}
 			});
 
-		this.add(Box.createVerticalStrut(10));
+		this.add(Box.createVerticalGlue());
 		this.add(jButtonHomeTransform);
-		this.add(Box.createVerticalStrut(10));
+		this.add(Box.createVerticalGlue());
 		this.add(jButtonLookAt);
-		this.add(Box.createVerticalStrut(10));
+		this.add(Box.createVerticalGlue());
 
 		}
 	}

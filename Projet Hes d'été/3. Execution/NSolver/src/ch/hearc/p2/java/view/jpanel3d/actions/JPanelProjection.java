@@ -72,11 +72,11 @@ public class JPanelProjection extends JPanel
 
 		jPanelParProj.add(jRadioParallel);
 
-		this.add(Box.createVerticalStrut(5));
+		this.add(Box.createVerticalGlue());
 		this.add(jPanelParProj);
-		this.add(Box.createVerticalStrut(5));
+		this.add(Box.createVerticalStrut(10));
 		this.add(jRadioPerspective);
-		this.add(Box.createVerticalStrut(5));
+		this.add(Box.createVerticalGlue());
 
 		}
 	}

@@ -61,13 +61,15 @@ public class JPanelSelection extends JPanel {
 			jCheckFct[i].setForeground(jPanel3d.getPlanColor(i));
 
 			jPanelSelection.add(jCheckFct[i]);
-			jPanelSelection.add(Box.createVerticalStrut(5));
+			jPanelSelection.add(Box.createVerticalStrut(10));
 			
 		}
 		// jCheckFct[].setForeground(bgColor);
 		// jCheckFct[].setAlignmentX(Component.LEFT_ALIGNMENT);
 
+		this.add(Box.createVerticalGlue());
 		this.add(jPanelSelection);
+		this.add(Box.createVerticalGlue());
 	}
 	
 	public boolean isCheckBoxSelected(int index){
