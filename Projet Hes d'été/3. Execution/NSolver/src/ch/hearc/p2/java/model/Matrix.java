@@ -13,6 +13,11 @@ public final class Matrix implements Serializable
 	|*							Constructeurs							*|
 	\*------------------------------------------------------------------*/
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6886752129112591743L;
+
 	public Matrix(int rows, int cols)
 		{
 		if (rows <= 0 || cols <= 0) { throw new IllegalArgumentException("Invalid number of rows or columns"); }

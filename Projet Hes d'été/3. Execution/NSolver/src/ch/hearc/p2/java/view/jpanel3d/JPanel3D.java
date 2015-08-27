@@ -37,6 +37,7 @@ import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
 
 import ch.hearc.p2.java.model.Matrix;
+import ch.hearc.p2.java.view.jpanel.dialog.JPanelDialog;
 import ch.hearc.p2.java.view.jpanel3d.actions.JPanelHelp;
 import ch.hearc.p2.java.view.jpanel3d.actions.JPanelHomeTransform;
 import ch.hearc.p2.java.view.jpanel3d.actions.JPanelProjection;
@@ -60,7 +61,7 @@ import com.sun.j3d.utils.universe.SimpleUniverse;
  * 2a, 85737 Ismaning Germany / Munich Area www.InteractiveMesh.com/org *
  * 
  */
-final public class JPanel3D extends JPanel {
+final public class JPanel3D extends JPanelDialog {
 
 	private BoundingSphere globalBounds = null;
 
@@ -98,6 +99,7 @@ final public class JPanel3D extends JPanel {
 	private float space;
 
 	public JPanel3D(Matrix mat) {
+		super();
 		matrixValues = mat.getValuesCopy();
 		scaleFactor = 10f;
 		space = 1f;

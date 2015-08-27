@@ -11,6 +11,11 @@ public class Equation implements Serializable
 	|*							Constructeurs							*|
 	\*------------------------------------------------------------------*/
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4044778703986450246L;
+
 	public Equation()
 		{
 		this("Name", 3, 3, 1, true);

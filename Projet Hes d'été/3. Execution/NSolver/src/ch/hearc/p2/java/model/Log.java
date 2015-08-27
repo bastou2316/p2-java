@@ -1,6 +1,7 @@
 
 package ch.hearc.p2.java.model;
 
+import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,9 +10,11 @@ import java.util.Map;
 
 import ch.hearc.p2.java.tools.MathTools;
 
-public class Log
+public class Log implements Serializable
 	{
 
+	private static final long serialVersionUID = 6447407441073945152L;
+	
 	/*------------------------------------------------------------------*\
 	|*							Constructeurs							*|
 	\*------------------------------------------------------------------*/
