@@ -193,7 +193,7 @@ public class ControllerMain
 		JDialogMain jDialog = new JDialogSetMatrix(new JPanelSetMatrix(matrixTemp, equationTemp.isSolved()));
 
 		int result = jDialog.showDialog();
-		if (result == 1)//Appliqué (annulé renvoi 0)
+		if (result == 1)//Appliqué
 			{
 			equationTemp.setMatrix(matrixTemp, equationTemp.isStepMode());
 			equation = equationTemp;
@@ -210,14 +210,28 @@ public class ControllerMain
 			}
 		else if (result == 2)//Précédent
 			{
-			showNewEquationDialog();//showDialog(DIALOG.NEW_EQUATION);
+			if (equation.isSolved())
+				{
+				showSetEquationDialog();
+				}
+			else
+				{
+				showNewEquationDialog();//showDialog(DIALOG.NEW_EQUATION);
+				}
+			}
+		else	//Annulé
+			{
+			equationTemp = null;
 			}
 		}
 
 	private void showSetEquationDialog()
 		{
 		//Copie de l'equation
-		equationTemp = new Equation(equation);
+		if (equationTemp == null)//a controller
+			{
+			equationTemp = new Equation(equation);
+			}
 
 		//Affichage
 		JDialogMain jDialog = new JDialogSetEquation(new JPanelSetEquation(equationTemp));
@@ -235,8 +249,13 @@ public class ControllerMain
 			else
 				{
 				//On doit entrer une nouvelle matrice
-				showDialog(DIALOG.SET_MATRIX);
+				equationTemp.setUnsolved();
+				showNewMatrixDialog();//On reste dans le temporaire
 				}
+			}
+		else
+			{
+			equationTemp = null;
 			}
 		}
 
@@ -255,7 +274,7 @@ public class ControllerMain
 				}
 			else
 				{
-//				equation.setMatrix(matrixTemp, true);
+				equation.setMatrix(matrixTemp, true);
 				changeView(PANEL.RESULT);
 				}
 			}

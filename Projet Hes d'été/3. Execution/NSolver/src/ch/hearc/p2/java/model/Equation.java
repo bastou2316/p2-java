@@ -138,6 +138,11 @@ public class Equation implements Serializable
 		saved = true;
 		}
 
+	public void setUnsolved()
+		{
+		solved = false;
+		}
+
 	/*------------------------------*\
 	|*				Is				*|
 	\*------------------------------*/
@@ -155,6 +160,11 @@ public class Equation implements Serializable
 	public boolean isSolved()
 		{
 		return solved;
+		}
+
+	public boolean isSaved()
+		{
+		return saved;
 		}
 
 	/*------------------------------------------------------------------*\

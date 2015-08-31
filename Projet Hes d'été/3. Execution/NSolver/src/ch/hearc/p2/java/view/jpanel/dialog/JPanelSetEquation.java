@@ -18,6 +18,8 @@ import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import ch.hearc.p2.java.model.Equation;
 import ch.hearc.p2.java.view.dialog.JDialogSetEquation;
@@ -40,6 +42,8 @@ public class JPanelSetEquation extends JPanelDialog
 		control();
 		appearance();
 
+		//Update du bouton
+		updateButtonText();
 		}
 
 	/*------------------------------------------------------------------*\
@@ -140,6 +144,26 @@ public class JPanelSetEquation extends JPanelDialog
 
 	private void control()
 		{
+		numberVar.addChangeListener(new ChangeListener()
+			{
+
+				@Override
+				public void stateChanged(ChangeEvent e)
+					{
+					updateButtonText();
+					}
+			});
+
+		numberEquation.addChangeListener(new ChangeListener()
+			{
+
+				@Override
+				public void stateChanged(ChangeEvent e)
+					{
+					updateButtonText();
+					}
+			});
+
 		nextButton.addActionListener(new ActionListener()
 			{
 
@@ -154,7 +178,7 @@ public class JPanelSetEquation extends JPanelDialog
 
 					choice = 1;
 
-					JDialogSetEquation jdialog = (JDialogSetEquation) getRootPane().getParent();
+					JDialogSetEquation jdialog = (JDialogSetEquation)getRootPane().getParent();
 					jdialog.close();
 					}
 			});
@@ -163,6 +187,24 @@ public class JPanelSetEquation extends JPanelDialog
 	private void appearance()
 		{
 		// rien
+		}
+
+	private void updateButtonText()
+		{
+		//Adapte le texte du bouton en fonction du changement de matrice nécessaire
+		if (equation.isSolved())
+			{
+			String newText;
+			if (equation.getMatrixNumberEquation() != (Integer)numberVar.getValue() || equation.getMatrixNumberVariable() != (Integer)numberEquation.getValue())
+				{
+				newText = "Suivant";
+				}
+			else
+				{
+				newText = "Confirmer";
+				}
+			nextButton.setText(newText);
+			}
 		}
 
 	/*------------------------------------------------------------------*\
