@@ -180,9 +180,13 @@ public class ControllerMain
 		int result = jDialog.showDialog();
 
 		//Traitement du résultat
-		if (result == 1)//si pas annulé
+		if (result == 1)//Suivant
 			{
 			showNewMatrixDialog();//showDialog(DIALOG.NEW_MATRIX);
+			}
+		else
+			{
+			equationTemp = null;
 			}
 		}
 
@@ -190,7 +194,7 @@ public class ControllerMain
 		{
 		Matrix matrixTemp = new Matrix(equationTemp.getMatrixNumberEquation(), equationTemp.getMatrixNumberVariable() + 1);
 
-		JDialogMain jDialog = new JDialogSetMatrix(new JPanelSetMatrix(matrixTemp, equationTemp.isSolved()));
+		JDialogMain jDialog = new JDialogSetMatrix(new JPanelSetMatrix(matrixTemp, false)); //equationTemp.isSolved()));
 
 		int result = jDialog.showDialog();
 		if (result == 1)//Appliqué
@@ -210,7 +214,7 @@ public class ControllerMain
 			}
 		else if (result == 2)//Précédent
 			{
-			if (equation.isSolved())
+			if (equationTemp.isSolved())
 				{
 				showSetEquationDialog();
 				}
@@ -219,7 +223,8 @@ public class ControllerMain
 				showNewEquationDialog();//showDialog(DIALOG.NEW_EQUATION);
 				}
 			}
-		else	//Annulé
+		else
+			//Annulé
 			{
 			equationTemp = null;
 			}
@@ -228,7 +233,7 @@ public class ControllerMain
 	private void showSetEquationDialog()
 		{
 		//Copie de l'equation
-		if (equationTemp == null)//a controller
+		if (equationTemp == null)
 			{
 			equationTemp = new Equation(equation);
 			}
@@ -238,7 +243,7 @@ public class ControllerMain
 		int result = jDialog.showDialog();
 
 		//Traitement du resultat
-		if (result == 1)//si pas annulé
+		if (result == 1)//Suivant
 			{
 			if (equationTemp.getMatrixNumberEquation() == equation.getMatrixNumberEquation() && equationTemp.getMatrixNumberVariable() == equation.getMatrixNumberVariable())
 				{
@@ -249,11 +254,11 @@ public class ControllerMain
 			else
 				{
 				//On doit entrer une nouvelle matrice
-				equationTemp.setUnsolved();
+				//equationTemp.setUnsolved();
 				showNewMatrixDialog();//On reste dans le temporaire
 				}
 			}
-		else
+		else//Annulé
 			{
 			equationTemp = null;
 			}
@@ -262,7 +267,7 @@ public class ControllerMain
 	private void showSetMatrixDialog()
 		{
 		Matrix matrixTemp = equation.getMatrix();
-		JDialogMain jDialog = new JDialogSetMatrix(new JPanelSetMatrix(matrixTemp, equation.isSolved()));
+		JDialogMain jDialog = new JDialogSetMatrix(new JPanelSetMatrix(matrixTemp, true));
 
 		int result = jDialog.showDialog();
 		if (result == 1)//Appliqué (annulé renvoi 0)
