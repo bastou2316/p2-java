@@ -194,7 +194,7 @@ public class ControllerMain
 		{
 		Matrix matrixTemp = new Matrix(equationTemp.getMatrixNumberEquation(), equationTemp.getMatrixNumberVariable() + 1);
 
-		JDialogMain jDialog = new JDialogSetMatrix(new JPanelSetMatrix(matrixTemp, false)); //equationTemp.isSolved()));
+		JDialogMain jDialog = new JDialogSetMatrix(new JPanelSetMatrix(matrixTemp, equationTemp.getVariableStyle(), false)); //equationTemp.isSolved()));
 
 		int result = jDialog.showDialog();
 		if (result == 1)//Appliqué
@@ -266,7 +266,7 @@ public class ControllerMain
 	private void showSetMatrixDialog()
 		{
 		Matrix matrixTemp = equation.getMatrix();
-		JDialogMain jDialog = new JDialogSetMatrix(new JPanelSetMatrix(matrixTemp, true));
+		JDialogMain jDialog = new JDialogSetMatrix(new JPanelSetMatrix(matrixTemp, equation.getVariableStyle(), true));
 
 		int result = jDialog.showDialog();
 		if (result == 1)//Appliqué (annulé renvoi 0)

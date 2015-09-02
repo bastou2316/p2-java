@@ -1,31 +1,54 @@
 
-package ch.hearc.p2.java.view.jpanel;
+package ch.hearc.p2.java.view;
 
 public class IndependentVar
 	{
-	
-	public IndependentVar()
+
+	/*------------------------------------------------------------------*\
+	|*							Methodes Public							*|
+	\*------------------------------------------------------------------*/
+
+	public static void create(int n, int m, int noMethod)
 		{
-		
-		}
-	
-	public static String[][] create(int n, int m)
-		{
+		//Enregistrement de la methode
+		method = noMethod;
+
+		//Creation du tableau
 		tab2d = new String[n][];
 		for(int i = 1; i <= n; i++)
 			{
 			tab2d[i - 1] = new String[m];
 			}
+
+		//Remplissage
+		fillTabIndepVar(noMethod, n, m);
+
+		for(int i = 1; i <= n; i++)
+			{
+			for(int j = 1; j <= m; j++)
+				{
+				tab2d[i - 1][j - 1] = tabString[j - 1];
+				}
+			}
+		}
+
+	public static String[][] getTabVar()
+		{
 		return tab2d;
 		}
-	
+
+	public static int getMethod()
+		{
+		return method;
+		}
+
 	public static void afficher(String[][] tab2d)
 		{
 			//v1
 			{
 			int n = tab2d.length;
 			int m = tab2d[0].length;
-			
+
 			for(int i = 1; i <= n; i++)
 				{
 				for(int j = 1; j <= m; j++)
@@ -37,29 +60,11 @@ public class IndependentVar
 				}
 			}
 		}
-	
-	public static void peupler(String[][] tab2d, int noMethod)
-		{
-		
-		int n = tab2d.length;
-		int m = tab2d[0].length;
-		fillTabIndepVar(noMethod, n, m);
-		
-		for(int i = 1; i <= n; i++)
-			{
-			for(int j = 1; j <= m; j++)
-				{
-				tab2d[i - 1][j - 1] = tabString[j - 1];
-				}
-			}
-		}
-	
-	public static String[][] getTabVar()
-		{
-		if (tab2d[0][0].length() >= 0) return tab2d;
-		else return null;
-		}
-	
+
+	/*------------------------------------------------------------------*\
+	|*							Methodes Private						*|
+	\*------------------------------------------------------------------*/
+
 	private static void fillTabIndepVar(int noMethod, int n, int m)
 		{
 		switch(noMethod)
@@ -113,7 +118,7 @@ public class IndependentVar
 					tabString[25] = "Z";
 					}
 				break;
-			
+
 			case 2:
 				tabString = new String[m + 1];
 				for(int i1 = 1; i1 <= m; i1++)
@@ -125,8 +130,13 @@ public class IndependentVar
 				throw new IllegalStateException("Not valide variable display");
 			}
 		}
-	
+
+	/*------------------------------------------------------------------*\
+	|*							Attributs Private						*|
+	\*------------------------------------------------------------------*/
+
 	private static String[] tabString;
 	private static String[][] tab2d;
-	
+	private static int method;
+
 	}

@@ -8,6 +8,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -16,6 +17,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 
 import ch.hearc.p2.java.model.Matrix;
+import ch.hearc.p2.java.view.IndependentVar;
 import ch.hearc.p2.java.view.dialog.JDialogSetMatrix;
 
 public class JPanelSetMatrix extends JPanelDialog
@@ -25,7 +27,7 @@ public class JPanelSetMatrix extends JPanelDialog
 	|*							Constructeurs							*|
 	\*------------------------------------------------------------------*/
 
-	public JPanelSetMatrix(Matrix matrix, boolean solved)
+	public JPanelSetMatrix(Matrix matrix, int method, boolean solved)
 		{
 		super();
 
@@ -34,7 +36,7 @@ public class JPanelSetMatrix extends JPanelDialog
 		this.m = matrix.columnCount();
 		this.isMatrixSolved = solved;
 
-		prepareTabNameVar(n, m, 2); //remplacer 2 par methodVar
+		IndependentVar.create(n, m, method);//remplacer 2 par methodVar
 
 		// Composition du panel
 		geometry();
@@ -59,29 +61,30 @@ public class JPanelSetMatrix extends JPanelDialog
 		previousButton = new JButton("Précédent");
 
 		tabTextField = new JTextField[n][];
+		String[][] tabString = IndependentVar.getTabVar();
+
 		for(int i = 1; i <= n; i++)
 			{
-			tabTextField[i - 1] = new JTextField[m];// + 1];
+			tabTextField[i - 1] = new JTextField[m];
 			for(int j = 1; j <= m ; j++)// + 1; j++)
 				{
-				JPanel panMatrice = new JPanel();
-				panMatrice.setLayout(new GridLayout(0, 2));
+				Box panMatrice = Box.createHorizontalBox();
 
 				String string;
 
-				if (j == m)
+				if (j == m-1)
 					{
-					string = tabString[j - 1] + j + "=";
+					string = tabString[i-1][j-1] + j + "=";
 					}
 				else
 					{
-					if (j == m) //+ 1)
+					if (j == m)
 						{
 						string = "";
 						}
 					else
 						{
-						string = tabString[j - 1] + j + "+";
+						string = tabString[i-1][j-1] + j + "+";
 						}
 					}
 				JLabel label = new JLabel(string);
@@ -95,7 +98,12 @@ public class JPanelSetMatrix extends JPanelDialog
 					textfield.setText(String.valueOf(matrix.get(i - 1, j - 1)));
 					}
 
-				panMatrice.add(textfield);
+				Box box = Box.createVerticalBox();
+				box.add(Box.createVerticalGlue());
+				box.add(textfield);
+				box.add(Box.createVerticalGlue());
+
+				panMatrice.add(box);
 				panMatrice.add(label);
 				panelVar.add(panMatrice);
 				}
@@ -160,70 +168,6 @@ public class JPanelSetMatrix extends JPanelDialog
 		// rien
 		}
 
-	private void prepareTabNameVar(int m, int n, int noMethod)
-		{
-
-		switch(noMethod)
-			{
-			case 0:
-				if (n > 3)
-					{
-					prepareTabNameVar(m, n, 2);
-					}
-				else
-					{
-//					equation.setVariableName("x");
-					tabString = new String[3];
-					tabString[0] = "X";
-					tabString[1] = "Y";
-					tabString[2] = "Z";
-					}
-				break;
-			case 1:
-//				equation.setVariableName("a");
-				tabString = new String[27];
-				tabString[0] = "A";
-				tabString[1] = "B";
-				tabString[2] = "C";
-				tabString[3] = "D";
-				tabString[4] = "E";
-				tabString[5] = "F";
-				tabString[6] = "G";
-				tabString[7] = "H";
-				tabString[8] = "I";
-				tabString[9] = "J";
-				tabString[10] = "K";
-				tabString[11] = "L";
-				tabString[12] = "M";
-				tabString[13] = "N";
-				tabString[14] = "O";
-				tabString[15] = "P";
-				tabString[16] = "Q";
-				tabString[17] = "R";
-				tabString[18] = "S";
-				tabString[19] = "T";
-				tabString[20] = "U";
-				tabString[21] = "V";
-				tabString[22] = "W";
-				tabString[23] = "X";
-				tabString[24] = "Y";
-				tabString[25] = "Z";
-				break;
-			case 2:
-				tabString = new String[n]; // + 1];
-//				equation.setVariableName("x1");
-				for(int i = 1; i <= n; i++)
-					{
-					tabString[i - 1] = "X";
-					}
-
-				break;
-
-			default:
-				throw new IllegalStateException("Not valide variable display");
-			}
-		}
-
 	/*------------------------------------------------------------------*\
 	|*							Attributs Private						*|
 	\*------------------------------------------------------------------*/
@@ -237,7 +181,5 @@ public class JPanelSetMatrix extends JPanelDialog
 	private JTextField[][] tabTextField;
 	private int n;
 	private int m;
-	private static String[] tabString;
-
 
 	}

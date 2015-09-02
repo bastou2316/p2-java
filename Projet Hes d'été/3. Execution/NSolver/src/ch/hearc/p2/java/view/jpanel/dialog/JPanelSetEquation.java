@@ -31,7 +31,6 @@ public class JPanelSetEquation extends JPanelDialog
 	|*							Constructeurs							*|
 	\*------------------------------------------------------------------*/
 
-
 	public JPanelSetEquation(Equation equation, int numbVar, int numbEqu)
 		{
 		super();
@@ -72,29 +71,27 @@ public class JPanelSetEquation extends JPanelDialog
 		jpanelMatrix.setBorder(titlesborder);
 
 		JPanel jpanelResolution = new JPanel();
-		TitledBorder panreso = BorderFactory.createTitledBorder("Résolution");
-		jpanelResolution.setBorder(panreso);
 
 		JPanel jpanelControl = new JPanel();
 
-		labelName = new JLabel("Nom :");
+		labelName = new JLabel("Nom : ");
 		textFieldName = new JTextField(equation.getName());
 		textFieldName.setMinimumSize(new Dimension(100, 5));
 
-		labelNumberEquation = new JLabel("Nombre d'équations :");
+		labelNumberEquation = new JLabel("Nombre d'équations : ");
 		spinNumbEqu = new JSpinner();
 		spinNumbEqu.setValue(equation.getMatrixNumberEquation());
 
-		labelNumberVar = new JLabel("Nombre d'inconnues :");
+		labelNumberVar = new JLabel("Nombre d'inconnues : ");
 		spinNumbVar = new JSpinner();
 		spinNumbVar.setValue(equation.getMatrixNumberVariable());
 
-		labelVarStyle = new JLabel("Style des variables :");
+		labelVarStyle = new JLabel("Style des variables : ");
 		comboVarStyle = new JComboBox<String>();
 		comboVarStyle.addItem("x1, x2, x3, x4, ...");
 		comboVarStyle.addItem("a, b, c, d, e, ...");
 		comboVarStyle.addItem("x, y, z (max 3)");
-		comboVarStyle.setSelectedItem(0);
+		comboVarStyle.setSelectedIndex(equation.getVariableStyle());
 
 		methodStep = new JRadioButton("étape par étape");
 		methodStep.setSelected(equation.isStepMode());
@@ -104,7 +101,7 @@ public class JPanelSetEquation extends JPanelDialog
 		bg.add(methodStep);
 		bg.add(methodDirect);
 
-		labelSpeed = new JLabel("Vitesse (en seconde) :");
+		labelSpeed = new JLabel("Vitesse (en seconde) : ");
 		spinSpeed = new JSpinner();
 		spinSpeed.setValue(equation.getSpeedSec());
 
@@ -116,33 +113,52 @@ public class JPanelSetEquation extends JPanelDialog
 
 			jpanelCenter.setLayout(new GridLayout(2, 0));
 
-			jpanelMatrix.setLayout(new GridLayout(4, 2));
-			jpanelResolution.setLayout(new GridLayout(2, 2));
+			jpanelMatrix.setLayout(new BorderLayout());
+			jpanelResolution.setLayout(new GridLayout(1, 2));
 
 			jpanelControl.setLayout(new FlowLayout(FlowLayout.CENTER));
 			}
 
 		// JComponent : add
-		jpanelMatrix.add(labelName);
-		jpanelMatrix.add(textFieldName);
 
-		jpanelMatrix.add(labelNumberEquation);
-		jpanelMatrix.add(spinNumbEqu);
+		JPanel jpanelGauche = new JPanel();
+		JPanel jpanelDroite = new JPanel();
+		jpanelGauche.setLayout(new GridLayout(4, 1));
+		jpanelDroite.setLayout(new GridLayout(4, 1));
 
-		jpanelMatrix.add(labelNumberVar);
-		jpanelMatrix.add(spinNumbVar);
+		jpanelGauche.add(labelName);
+		jpanelDroite.add(textFieldName);
 
-		jpanelMatrix.add(labelVarStyle);
-		jpanelMatrix.add(comboVarStyle);
+		jpanelGauche.add(labelNumberEquation);
+		jpanelDroite.add(spinNumbEqu);
+
+		jpanelGauche.add(labelNumberVar);
+		jpanelDroite.add(spinNumbVar);
+
+		jpanelGauche.add(labelVarStyle);
+		jpanelDroite.add(comboVarStyle);
+
+		jpanelMatrix.add(jpanelGauche, BorderLayout.WEST);
+		jpanelMatrix.add(jpanelDroite, BorderLayout.CENTER);
 
 		jpanelResolution.add(methodStep);
 		jpanelResolution.add(methodDirect);
 
-		jpanelResolution.add(labelSpeed);
-		jpanelResolution.add(spinSpeed);
+		JPanel jpanelResolution2 = new JPanel();
+		jpanelResolution2.setLayout(new BorderLayout());
+
+		jpanelResolution2.add(labelSpeed, BorderLayout.WEST);
+		jpanelResolution2.add(spinSpeed, BorderLayout.CENTER);
+
+		JPanel jpanelResoFinal = new JPanel();
+		jpanelResoFinal.setLayout(new GridLayout(2, 1));
+		jpanelResoFinal.add(jpanelResolution);
+		jpanelResoFinal.add(jpanelResolution2);
+		TitledBorder panreso = BorderFactory.createTitledBorder("Résolution");
+		jpanelResoFinal.setBorder(panreso);
 
 		jpanelCenter.add(jpanelMatrix);
-		jpanelCenter.add(jpanelResolution);
+		jpanelCenter.add(jpanelResoFinal);
 
 		jpanelControl.add(nextButton);
 
@@ -183,6 +199,7 @@ public class JPanelSetEquation extends JPanelDialog
 					equation.setNumberVar((Integer)spinNumbVar.getValue());
 					equation.setNumberEquation((Integer)spinNumbEqu.getValue());
 					equation.setModeStep(methodStep.isSelected());
+					equation.setVarNameMethod(comboVarStyle.getSelectedIndex());
 
 					choice = 1;
 
