@@ -3,6 +3,8 @@ package ch.hearc.p2.java.view.jpanel;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -29,14 +31,33 @@ public class JPanelMenu extends JPanel
 		{
 		this.controllerMain = controllerMain;
 
+
+
+
+
+
 		geometry();
 		control();
 		appearance();
+		changeFont(this, 1);
+
 		}
 
 	/*------------------------------------------------------------------*\
 	|*							Methodes Public							*|
 	\*------------------------------------------------------------------*/
+
+
+
+	 public static void changeFont(Component component, int fontSize) {
+	    Font f = component.getFont();
+	    component.setFont(new Font(f.getName(),f.getStyle(),f.getSize() + fontSize));
+	    if (component instanceof Container) {
+	        for (Component child : ((Container) component).getComponents()) {
+	            changeFont(child, fontSize);
+	        }
+	    }
+	}
 
 	/*------------------------------------------------------------------*\
 	|*							Methodes Private						*|

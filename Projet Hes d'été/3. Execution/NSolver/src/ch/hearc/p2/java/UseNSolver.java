@@ -1,6 +1,8 @@
 
 package ch.hearc.p2.java;
 
+import javax.swing.UIManager;
+
 import ch.hearc.p2.java.controller.ControllerMain;
 
 public class UseNSolver
@@ -26,6 +28,15 @@ public class UseNSolver
 
 	public static void main()
 		{
+		try
+			{
+		UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+			}
+		catch (Exception e)
+			{
+			e.printStackTrace();
+			}
+
 		new ControllerMain();
 		}
 	}
