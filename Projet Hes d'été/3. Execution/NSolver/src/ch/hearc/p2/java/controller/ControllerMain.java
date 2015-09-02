@@ -216,11 +216,11 @@ public class ControllerMain
 			{
 			if (equationTemp.isSolved())
 				{
-				showSetEquationDialog();
+				showSetEquationDialog();	//A deja été résolu, donc modif
 				}
 			else
 				{
-				showNewEquationDialog();//showDialog(DIALOG.NEW_EQUATION);
+				showNewEquationDialog();	//N'a pas été résolu, donc création
 				}
 			}
 		else
@@ -239,7 +239,7 @@ public class ControllerMain
 			}
 
 		//Affichage
-		JDialogMain jDialog = new JDialogSetEquation(new JPanelSetEquation(equationTemp));
+		JDialogMain jDialog = new JDialogSetEquation(new JPanelSetEquation(equationTemp, equation.getMatrixNumberVariable(), equation.getMatrixNumberEquation()));
 		int result = jDialog.showDialog();
 
 		//Traitement du resultat
@@ -254,7 +254,6 @@ public class ControllerMain
 			else
 				{
 				//On doit entrer une nouvelle matrice
-				//equationTemp.setUnsolved();
 				showNewMatrixDialog();//On reste dans le temporaire
 				}
 			}

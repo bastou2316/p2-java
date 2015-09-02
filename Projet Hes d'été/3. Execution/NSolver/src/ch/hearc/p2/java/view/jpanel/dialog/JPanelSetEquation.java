@@ -31,11 +31,14 @@ public class JPanelSetEquation extends JPanelDialog
 	|*							Constructeurs							*|
 	\*------------------------------------------------------------------*/
 
-	public JPanelSetEquation(Equation equation)
+
+	public JPanelSetEquation(Equation equation, int numbVar, int numbEqu)
 		{
 		super();
 
 		this.equation = equation;
+		this.numbVar = numbVar;
+		this.numbEqu = numbEqu;
 
 		// Composition du panel
 		geometry();
@@ -44,6 +47,11 @@ public class JPanelSetEquation extends JPanelDialog
 
 		//Update du bouton
 		updateButtonText();
+		}
+
+	public JPanelSetEquation(Equation equation)
+		{
+		this(equation, equation.getMatrixNumberVariable(), equation.getMatrixNumberEquation());
 		}
 
 	/*------------------------------------------------------------------*\
@@ -74,19 +82,19 @@ public class JPanelSetEquation extends JPanelDialog
 		textFieldName.setMinimumSize(new Dimension(100, 5));
 
 		labelNumberEquation = new JLabel("Nombre d'équations :");
-		numberEquation = new JSpinner();
-		numberEquation.setValue(equation.getMatrixNumberEquation());
+		spinNumbEqu = new JSpinner();
+		spinNumbEqu.setValue(equation.getMatrixNumberEquation());
 
 		labelNumberVar = new JLabel("Nombre d'inconnues :");
-		numberVar = new JSpinner();
-		numberVar.setValue(equation.getMatrixNumberVariable());
+		spinNumbVar = new JSpinner();
+		spinNumbVar.setValue(equation.getMatrixNumberVariable());
 
 		labelVarStyle = new JLabel("Style des variables :");
-		varStyle = new JComboBox<String>();
-		varStyle.addItem("x1, x2, x3, x4, ...");
-		varStyle.addItem("a, b, c, d, e, ...");
-		varStyle.addItem("x, y, z (max 3)");
-		varStyle.setSelectedItem(0);
+		comboVarStyle = new JComboBox<String>();
+		comboVarStyle.addItem("x1, x2, x3, x4, ...");
+		comboVarStyle.addItem("a, b, c, d, e, ...");
+		comboVarStyle.addItem("x, y, z (max 3)");
+		comboVarStyle.setSelectedItem(0);
 
 		methodStep = new JRadioButton("étape par étape");
 		methodStep.setSelected(equation.isStepMode());
@@ -119,13 +127,13 @@ public class JPanelSetEquation extends JPanelDialog
 		jpanelMatrix.add(textFieldName);
 
 		jpanelMatrix.add(labelNumberEquation);
-		jpanelMatrix.add(numberEquation);
+		jpanelMatrix.add(spinNumbEqu);
 
 		jpanelMatrix.add(labelNumberVar);
-		jpanelMatrix.add(numberVar);
+		jpanelMatrix.add(spinNumbVar);
 
 		jpanelMatrix.add(labelVarStyle);
-		jpanelMatrix.add(varStyle);
+		jpanelMatrix.add(comboVarStyle);
 
 		jpanelResolution.add(methodStep);
 		jpanelResolution.add(methodDirect);
@@ -144,7 +152,7 @@ public class JPanelSetEquation extends JPanelDialog
 
 	private void control()
 		{
-		numberVar.addChangeListener(new ChangeListener()
+		spinNumbVar.addChangeListener(new ChangeListener()
 			{
 
 				@Override
@@ -154,7 +162,7 @@ public class JPanelSetEquation extends JPanelDialog
 					}
 			});
 
-		numberEquation.addChangeListener(new ChangeListener()
+		spinNumbEqu.addChangeListener(new ChangeListener()
 			{
 
 				@Override
@@ -172,8 +180,8 @@ public class JPanelSetEquation extends JPanelDialog
 					{
 					equation.setName(textFieldName.getText());
 					equation.setSpeed((Integer)spinSpeed.getValue());
-					equation.setNumberVar((Integer)numberVar.getValue());
-					equation.setNumberEquation((Integer)numberEquation.getValue());
+					equation.setNumberVar((Integer)spinNumbVar.getValue());
+					equation.setNumberEquation((Integer)spinNumbEqu.getValue());
 					equation.setModeStep(methodStep.isSelected());
 
 					choice = 1;
@@ -195,7 +203,7 @@ public class JPanelSetEquation extends JPanelDialog
 		if (equation.isSolved())
 			{
 			String newText;
-			if (equation.getMatrixNumberEquation() != (Integer)numberVar.getValue() || equation.getMatrixNumberVariable() != (Integer)numberEquation.getValue())
+			if (numbVar != (Integer)spinNumbVar.getValue() || numbEqu != (Integer)spinNumbEqu.getValue())//if (equation.getMatrixNumberEquation() != (Integer)spinNumbVar.getValue() || equation.getMatrixNumberVariable() != (Integer)spinNumbEqu.getValue())
 				{
 				newText = "Suivant";
 				}
@@ -213,12 +221,14 @@ public class JPanelSetEquation extends JPanelDialog
 
 	// Inputs
 	private Equation equation;
+	private int numbVar;
+	private int numbEqu;
 
 	// Tools
 	private JLabel labelName, labelNumberEquation, labelNumberVar, labelVarStyle, labelSpeed;
 	private JRadioButton methodStep, methodDirect;
-	private JComboBox<String> varStyle;
-	private JSpinner numberEquation, numberVar, spinSpeed;
+	private JComboBox<String> comboVarStyle;
+	private JSpinner spinNumbEqu, spinNumbVar, spinSpeed;
 	private JTextField textFieldName;
 	private JButton nextButton;
 
