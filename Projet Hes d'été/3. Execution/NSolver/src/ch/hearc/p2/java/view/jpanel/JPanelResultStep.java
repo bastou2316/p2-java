@@ -71,7 +71,7 @@ public class JPanelResultStep extends JPanel
 					@Override
 					public void run()
 						{
-						while(!isFini && equation.hasMatrixIndex(actualStep + 1))
+						while(!isFini && equation.hasMatrixIndex(actualStep))
 							{
 							equation.getMatrix(++actualStep);
 							updateDisplayedMatrix();
@@ -94,7 +94,7 @@ public class JPanelResultStep extends JPanel
 
 	public void next()
 		{
-		if (actualStep < tabHistory.length - 1)
+		if (actualStep < tabHistory.length)// - 1)
 			{
 			++actualStep;
 			}
