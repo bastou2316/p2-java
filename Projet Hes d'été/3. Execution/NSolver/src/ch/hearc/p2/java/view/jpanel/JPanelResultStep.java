@@ -26,6 +26,7 @@ import javax.swing.border.TitledBorder;
 
 import ch.hearc.p2.java.model.Equation;
 import ch.hearc.p2.java.tools.ListAction;
+import ch.hearc.p2.java.view.IndependentVar;
 
 public class JPanelResultStep extends JPanel
 	{
@@ -321,10 +322,10 @@ public class JPanelResultStep extends JPanel
 	private void updateDisplayedMatrix()
 		{
 		//Affichage de la matrix en fonction de l'étape
-		textMatrix.setText(stepToString(equation.getMatrix(actualStep), equation.getMatrixNumberEquation(), equation.getMatrixNumberVariable() + 1));
+		textMatrix.setText(stepToString(equation.getMatrix(actualStep), equation.getMatrixNumberEquation(), equation.getMatrixNumberVariable() + 1, equation.getVariableStyle()));
 		if (actualStep > 0)//matrix précédente affichage slmt a partir de étape "2"
 			{
-			textMatrixPrev.setText(stepToString(equation.getMatrix(actualStep - 1), equation.getMatrixNumberEquation(), equation.getMatrixNumberVariable() + 1));
+			textMatrixPrev.setText(stepToString(equation.getMatrix(actualStep - 1), equation.getMatrixNumberEquation(), equation.getMatrixNumberVariable() + 1, equation.getVariableStyle()));
 			}
 		jPanelPreviousStep.setVisible(actualStep > 0);
 
@@ -338,16 +339,28 @@ public class JPanelResultStep extends JPanel
 		buttonPrevious.setEnabled(actualStep > 0 && !isRunning);
 		}
 
-	private static String stepToString(String[][] tabMatrix, int rowCount, int columnCount)
+	private String stepToString(String[][] tabMatrix, int rowCount, int columnCount, int varStyle)
 		{
+		String[] tabVar = IndependentVar.getVarStyle(varStyle, rowCount, columnCount);
 		StringBuilder builder = new StringBuilder();
 		int rows = rowCount;
 		int cols = columnCount;
+
 		for(int i = 0; i < rows; i++)
 			{
 			for(int j = 0; j < cols - 1; j++)
 				{
-				builder.append(tabMatrix[i][j]);
+				if (!tabMatrix[i][j].equals("0")) //0 => Rien a afficher
+					{
+					if (!tabMatrix[i][j].equals("1")) //1 => On affiche uniquement la variable
+						{
+//						builder.append("<b>");
+						builder.append(tabMatrix[i][j]);//Autres => on affiche le coefficient
+//						builder.append("</b>");
+						}
+					builder.append(tabVar[j]);
+					}
+
 				builder.append("\t");
 				}
 			builder.append("= ");

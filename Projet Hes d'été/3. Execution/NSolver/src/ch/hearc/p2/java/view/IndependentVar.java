@@ -8,73 +8,34 @@ public class IndependentVar
 	|*							Methodes Public							*|
 	\*------------------------------------------------------------------*/
 
-	public static void create(int n, int m, int noMethod)
+	public static void afficher(String[][] tab2d)
 		{
-		//Enregistrement de la methode
-		m--;
-		method = noMethod;
-
-		//Creation du tableau
-		tab2d = new String[n][];
-		for(int i = 1; i <= n; i++)
-			{
-			tab2d[i - 1] = new String[m];
-			}
-
-		//Remplissage
-		fillTabIndepVar(noMethod, n, m);
+		int n = tab2d.length;
+		int m = tab2d[0].length;
 
 		for(int i = 1; i <= n; i++)
 			{
 			for(int j = 1; j <= m; j++)
 				{
-				tab2d[i - 1][j - 1] = tabString[j - 1];
+				System.out.print(tab2d[i - 1][j - 1]);
+				System.out.print("\t");
 				}
+			System.out.print("\n");
 			}
 		}
 
-	public static String[][] getTabVar()
+	public static String[] getVarStyle(int noMethod, int n, int m)
 		{
-		return tab2d;
-		}
+		m = m - 1; //Matrice non-augmentée
+		String[] tabString = new String[n];
 
-	public static int getMethod()
-		{
-		return method;
-		}
-
-	public static void afficher(String[][] tab2d)
-		{
-			//v1
-			{
-			int n = tab2d.length;
-			int m = tab2d[0].length;
-
-			for(int i = 1; i <= n; i++)
-				{
-				for(int j = 1; j <= m; j++)
-					{
-					System.out.print(tab2d[i - 1][j - 1]);
-					System.out.print("\t");
-					}
-				System.out.print("\n");
-				}
-			}
-		}
-
-	/*------------------------------------------------------------------*\
-	|*							Methodes Private						*|
-	\*------------------------------------------------------------------*/
-
-	private static void fillTabIndepVar(int noMethod, int n, int m)
-		{
 		switch(noMethod)
 			{
 			case 0:
-			System.out.println(m+"");
+				System.out.println(m + "");
 				if (m > 3)
 					{
-					fillTabIndepVar(2, n, m);
+					getVarStyle(2, n, m);
 					}
 				else
 					{
@@ -87,7 +48,7 @@ public class IndependentVar
 			case 1:
 				if (m > 26)
 					{
-					fillTabIndepVar(2, n, m);
+					getVarStyle(2, n, m);
 					}
 				else
 					{
@@ -129,16 +90,10 @@ public class IndependentVar
 					}
 				break;
 			default:
-				throw new IllegalStateException("Not valide variable display");
+				throw new IllegalStateException("Variable style does not exist");
 			}
+
+		return tabString;
 		}
-
-	/*------------------------------------------------------------------*\
-	|*							Attributs Private						*|
-	\*------------------------------------------------------------------*/
-
-	private static String[] tabString;
-	private static String[][] tab2d;
-	private static int method;
 
 	}

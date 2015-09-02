@@ -27,7 +27,8 @@ public class JPanelSetMatrix extends JPanelDialog
 	|*							Constructeurs							*|
 	\*------------------------------------------------------------------*/
 
-	public JPanelSetMatrix(Matrix matrix, int method, boolean solved)
+
+	public JPanelSetMatrix(Matrix matrix, int varStyle, boolean solved)
 		{
 		super();
 
@@ -35,8 +36,7 @@ public class JPanelSetMatrix extends JPanelDialog
 		this.n = matrix.rowCount();//attention inversion ptetre
 		this.m = matrix.columnCount();
 		this.isMatrixSolved = solved;
-
-		IndependentVar.create(n, m, method);//remplacer 2 par methodVar
+		this.varStyle = varStyle;
 
 		// Composition du panel
 		geometry();
@@ -61,12 +61,12 @@ public class JPanelSetMatrix extends JPanelDialog
 		previousButton = new JButton("Précédent");
 
 		tabTextField = new JTextField[n][];
-		String[][] tabString = IndependentVar.getTabVar();
+		String[] tabString = IndependentVar.getVarStyle(varStyle, n, m);
 
 		for(int i = 1; i <= n; i++)
 			{
 			tabTextField[i - 1] = new JTextField[m];
-			for(int j = 1; j <= m ; j++)// + 1; j++)
+			for(int j = 1; j <= m ; j++)
 				{
 				Box panMatrice = Box.createHorizontalBox();
 
@@ -74,7 +74,7 @@ public class JPanelSetMatrix extends JPanelDialog
 
 				if (j == m-1)
 					{
-					string = tabString[i-1][j-1] + "=";
+					string = tabString[j-1] + "=";		//Ou j si beugs
 					}
 				else
 					{
@@ -84,7 +84,7 @@ public class JPanelSetMatrix extends JPanelDialog
 						}
 					else
 						{
-						string = tabString[i-1][j-1]  + "+";
+						string = tabString[j-1]  + "+";	//Ou j si beugs
 						}
 					}
 				JLabel label = new JLabel(string);
@@ -174,6 +174,7 @@ public class JPanelSetMatrix extends JPanelDialog
 
 	// Inputs
 	private Matrix matrix;
+	private int varStyle;
 	private boolean isMatrixSolved;
 
 	// Tools
