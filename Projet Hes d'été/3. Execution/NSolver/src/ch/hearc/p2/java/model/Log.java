@@ -30,7 +30,7 @@ public class Log implements Serializable
 		rows = matrix.rowCount();
 		cols = matrix.columnCount();
 		listOperation = new ArrayList<String>();
-		listOperation.add("origin");
+		listOperation.add("Origin");
 
 		if (isGauss)
 			{
@@ -83,6 +83,11 @@ public class Log implements Serializable
 	public int getCols()
 		{
 		return this.cols;
+		}
+
+	public String getSolution()
+		{
+		return this.solution;
 		}
 
 	/*------------------------------------------------------------------*\
@@ -246,10 +251,7 @@ public class Log implements Serializable
 
 			if (findDependentVariables())
 				{
-				//TODO
-				//multiple solution
 				//substitution arrière algébrique
-				System.out.println("Log: the equation has multiple solution");
 
 				// Compute reduced row echelon form (RREF)
 				for(int i = rows - 1; i >= 0; i--)
@@ -273,6 +275,7 @@ public class Log implements Serializable
 
 						if (!isEqual(listMatrix.get(listMatrix.size() - 1), matrix))
 							{
+							updateListMapNameToCoefiecient();
 							addRowsCoeficientMatrix(i, j, factorBackup);
 							stringBuilder.append("L");
 							stringBuilder.append(j + 1);
@@ -298,25 +301,22 @@ public class Log implements Serializable
 								stringBuilder.append("L");
 								stringBuilder.append(pivotCol + 1);
 								}
-							System.out.println("DEBUG: Stringbuilder=" + stringBuilder.toString());
 							listOperation.add(stringBuilder.toString());
 							stringBuilder = new StringBuilder();
 							listMatrix.add(matrix.cloneOf());
-							updateListMapNameToCoefiecient();
 							}
 						}
 					}
+				solution = "Cette équation possède une infinité de solutions.";
 				}
 			else
 				{
-				//single solution
-				System.out.println("Log: the equation has an unique solution");
+				solution = "Cette équation possède une unique solution.";
 				}
 			}
 		else
-			//no solution
 			{
-			System.out.println("Log: the equation has no solution");
+			solution = "Cette équation n'a pas de solution réelle.";
 			}
 		}
 
@@ -345,7 +345,6 @@ public class Log implements Serializable
 				if (MathTools.isEquals(matrix.get(currentRow, currentCol), 1))
 					{
 					//pivot trouvé
-					System.out.println("DEBUG: (" + currentRow + "," + currentCol + ") is a pivot");
 					flagPivot[currentCol] = true;//marquage du pivot
 					isPivotFound = true;
 					}
@@ -360,7 +359,6 @@ public class Log implements Serializable
 					{
 					if (flagPivot[currentCol] == false)
 						{
-						System.out.println("DEBUG: (" + currentRow + "," + currentCol + ") is free");
 						updateListMapNameToCoefiecient(freeVariableIndex, currentRow, cols - 1);//add and save
 						isPivotFound = true; //permet de sortir de la boucle
 						flagPivot[currentCol] = true;//marquage de l'injection d'une variable libre
@@ -420,20 +418,34 @@ public class Log implements Serializable
 	//used during the reduction algorithme. It makes a copy of the previous map and add it to the list of map.
 	private void updateListMapNameToCoefiecient()
 		{
-		//TODO the putAll does a superficial copy
 		listMapNameToCoeficient.add(new HashMap<String, Matrix>());
-		listMapNameToCoeficient.get(listMapNameToCoeficient.size() - 1).putAll(listMapNameToCoeficient.get(listMapNameToCoeficient.size() - 2));
+		int k = 1;
+		while(k < cols)
+			{
+			if (listMapNameToCoeficient.get(listMapNameToCoeficient.size() - 2).containsKey("u" + k))
+				{
+				listMapNameToCoeficient.get(listMapNameToCoeficient.size() - 1).put("u" + k, listMapNameToCoeficient.get(listMapNameToCoeficient.size() - 2).get("u" + k).cloneOf());
+				}
+			k++;
+			}
+
 		}
 
 	//used during the back substitution. the index represents the index of the free variable stored in the map.
 	private void updateListMapNameToCoefiecient(int freeVariableIndex, int row, int col)
 		{
 		listMapNameToCoeficient.add(new HashMap<String, Matrix>());
-		listMapNameToCoeficient.get(listMapNameToCoeficient.size() - 1).putAll(listMapNameToCoeficient.get(listMapNameToCoeficient.size() - 2));
-		listMapNameToCoeficient.get(listMapNameToCoeficient.size() - 1).putIfAbsent("u" + freeVariableIndex, new Matrix(rows, cols));
+		int k = 1;
+		while(k < cols)
+			{
+			if (listMapNameToCoeficient.get(listMapNameToCoeficient.size() - 2).containsKey("u" + k))
+				{
+				listMapNameToCoeficient.get(listMapNameToCoeficient.size() - 1).put("u" + k, listMapNameToCoeficient.get(listMapNameToCoeficient.size() - 2).get("u" + k).cloneOf());
+				}
+			k++;
+			}
+		listMapNameToCoeficient.get(listMapNameToCoeficient.size() - 1).put("u" + freeVariableIndex, new Matrix(rows, cols));
 		listMapNameToCoeficient.get(listMapNameToCoeficient.size() - 1).get("u" + freeVariableIndex).set(row, col, 1);
-		System.out.println("DEBUG: State of the matrix of u1 for step=" + (listMapNameToCoeficient.size() - 1));
-		System.out.println(listMapNameToCoeficient.get(listMapNameToCoeficient.size() - 1).get("u" + freeVariableIndex).toString());
 		}
 
 	private void addRowsCoeficientMatrix(int srcRow, int destRow, double factor)
@@ -444,8 +456,6 @@ public class Log implements Serializable
 			if (listMapNameToCoeficient.get(listMapNameToCoeficient.size() - 1).containsKey("u" + k))
 				{
 				listMapNameToCoeficient.get(listMapNameToCoeficient.size() - 1).get("u" + k).addRows(srcRow, destRow, factor);
-				System.out.println("DEBUG: State of the matrix of u1");
-				System.out.println(listMapNameToCoeficient.get(listMapNameToCoeficient.size() - 1).get("u" + k).toString());
 				}
 			k++;
 			}
@@ -489,7 +499,6 @@ public class Log implements Serializable
 						if (listMapNameToCoeficient.get(step).containsKey("u" + k))
 							{
 							coeficient = listMapNameToCoeficient.get(step).get("u" + k).get(i, j);
-							System.out.println("DEBUG: Step=" + step + ", Coeficient=" + coeficient + " at (" + i + "," + j + ").");
 							if (!MathTools.isEquals(coeficient, 0))
 								{
 								//efface le 0
@@ -504,7 +513,7 @@ public class Log implements Serializable
 										//gère le +
 										if (!MathTools.isEquals(matrix.get(i, j), 0))
 											{
-											stringBuilder.append("+");
+											stringBuilder.append(" +");
 											}
 										stringBuilder.append(formatter.format(coeficient));
 										}
@@ -515,6 +524,10 @@ public class Log implements Serializable
 									if (!MathTools.isEquals(coeficient, -1))
 										{
 										stringBuilder.append(formatter.format(coeficient));
+										}
+									else
+										{
+										stringBuilder.append(" -");
 										}
 									stringBuilder.append("u" + k);
 									}
@@ -535,6 +548,7 @@ public class Log implements Serializable
 	//output
 	private List<String[][]> listTabMatrix;
 	private List<String> listOperation;
+	private String solution;//Donne une information sur le nombre de solution
 
 	// tools
 	private Matrix matrix;
