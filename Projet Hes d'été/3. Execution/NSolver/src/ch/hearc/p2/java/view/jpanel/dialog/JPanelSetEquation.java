@@ -88,9 +88,9 @@ public class JPanelSetEquation extends JPanelDialog
 
 		labelVarStyle = new JLabel("Style des variables : ");
 		comboVarStyle = new JComboBox<String>();
-		comboVarStyle.addItem("x1, x2, x3, x4, ...");
-		comboVarStyle.addItem("a, b, c, d, e, ...");
 		comboVarStyle.addItem("x, y, z (max 3)");
+		comboVarStyle.addItem("a, b, c, d, e, ...");
+		comboVarStyle.addItem("x1, x2, x3, x4, ...");
 		comboVarStyle.setSelectedIndex(equation.getVariableStyle());
 
 		methodStep = new JRadioButton("étape par étape");

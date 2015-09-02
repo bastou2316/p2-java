@@ -74,7 +74,7 @@ public class JPanelSetMatrix extends JPanelDialog
 
 				if (j == m-1)
 					{
-					string = tabString[i-1][j-1] + j + "=";
+					string = tabString[i-1][j-1] + "=";
 					}
 				else
 					{
@@ -84,7 +84,7 @@ public class JPanelSetMatrix extends JPanelDialog
 						}
 					else
 						{
-						string = tabString[i-1][j-1] + j + "+";
+						string = tabString[i-1][j-1]  + "+";
 						}
 					}
 				JLabel label = new JLabel(string);
