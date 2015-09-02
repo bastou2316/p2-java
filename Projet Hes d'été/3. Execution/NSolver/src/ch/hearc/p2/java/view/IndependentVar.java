@@ -11,6 +11,7 @@ public class IndependentVar
 	public static void create(int n, int m, int noMethod)
 		{
 		//Enregistrement de la methode
+		m--;
 		method = noMethod;
 
 		//Creation du tableau
@@ -70,6 +71,7 @@ public class IndependentVar
 		switch(noMethod)
 			{
 			case 0:
+			System.out.println(m+"");
 				if (m > 3)
 					{
 					fillTabIndepVar(2, n, m);
