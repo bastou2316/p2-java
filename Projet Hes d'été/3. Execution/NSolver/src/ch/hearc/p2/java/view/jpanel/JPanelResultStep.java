@@ -138,6 +138,7 @@ public class JPanelResultStep extends JPanel
 		JPanel jPanelOperation = new JPanel();
 		TitledBorder titlesborder = BorderFactory.createTitledBorder("Opérations");
 		jPanelOperation.setBorder(titlesborder);
+		jPanelOperation.setMinimumSize(new Dimension(100, 0));
 
 		JPanel jPanelMatrix = new JPanel();
 		TitledBorder titlematrix = BorderFactory.createTitledBorder("Matrice");
