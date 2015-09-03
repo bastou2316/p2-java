@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -26,6 +27,7 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.border.TitledBorder;
 
 import ch.hearc.p2.java.model.Equation;
+import ch.hearc.p2.java.model.Matrix;
 import ch.hearc.p2.java.tools.ListAction;
 
 public class JPanelResultStep extends JPanel
@@ -361,17 +363,17 @@ public class JPanelResultStep extends JPanel
 	private void updateDisplayedMatrix()
 		{
 		//Affichage de la matrix en fonction de l'étape
-//		textMatrix.setText(stepToString(equation.getMatrix(actualStep), equation.getMatrixNumberEquation(), equation.getMatrixNumberVariable() + 1, equation.getVariableStyle()));
-//		String[][] actualMatrix = equation.getMatrix(actualStep);
-//		textMatrix.setText(stepToString(actualMatrix, actualMatrix.length, actualMatrix[0].length, equation.getVariableStyle()));
-		panelMatrix.updateLabels(equation.getMatrix(actualStep));
+		Set<Integer> setDifference = null;
 
+		//Maj des labels en fonc de la matrix
 		if (actualStep > 0)//matrix précédente affichage slmt a partir de étape "2"
 			{
-//			textMatrixPrev.setText(stepToString(equation.getMatrix(actualStep - 1), equation.getMatrixNumberEquation(), equation.getMatrixNumberVariable() + 1, equation.getVariableStyle()));
-			panelMatrixPrev.updateLabels(equation.getMatrix(actualStep-1));
+			setDifference = Matrix.isEquals(equation.getMatrix(actualStep), equation.getMatrix(actualStep-1));//Comparaison des lignes de la matrix
+			panelMatrixPrev.updateLabels(equation.getMatrix(actualStep-1), null);
 			}
+
 		jPanelPreviousStep.setVisible(actualStep > 0);
+		panelMatrix.updateLabels(equation.getMatrix(actualStep), setDifference);
 
 		graphicListHistory.setSelectedIndex(actualStep);
 

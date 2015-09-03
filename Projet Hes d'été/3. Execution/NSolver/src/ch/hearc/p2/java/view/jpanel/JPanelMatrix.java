@@ -2,8 +2,10 @@
 package ch.hearc.p2.java.view.jpanel;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.Box;
 import javax.swing.JLabel;
@@ -33,7 +35,7 @@ public class JPanelMatrix extends JPanel
 	|*							Methodes Public							*|
 	\*------------------------------------------------------------------*/
 
-	public void updateLabels(String[][] matrix)
+	public void updateLabels(String[][] matrix, Set<Integer> setDifference)
 		{
 		//Update
 		updateGeometry(matrix.length);
@@ -46,7 +48,7 @@ public class JPanelMatrix extends JPanel
 			{
 			nbVar = 0;
 			StringBuilder builder = new StringBuilder();
-			for(int j = 0; j < matrix[0].length; j++)	//verifier -1
+			for(int j = 0; j < matrix[0].length - 1; j++) //verifier -1
 				{
 				if (!matrix[i][j].equals("0")) //0 => Rien a afficher
 					{
@@ -66,20 +68,20 @@ public class JPanelMatrix extends JPanel
 
 			//On sort de la boucle 1 avant pour placer le =
 			builder.append(" = ");
-			builder.append(matrix[i][matrix.length]);
+			builder.append(matrix[i][matrix[0].length - 1]);
 
 			//Application du textes au labels
 			labels.get(i).setText(builder.toString());
-			System.out.println(i);
 
-			//	        if (i == 2)//A fixer
-			//	            {
-			//	            labels[i].setForeground(Color.RED);
-			//	            }
-			//	        else
-			//	            {
-			//	            labels[i].setForeground(Color.BLACK);
-			//	            }
+			//Mise en evidence
+			if (setDifference != null && setDifference.contains(i))
+				{
+				labels.get(i).setForeground(Color.RED);
+				}
+			else
+				{
+				labels.get(i).setForeground(Color.BLACK);
+				}
 
 			}
 
@@ -89,18 +91,23 @@ public class JPanelMatrix extends JPanel
 	|*							Methodes Private						*|
 	\*------------------------------------------------------------------*/
 
-	private void updateGeometry(int rows)
+	private void updateGeometry(int rows)//a verifier
 		{
 		while(labels.size() < rows)
 			{
 			JLabel label = new JLabel("N/A");
+			label.setForeground(Color.RED);
 			labels.add(label);
 			boxV.add(label);
 			}
 		while(labels.size() > rows)
 			{
-			labels.remove(labels.size()-1);
+			JLabel label = labels.remove(labels.size() - 1);
+			boxV.remove(label);
+			label = null;
 			}
+
+		repaint();//updateUI();
 		}
 
 	private void geometry()
@@ -114,7 +121,6 @@ public class JPanelMatrix extends JPanel
 		//Layout
 		boxV = Box.createVerticalBox();
 		setLayout(new BorderLayout());
-
 
 		//Ajout
 		for(int i = 0; i < rows; i++)//a voir -1
