@@ -27,6 +27,7 @@ public class JPanelMatrix extends JPanel
 
 		variableDisplay = true;
 		space = " ";
+		symbol = "+";
 		labels = new LinkedList<JLabel>();
 
 		geometry();
@@ -78,17 +79,35 @@ public class JPanelMatrix extends JPanel
 			StringBuilder builder = new StringBuilder();
 			for(int j = 0; j < matrix[0].length - 1; j++) //verifier -1
 				{
-				if (!matrix[i][j].equals("0")) //0 => Rien a afficher
+				String value = matrix[i][j];
+				if (!value.equals("0")) //0 => Rien a afficher
 					{
-					if (nbVar != 0) //sauf dernière variable
+					if (value.substring(0, 1).equals("-"))
 						{
-						builder.append(space + "+" + space);
+						symbol = "-";
+						}
+					else
+						{
+						symbol = "+";
 						}
 
-					if (!matrix[i][j].equals("1")) //1 => On affiche uniquement la variable
+					if (nbVar != 0) //sauf première variable
 						{
-						builder.append(matrix[i][j]);//Autres => on affiche le coefficient
+						builder.append(space + symbol + space);
 						}
+
+					if (!value.equals("1")) //1 => On affiche uniquement la variable
+						{
+						if (symbol.equals("-"))
+							{
+							builder.append(value.substring(1, value.length()-1));//Autres => on affiche le coefficient
+							}
+						else
+							{
+							builder.append(value);
+							}
+						}
+
 					builder.append(tabVar[j]);
 					nbVar++;
 					}
@@ -181,7 +200,7 @@ public class JPanelMatrix extends JPanel
 			labels.add(new JLabel("N/A"));
 			}
 		labelSolution = new Label("N/A");//utilisé plus tard
-//		labelSolution.setFont(new Font("Sans-Serif", Font.PLAIN, 25));
+		//		labelSolution.setFont(new Font("Sans-Serif", Font.PLAIN, 25));
 
 		//Layout
 		boxV = Box.createVerticalBox();
@@ -216,6 +235,7 @@ public class JPanelMatrix extends JPanel
 	private Box boxV;
 	private Box boxSolution;
 	private String space;
+	private String symbol;
 	private boolean variableDisplay;
 
 	}
