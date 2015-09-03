@@ -2,6 +2,8 @@
 package ch.hearc.p2.java.view.jpanel;
 
 import java.awt.GridLayout;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -17,8 +19,9 @@ public class JPanelMatrix extends JPanel
 	public JPanelMatrix(int rows, int cols, int varStyle)
 		{
 		this.rows = rows;
-		this.cols = cols;
 		this.varStyle = varStyle;
+
+		labels = new LinkedList<JLabel>();
 
 		geometry();
 		appareance();
@@ -34,26 +37,26 @@ public class JPanelMatrix extends JPanel
 
 		for(int i = 0; i < rows; i++)
 			{
-			StringBuilder builder2 = new StringBuilder();
-			for(int j = 0; j < cols - 1; j++)
+			StringBuilder builder = new StringBuilder();
+			for(int j = 0; j < matrix.length - 1; j++)
 				{
 				if (!matrix[i][j].equals("0")) //0 => Rien a afficher
 					{
 					if (!matrix[i][j].equals("1")) //1 => On affiche uniquement la variable
 						{
-						builder2.append(matrix[i][j]);//Autres => on affiche le coefficient
+						builder.append(matrix[i][j]);//Autres => on affiche le coefficient
 						}
-					builder2.append(tabVar[j]);
-					builder2.append("\t");
+					builder.append(tabVar[j]);
+					builder.append("\t");
 					}
 				}
 
 			//On sort de la boucle 1 avant pour placer le =
-			builder2.append("= ");
-			builder2.append(matrix[i][cols - 1]);
+			builder.append("= ");
+			builder.append(matrix[i][matrix.length - 1]);
 
 			//Application du textes au labels
-			labels[i].setText(builder2.toString());
+			labels.get(i).setText(builder.toString());
 
 			//	        if (i == 2)//A fixer
 			//	            {
@@ -75,7 +78,10 @@ public class JPanelMatrix extends JPanel
 	private void geometry()
 		{
 		//Declaration
-		labels = new JLabel[rows];
+		for(int i = 0; i < rows; i++)
+			{
+			labels.add(new JLabel("N/A"));
+			}
 
 		//Layout
 		setLayout(new GridLayout(rows, 1));
@@ -83,7 +89,7 @@ public class JPanelMatrix extends JPanel
 		//Ajout
 		for(int i = 0; i < rows; i++)//a voir -1
 			{
-			add(labels[i]);
+			add(labels.get(i));
 			}
 		}
 
@@ -102,6 +108,6 @@ public class JPanelMatrix extends JPanel
 	private int varStyle;
 
 	//Tools
-	private JLabel[] labels;
+	private List<JLabel> labels;
 
 	}
