@@ -21,7 +21,7 @@ public class Log implements Serializable
 	\*------------------------------------------------------------------*/
 	public Log(Matrix matrix, boolean isGauss, int varStyle)
 		{
-		this.varStyle=varStyle;
+		this.varStyle = varStyle;
 		this.matrix = matrix.cloneOf();
 		listMapNameToCoeficient = new ArrayList<Map<String, Matrix>>();
 		listMapNameToCoeficient.add(new HashMap<String, Matrix>());
@@ -36,6 +36,7 @@ public class Log implements Serializable
 		if (isGauss)
 			{
 			reducedRowEchelonForm(); //fill listOperation
+			listOperation.add("Résultat final");
 			serializeMatrix(); //fill listMatrix
 			}
 		else
@@ -94,7 +95,7 @@ public class Log implements Serializable
 	public double[][] getParametricEquations()
 		{
 		double[][] tabCoeficient = null;
-		if (solution.equals("Cette équation possède une unique solution."))
+		if (solution.equals("Ce système d'équations possède une solution unique."))
 			{
 			tabCoeficient = new double[cols - 1][1];
 			for(int i = 0; i < cols - 1; ++i)
@@ -102,8 +103,9 @@ public class Log implements Serializable
 				tabCoeficient[i][0] = listMatrix.get(listMatrix.size() - 1).get(i, cols - 1);
 				}
 			}
-		else if (solution.equals("Cette équation possède une infinité de solutions."))
+		else if (solution.equals("Ce système d'équations possède une infinité de solutions."))
 			{
+
 			tabCoeficient = new double[cols - 1][cols - 1];
 			for(int i = 0; i < cols - 1; ++i)
 				{
@@ -282,16 +284,16 @@ public class Log implements Serializable
 			if (findDependentVariables())
 				{
 				algebricBackSubstitution();
-				solution = "Cette équation possède une infinité de solutions.";
+				solution = "Ce système d'équations possède une infinité de solutions.";
 				}
 			else
 				{
-				solution = "Cette équation possède une unique solution.";
+				solution = "Ce système d'équations possède une solution unique.";
 				}
 			}
 		else
 			{
-			solution = "Cette équation n'a pas de solution réelle.";
+			solution = "Ce système d'équations n'a pas de solution réelle.";
 			}
 		}
 
@@ -365,7 +367,7 @@ public class Log implements Serializable
 		int currentRow;
 		StringBuilder stringBuilder = new StringBuilder();
 		Boolean[] flagPivot = new Boolean[cols - 1];//cols-1 because we don't look at the augmented part of the matrix
-		String[] tabVarStyle = IndependentVar.getTabVar(cols-1, varStyle);
+		String[] tabVarStyle = IndependentVar.getTabVar(cols - 1, varStyle);
 
 		//rempli le tableau de boolean
 		for(int i = 0; i < cols - 1; i++)
@@ -453,7 +455,8 @@ public class Log implements Serializable
 				matrixTemp = listMapNameToCoeficient.get(listMapNameToCoeficient.size() - 1).get("u" + m);
 				matrix = new Matrix(cols - 1, cols);
 				//we copy the values of the last matrix into the new one
-				for(int j = 0; j < cols - 2; j++)
+
+				for(int j = 0; j < rows; j++)
 					{
 					for(int k = 0; k < cols; k++)
 						{
@@ -480,7 +483,7 @@ public class Log implements Serializable
 				}
 
 			//we set the value of the new free variable
-			listMapNameToCoeficient.get(listMapNameToCoeficient.size() - 1).put("u" + freeVariableIndex, new Matrix(rows + i + 1, cols));
+			listMapNameToCoeficient.get(listMapNameToCoeficient.size() - 1).put("u" + freeVariableIndex, new Matrix(cols - 1, cols));
 			listMapNameToCoeficient.get(listMapNameToCoeficient.size() - 1).get("u" + freeVariableIndex).set(rows + i, cols - 1, 1);
 			updateListMapNameToCoefiecient();//save
 
@@ -595,7 +598,6 @@ public class Log implements Serializable
 				}
 			k++;
 			}
-
 		}
 
 	private boolean isEqual(Matrix matrix1, Matrix matrix2)
