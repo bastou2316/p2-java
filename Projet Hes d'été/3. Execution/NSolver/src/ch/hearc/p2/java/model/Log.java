@@ -365,7 +365,7 @@ public class Log implements Serializable
 		int currentRow;
 		StringBuilder stringBuilder = new StringBuilder();
 		Boolean[] flagPivot = new Boolean[cols - 1];//cols-1 because we don't look at the augmented part of the matrix
-		String[] tabVarStyle = IndependentVar.getTabVar(cols, varStyle);
+		String[] tabVarStyle = IndependentVar.getTabVar(cols-1, varStyle);
 
 		//rempli le tableau de boolean
 		for(int i = 0; i < cols - 1; i++)

@@ -75,7 +75,7 @@ public class JPanelSetMatrix extends JPanelDialog
 		previousButton = new JButton("Précédent");
 
 		tabTextField = new JTextField[rows][];
-		String[] tabString = IndependentVar.getTabVar(cols, varStyle);
+		String[] tabString = IndependentVar.getTabVar(cols-1, varStyle);
 
 		for(int i = 1; i <= rows; i++)
 			{
@@ -88,7 +88,7 @@ public class JPanelSetMatrix extends JPanelDialog
 
 				if (j == cols-1)
 					{
-					string = tabString[j-1] + "=";		//Ou j si beugs
+					string = tabString[j-1] + "=";
 					}
 				else
 					{
@@ -98,7 +98,7 @@ public class JPanelSetMatrix extends JPanelDialog
 						}
 					else
 						{
-						string = tabString[j-1]  + "+";	//Ou j si beugs
+						string = tabString[j-1]  + "+";
 						}
 					}
 				JLabel label = new JLabel(string);
