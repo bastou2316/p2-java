@@ -36,6 +36,7 @@ public class Log implements Serializable
 		if (isGauss)
 			{
 			reducedRowEchelonForm(); //fill listOperation
+			listOperation.add("Résultat final");
 			serializeMatrix(); //fill listMatrix
 			}
 		else
@@ -94,7 +95,7 @@ public class Log implements Serializable
 	public double[][] getParametricEquations()
 		{
 		double[][] tabCoeficient = null;
-		if (solution.equals("Cette équation possède une unique solution."))
+		if (solution.equals("Ce système d'équations possède une solution unique."))
 			{
 			tabCoeficient = new double[cols - 1][1];
 			for(int i = 0; i < cols - 1; ++i)
@@ -102,8 +103,9 @@ public class Log implements Serializable
 				tabCoeficient[i][0] = listMatrix.get(listMatrix.size() - 1).get(i, cols - 1);
 				}
 			}
-		else if (solution.equals("Cette équation possède une infinité de solutions."))
+		else if (solution.equals("Ce système d'équations possède une infinité de solutions."))
 			{
+
 			tabCoeficient = new double[cols - 1][cols - 1];
 			for(int i = 0; i < cols - 1; ++i)
 				{
@@ -596,7 +598,6 @@ public class Log implements Serializable
 				}
 			k++;
 			}
-
 		}
 
 	private boolean isEqual(Matrix matrix1, Matrix matrix2)
@@ -637,7 +638,6 @@ public class Log implements Serializable
 						{
 						if (listMapNameToCoeficient.get(step).containsKey("u" + k))
 							{
-							System.out.println("(" + i + "," + j + ")");
 							coeficient = listMapNameToCoeficient.get(step).get("u" + k).get(i, j);
 							if (!MathTools.isEquals(coeficient, 0))
 								{
