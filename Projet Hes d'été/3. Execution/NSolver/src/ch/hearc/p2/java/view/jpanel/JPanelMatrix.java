@@ -33,7 +33,7 @@ public class JPanelMatrix extends JPanel
 
 	public void updateLabels(String[][] matrix)
 		{
-		String[] tabVar = IndependentVar.getVarStyle(varStyle, rows, cols);//voir dans le constr
+		String[] tabVar = IndependentVar.getTabVar(cols, varStyle);//voir dans le constr
 
 		for(int i = 0; i < rows; i++)
 			{

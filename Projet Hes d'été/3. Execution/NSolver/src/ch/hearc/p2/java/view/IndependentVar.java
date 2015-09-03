@@ -24,9 +24,13 @@ public class IndependentVar
 			}
 		}
 
-	public static String[] getTabVar(int cols)
+	public static String[] getTabVar(int cols, int varStyle)
+	{
+		return getTabVar(cols, IndependentVar.varStyleFromInt(varStyle));
+	}
+
+	public static String[] getTabVar(int cols, VARSTYLE varStyle)
 		{
-		cols = cols - 1; //Matrice non-augmentée
 		String[] tabString = new String[cols];
 
 		switch(varStyle)
@@ -35,7 +39,7 @@ public class IndependentVar
 			case X:
 				if (cols > 3)
 					{
-					getTabVar(cols);
+					getTabVar(cols, varStyle);
 					}
 				else
 					{
@@ -49,7 +53,7 @@ public class IndependentVar
 			case A:
 				if (cols > 26)
 					{
-					getTabVar(cols);
+					getTabVar(cols, varStyle);
 					}
 				else
 					{
@@ -96,7 +100,20 @@ public class IndependentVar
 		return tabString;
 		}
 
-	public static VARSTYLE varStyle = VARSTYLE.X;
+	public static VARSTYLE varStyleFromInt(int varStyle)
+	{
+	switch(varStyle)
+		{
+		case 0:
+			return VARSTYLE.X;
+		case 1:
+			return VARSTYLE.A;
+		case 2:
+			return VARSTYLE.X1;
+		default:
+			throw new IndexOutOfBoundsException();
+		}
+	}
 
 	public static enum VARSTYLE
 		{

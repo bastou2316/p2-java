@@ -33,8 +33,8 @@ public class JPanelSetMatrix extends JPanelDialog
 		super();
 
 		this.matrix = matrix;
-		this.n = matrix.rowCount();//attention inversion ptetre
-		this.m = matrix.columnCount();
+		this.rows = matrix.rowCount();//attention inversion ptetre
+		this.cols = matrix.columnCount();
 		this.isMatrixSolved = solved;
 		this.varStyle = varStyle;
 
@@ -52,7 +52,7 @@ public class JPanelSetMatrix extends JPanelDialog
 		{
 		// JComponent : Instanciation
 		JPanel panelVar = new JPanel();
-		panelVar.setLayout(new GridLayout(n, m, 0, 0));
+		panelVar.setLayout(new GridLayout(rows, cols, 0, 0));
 		panelVar.setBorder(new TitledBorder(null, "Remplissage de la matrice", TitledBorder.LEADING, TitledBorder.TOP, null, Color.BLACK));
 
 		JPanel panelButton = new JPanel();
@@ -60,25 +60,25 @@ public class JPanelSetMatrix extends JPanelDialog
 		solveButton = new JButton("R\u00E9soudre");
 		previousButton = new JButton("Précédent");
 
-		tabTextField = new JTextField[n][];
-		String[] tabString = IndependentVar.getVarStyle(varStyle, n, m);
+		tabTextField = new JTextField[rows][];
+		String[] tabString = IndependentVar.getTabVar(cols, varStyle);
 
-		for(int i = 1; i <= n; i++)
+		for(int i = 1; i <= rows; i++)
 			{
-			tabTextField[i - 1] = new JTextField[m];
-			for(int j = 1; j <= m ; j++)
+			tabTextField[i - 1] = new JTextField[cols];
+			for(int j = 1; j <= cols ; j++)
 				{
 				Box panMatrice = Box.createHorizontalBox();
 
 				String string;
 
-				if (j == m-1)
+				if (j == cols-1)
 					{
 					string = tabString[j-1] + "=";		//Ou j si beugs
 					}
 				else
 					{
-					if (j == m)
+					if (j == cols)
 						{
 						string = "";
 						}
@@ -133,9 +133,9 @@ public class JPanelSetMatrix extends JPanelDialog
 					//Remplissage de la matrice
 					//matrix = new Matrix(n, m + 1);
 
-					for(int i = 0; i < n; i++)
+					for(int i = 0; i < rows; i++)
 						{
-						for(int j = 0; j < m; j++) // m + 1; j++)
+						for(int j = 0; j < cols; j++) // m + 1; j++)
 							{
 							//System.out.println(Float.parseFloat(tabTextField[i][j].getText()));
 							float value = (tabTextField[i][j].getText().isEmpty()) ? 0 : Float.parseFloat(tabTextField[i][j].getText());
@@ -180,7 +180,7 @@ public class JPanelSetMatrix extends JPanelDialog
 	// Tools
 	private JButton solveButton, previousButton;
 	private JTextField[][] tabTextField;
-	private int n;
-	private int m;
+	private int rows;
+	private int cols;
 
 	}

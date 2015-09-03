@@ -105,7 +105,7 @@ public class Equation implements Serializable
 
 	public void setMatrix(Matrix matrix, boolean gaussResolution)
 		{
-		log = new Log(matrix, gaussResolution);
+		log = new Log(matrix, gaussResolution, varStyle);
 		solved = true;
 		}
 
