@@ -11,11 +11,11 @@ public class IndependentVar
 	public static void afficher(String[][] tab2d)
 		{
 		int n = tab2d.length;
-		int m = tab2d[0].length;
+		int cols = tab2d[0].length;
 
 		for(int i = 1; i <= n; i++)
 			{
-			for(int j = 1; j <= m; j++)
+			for(int j = 1; j <= cols; j++)
 				{
 				System.out.print(tab2d[i - 1][j - 1]);
 				System.out.print("\t");
@@ -24,18 +24,18 @@ public class IndependentVar
 			}
 		}
 
-	public static String[] getVarStyle(int noMethod, int n, int m)
+	public static String[] getTabVar(int cols)
 		{
-		m = m - 1; //Matrice non-augmentée
-		String[] tabString = new String[n];
+		cols = cols - 1; //Matrice non-augmentée
+		String[] tabString = new String[cols];
 
-		switch(noMethod)
+		switch(varStyle)
 			{
-			case 0:
-				System.out.println(m + "");
-				if (m > 3)
+
+			case X:
+				if (cols > 3)
 					{
-					getVarStyle(2, n, m);
+					getTabVar(cols);
 					}
 				else
 					{
@@ -45,14 +45,15 @@ public class IndependentVar
 					tabString[2] = "Z";
 					}
 				break;
-			case 1:
-				if (m > 26)
+
+			case A:
+				if (cols > 26)
 					{
-					getVarStyle(2, n, m);
+					getTabVar(cols);
 					}
 				else
 					{
-					tabString = new String[27];
+					tabString = new String[26];
 					tabString[0] = "A";
 					tabString[1] = "B";
 					tabString[2] = "C";
@@ -82,9 +83,9 @@ public class IndependentVar
 					}
 				break;
 
-			case 2:
-				tabString = new String[m + 1];
-				for(int i1 = 1; i1 <= m; i1++)
+			case X1:
+				tabString = new String[cols];
+				for(int i1 = 1; i1 <= cols; i1++)
 					{
 					tabString[i1 - 1] = "X" + i1;
 					}
@@ -92,8 +93,14 @@ public class IndependentVar
 			default:
 				throw new IllegalStateException("Variable style does not exist");
 			}
-
 		return tabString;
+		}
+
+	public static VARSTYLE varStyle = VARSTYLE.X;
+
+	public static enum VARSTYLE
+		{
+		X, A, X1
 		}
 
 	}

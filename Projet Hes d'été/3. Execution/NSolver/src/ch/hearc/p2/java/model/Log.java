@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import ch.hearc.p2.java.tools.MathTools;
+import ch.hearc.p2.java.view.IndependentVar;
 
 public class Log implements Serializable
 	{
@@ -364,6 +365,7 @@ public class Log implements Serializable
 		int currentRow;
 		StringBuilder stringBuilder = new StringBuilder();
 		Boolean[] flagPivot = new Boolean[cols - 1];//cols-1 because we don't look at the augmented part of the matrix
+		String[] tabVarStyle = IndependentVar.getTabVar(cols);
 
 		//rempli le tableau de boolean
 		for(int i = 0; i < cols - 1; i++)
@@ -400,7 +402,7 @@ public class Log implements Serializable
 						isPivotFound = true; //permet de sortir de la boucle
 						flagPivot[currentCol] = true;//marquage de l'injection d'une variable libre
 						//create a new step
-						listOperation.add("v" + (currentCol + 1) + " est libre donc on a v" + (currentCol + 1) + " = u" + freeVariableIndex);
+						listOperation.add(tabVarStyle[currentCol] + " est libre donc on a " + tabVarStyle[currentCol] + " = u" + freeVariableIndex);
 						matrix.set(currentRow, currentCol, 1); //set the free variable in the matrice
 						listMatrix.add(matrix.cloneOf());//save
 
@@ -491,7 +493,7 @@ public class Log implements Serializable
 			flagPivot[currentCol] = true;//marquage de l'injection d'une variable libre
 			matrix.set(rows + i, currentCol, 1); //set the free variable in the matrice
 			listMatrix.add(matrix.cloneOf());//save
-			listOperation.add("v" + (rows + i + 1) + " est libre donc on a v" + (rows + i + 1) + " = u" + freeVariableIndex);
+			listOperation.add(tabVarStyle[rows + i] + " est libre donc on a " + tabVarStyle[rows + i] + " = u" + freeVariableIndex);
 
 			freeVariableIndex++;
 			}
