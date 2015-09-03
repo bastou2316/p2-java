@@ -61,7 +61,7 @@ public class JPanelSetMatrix extends JPanelDialog
 		previousButton = new JButton("Précédent");
 
 		tabTextField = new JTextField[n][];
-		String[] tabString = IndependentVar.getVarStyle(varStyle, n, m);
+		String[] tabString = IndependentVar.getTabVar(m);
 
 		for(int i = 1; i <= n; i++)
 			{
