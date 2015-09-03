@@ -323,14 +323,22 @@ public class JPanelResultStep extends JPanel
 					{
 					changeFont(panelMatrix, e.getWheelRotation());
 					changeFont(panelMatrixPrev, e.getWheelRotation());
-					changeFont(scrollPaneList, e.getWheelRotation());
 
 					}
 			};
 
 		panelMatrix.addMouseWheelListener(zoom);
 		panelMatrixPrev.addMouseWheelListener(zoom);
-		scrollPaneList.addMouseWheelListener(zoom);
+		scrollPaneList.addMouseWheelListener(new MouseWheelListener()
+			{
+
+				@Override
+				public void mouseWheelMoved(MouseWheelEvent e)
+					{
+					changeFont(scrollPaneList, e.getWheelRotation());
+
+					}
+			});
 		}
 
 	private void appearance()
