@@ -98,7 +98,7 @@ public class ControllerMain
 			case RESULT_3D:
 				if (equation.getMatrixNumberEquation() >= 1 && equation.getMatrixNumberEquation() <= 4 && (equation.getMatrixNumberVariable() == 2 || equation.getMatrixNumberVariable() == 3))
 					{
-					JDialog3D jDialogMain = new JDialog3D(new JPanel3D(equation.getMatrix()));
+					JDialog3D jDialogMain = new JDialog3D(new JPanel3D(equation.getMatrix(), equation.getParametricEquations()));
 					jDialogMain.showDialog();
 					}
 				else

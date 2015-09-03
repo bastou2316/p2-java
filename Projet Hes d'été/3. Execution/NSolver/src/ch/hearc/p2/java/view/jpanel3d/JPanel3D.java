@@ -109,11 +109,10 @@ final public class JPanel3D extends JPanelDialog {
 
 	
 
-	public JPanel3D(Matrix mat/*, double[][] solution*/) {
+	public JPanel3D(Matrix mat, double[][] solution) {
 		super();
 		matrixValues = mat.getValuesCopy();
-		Log log = new Log(mat, true, 0);
-		this.solution = log.getParametricEquations();//solution;
+		this.solution = solution;
 		scaleFactor = 10f;
 		space = 1f;
 		fontsize = 40;

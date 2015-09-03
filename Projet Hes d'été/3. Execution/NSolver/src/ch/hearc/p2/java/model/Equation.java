@@ -93,6 +93,11 @@ public class Equation implements Serializable
 		{
 		return log.getListOperation();
 		}
+	
+	public double[][] getParametricEquations()
+	{
+		return log.getParametricEquations();
+	}
 
 	/*------------------------------*\
 	|*				Set				*|
