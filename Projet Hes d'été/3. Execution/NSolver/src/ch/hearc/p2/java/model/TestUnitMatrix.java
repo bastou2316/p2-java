@@ -5,6 +5,9 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
+import ch.hearc.p2.java.view.IndependentVar;
+import ch.hearc.p2.java.view.IndependentVar.VARSTYLE;
+
 public final class TestUnitMatrix
 	{
 
@@ -84,6 +87,7 @@ public final class TestUnitMatrix
 
 	private static void testReduceMatrix(double[][] in, double[][] out)
 		{
+		IndependentVar.varStyle = VARSTYLE.X1;
 		Matrix matIn = new Matrix(in.length, in[0].length);
 		for(int i = 0; i < out.length; i++)
 			{
