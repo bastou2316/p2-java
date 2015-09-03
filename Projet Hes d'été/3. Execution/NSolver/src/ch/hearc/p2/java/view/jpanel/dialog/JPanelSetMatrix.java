@@ -3,10 +3,15 @@ package ch.hearc.p2.java.view.jpanel.dialog;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -47,6 +52,15 @@ public class JPanelSetMatrix extends JPanelDialog
 	/*------------------------------------------------------------------*\
 	|*							Methodes Private						*|
 	\*------------------------------------------------------------------*/
+	 private void changeFont(Component component, int fontSize) {
+	    Font f = component.getFont();
+	    component.setFont(new Font(f.getName(),f.getStyle(),f.getSize() + fontSize));
+	    if (component instanceof Container) {
+	        for (Component child : ((Container) component).getComponents()) {
+	            changeFont(child, fontSize);
+	        }
+	    }
+	}
 
 	private void geometry()
 		{
@@ -159,6 +173,18 @@ public class JPanelSetMatrix extends JPanelDialog
 					JDialogSetMatrix jdialog = (JDialogSetMatrix) getRootPane().getParent();
 					jdialog.close();
 //					controllerMain.showDialog(DIALOG.SET_EQUATION);
+					}
+			});
+
+		this.addMouseWheelListener(new MouseWheelListener()
+			{
+
+				@Override
+				public void mouseWheelMoved(MouseWheelEvent e)
+					{
+					// TODO Auto-generated method stub
+					changeFont(JPanelSetMatrix.this, e.getWheelRotation());
+
 					}
 			});
 		}

@@ -8,6 +8,8 @@ import java.awt.Container;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -49,7 +51,11 @@ public class JPanelMenu extends JPanel
 
 
 
-	 public static void changeFont(Component component, int fontSize) {
+
+	/*------------------------------------------------------------------*\
+	|*							Methodes Private						*|
+	\*------------------------------------------------------------------*/
+	 private void changeFont(Component component, int fontSize) {
 	    Font f = component.getFont();
 	    component.setFont(new Font(f.getName(),f.getStyle(),f.getSize() + fontSize));
 	    if (component instanceof Container) {
@@ -58,10 +64,6 @@ public class JPanelMenu extends JPanel
 	        }
 	    }
 	}
-
-	/*------------------------------------------------------------------*\
-	|*							Methodes Private						*|
-	\*------------------------------------------------------------------*/
 
 	private void geometry()
 		{
@@ -147,6 +149,18 @@ public class JPanelMenu extends JPanel
 				public void actionPerformed(ActionEvent e)
 					{
 					controllerMain.load();
+					}
+			});
+
+		this.addMouseWheelListener(new MouseWheelListener()
+			{
+
+				@Override
+				public void mouseWheelMoved(MouseWheelEvent e)
+					{
+					// TODO Auto-generated method stub
+					changeFont(JPanelMenu.this, e.getWheelRotation());
+
 					}
 			});
 		}
