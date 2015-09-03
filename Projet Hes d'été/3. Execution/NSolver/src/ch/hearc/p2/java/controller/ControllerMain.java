@@ -48,26 +48,25 @@ public class ControllerMain
 		if (currentView != panel)//Empeche le double affichage
 			{
 			currentView = panel;
-			JPanel jpanel;
 
 			switch(panel)
 				{
 				case MENU:
-					jpanel = new JPanelMenu(this);
-					jFrame.setPanel("Menu", jpanel);
+					currentPanel = new JPanelMenu(this);
+					jFrame.setPanel("Menu", currentPanel, 600, 400);
 					jFrame.enableAlternativeMenu(false);
 					break;
 
 				case RESULT:
-					jpanel = new JPanelResultStep(equation);
-					jFrame.setPanel("Résolution directe", jpanel, 600, 600);
+					currentPanel = new JPanelResultStep(equation);
+					jFrame.setPanel("Résolution directe", currentPanel, 600, 600);
 					jFrame.enableAlternativeMenu(true);
 					break;
 
 				case RESULT_STEP:
-					jpanel = new JPanelResultStep(equation);
-					jFrame.setPanel("Résolution étape par étape", jpanel, 600, 600);
-					jFrame.pack();
+					currentPanel = new JPanelResultStep(equation);
+					jFrame.setPanel("Résolution étape par étape", currentPanel, 600, 600);
+//					jFrame.pack();
 					jFrame.enableAlternativeMenu(true);
 					break;
 
@@ -182,7 +181,7 @@ public class ControllerMain
 		//Traitement du résultat
 		if (result == 1)//Suivant
 			{
-			showNewMatrixDialog();//showDialog(DIALOG.NEW_MATRIX);
+			showNewMatrixDialog();	//showDialog(DIALOG.NEW_MATRIX);
 			}
 		else
 			{
@@ -250,6 +249,14 @@ public class ControllerMain
 				//Matrice de meme taille, on applique les changements
 				equation = equationTemp;
 				equationTemp = null;
+
+				//Maj de la fenetre principale
+//				jFrame.revalidate();
+//				jFrame.repaint();
+
+				currentPanel.revalidate();
+				currentPanel.repaint();
+//				currentPanel.updateUI();
 				}
 			else
 				{
@@ -299,6 +306,7 @@ public class ControllerMain
 
 	//Vues
 	private JFrameMain jFrame;
+	private JPanel currentPanel;
 	private VIEW currentView;
 
 	private interface VIEW

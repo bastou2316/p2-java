@@ -322,7 +322,10 @@ public class JPanelResultStep extends JPanel
 	private void updateDisplayedMatrix()
 		{
 		//Affichage de la matrix en fonction de l'étape
-		textMatrix.setText(stepToString(equation.getMatrix(actualStep), equation.getMatrixNumberEquation(), equation.getMatrixNumberVariable() + 1, equation.getVariableStyle()));
+//		textMatrix.setText(stepToString(equation.getMatrix(actualStep), equation.getMatrixNumberEquation(), equation.getMatrixNumberVariable() + 1, equation.getVariableStyle()));
+		String[][] actualMatrix = equation.getMatrix(actualStep);
+		textMatrix.setText(stepToString(actualMatrix, actualMatrix.length, actualMatrix[0].length, equation.getVariableStyle()));
+
 		if (actualStep > 0)//matrix précédente affichage slmt a partir de étape "2"
 			{
 			textMatrixPrev.setText(stepToString(equation.getMatrix(actualStep - 1), equation.getMatrixNumberEquation(), equation.getMatrixNumberVariable() + 1, equation.getVariableStyle()));

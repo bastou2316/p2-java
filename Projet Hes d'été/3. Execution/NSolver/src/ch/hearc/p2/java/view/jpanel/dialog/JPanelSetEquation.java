@@ -71,7 +71,6 @@ public class JPanelSetEquation extends JPanelDialog
 		jpanelMatrix.setBorder(titlesborder);
 
 		JPanel jpanelResolution = new JPanel();
-
 		JPanel jpanelControl = new JPanel();
 
 		labelName = new JLabel("Nom : ");
