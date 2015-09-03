@@ -34,24 +34,27 @@ public class JPanelMatrix extends JPanel
 	public void updateLabels(String[][] matrix)
 		{
 		String[] tabVar = IndependentVar.getTabVar(cols + 1, varStyle);//voir dans le constr
+		int nbVar = 0;//Pour le blocage d'affichage du "+"
 
 		for(int i = 0; i < rows; i++)
 			{
+			nbVar = 0;
 			StringBuilder builder = new StringBuilder();
 			for(int j = 0; j < matrix.length; j++)
 				{
 				if (!matrix[i][j].equals("0")) //0 => Rien a afficher
 					{
+					if (nbVar != 0)	//sauf dernière variable
+						{
+						builder.append(" + ");
+						}
+
 					if (!matrix[i][j].equals("1")) //1 => On affiche uniquement la variable
 						{
 						builder.append(matrix[i][j]);//Autres => on affiche le coefficient
 						}
 					builder.append(tabVar[j]);
-
-					if (j != matrix.length - 1)	//sauf dernière variable
-						{
-						builder.append(" + ");
-						}
+					nbVar++;
 					}
 				}
 
