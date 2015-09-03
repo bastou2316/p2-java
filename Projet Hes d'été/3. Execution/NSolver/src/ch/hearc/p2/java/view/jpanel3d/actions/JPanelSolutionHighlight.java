@@ -16,12 +16,12 @@ import javax.swing.border.TitledBorder;
 import ch.hearc.p2.java.view.jpanel3d.JPanel3D;
 
 public class JPanelSolutionHighlight extends JPanel{
-	
+
 	private JCheckBox cb;
-	
-	public JPanelSolutionHighlight(Font font, Color titleColor, double[][] solution, JPanel3D panel3d) {
+
+	public JPanelSolutionHighlight(Font font, Color titleColor, double[][] solution, final JPanel3D panel3d) {
 		this.setLayout(new BoxLayout(this,
-				BoxLayout.Y_AXIS));	
+				BoxLayout.Y_AXIS));
 
 		TitledBorder tBorderSolution = BorderFactory
 				.createTitledBorder("Domaine de solution");
@@ -29,24 +29,24 @@ public class JPanelSolutionHighlight extends JPanel{
 		tBorderSolution.setTitleColor(titleColor);
 
 		this.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createRaisedBevelBorder(), tBorderSolution));		
-		
+				BorderFactory.createRaisedBevelBorder(), tBorderSolution));
+
 		JPanel jPanelSolution = new JPanel();
 		jPanelSolution.setLayout(new BoxLayout(jPanelSolution,
 				BoxLayout.Y_AXIS));
-	
+
 		cb = new JCheckBox();
 		cb.setSelected(true);
 		cb.setFont(font);
 		cb.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				panel3d.displaySolution(cb.isSelected());				
+				panel3d.displaySolution(cb.isSelected());
 			}
 		});
-		
-		
+
+
 		if(solution == null){ //pas de solution
 			cb.setText("Pas de solution");
 			cb.setEnabled(false);
@@ -63,14 +63,14 @@ public class JPanelSolutionHighlight extends JPanel{
 			cb.setText("Solutions multiples");
 			cb.setEnabled(false);
 		}
-		
+
 		jPanelSolution.add(cb);
-			
+
 
 		this.add(Box.createVerticalGlue());
 		this.add(jPanelSolution);
 		this.add(Box.createVerticalGlue());
-		
+
 		Dimension size = this.getPreferredSize();
 		if(size.width < 140){
 			size.width = 140;
