@@ -55,14 +55,14 @@ public final class TestUnitMatrix
 	//		//testDecompositionQR(in, out);
 	//		}
 	//
-	//	@Test
-	//	public void test4x3_Impossible()
-	//		{
-	//		double[][] in = { { 0, 1, 1, 1 }, { 2, 4, -2, 2 }, { 0, 1, 1, 2 }, { 0, 1, 1, 2 } };
-	//		double[][] out = { { 1, 2, -1, 1 }, { 0, 1, 1, 1 }, { 0, 0, 0, 1 }, { 0, 0, 0, 0 } };
-	//		testReduceMatrix(in, out);
-	//		//testDecompositionQR(in, out);
-	//		}
+		@Test
+		public void test4x3_Impossible()
+			{
+			double[][] in = { { 0, 1, 1, 1 }, { 2, 4, -2, 2 }, { 0, 1, 1, 2 }, { 0, 1, 1, 2 } };
+			double[][] out = { { 1, 2, -1, 1 }, { 0, 1, 1, 1 }, { 0, 0, 0, 1 }, { 0, 0, 0, 0 } };
+			testReduceMatrix(in, out);
+			//testDecompositionQR(in, out);
+			}
 	//
 	//	@Test
 	//	public void test4x3_Unique()
@@ -91,14 +91,14 @@ public final class TestUnitMatrix
 	//		//testDecompositionQR(in, out);
 	//		}
 	//
-	@Test
-	public void test3x6_Infinit_Line_()
-		{
-		double[][] in = { { 1, 0, 0, 0, 0, 0 }, { 0, 1, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0 } };
-		double[][] out = { { 1, 0, -3, -1 }, { 0, 1, 1, 1 }, { 0, 0, 0, 0 } };
-		testReduceMatrix(in, out);
-		//testDecompositionQR(in, out);
-		}
+//	@Test
+//	public void test3x6_Infinit_Line_()
+//		{
+//		double[][] in = { { 1, 0, 0, 0, 0, 0 }, { 0, 1, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0 } };
+//		double[][] out = { { 1, 0, -3, -1 }, { 0, 1, 1, 1 }, { 0, 0, 0, 0 } };
+//		testReduceMatrix(in, out);
+//		//testDecompositionQR(in, out);
+//		}
 
 	private static void testReduceMatrix(double[][] in, double[][] out)
 		{
@@ -141,6 +141,7 @@ public final class TestUnitMatrix
 				}
 			System.out.println("Step=" + (listOperation.size() - 1) + ", Operation: " + listOperation.get(listOperation.size() - 1));
 			}
+		System.out.println(log.getSolution());
 		double[][] temp = log.getParametricEquations();
 		System.out.println("State of tabCoeficient:");
 		stepToString(temp);
@@ -229,7 +230,7 @@ public final class TestUnitMatrix
 			}
 		else
 			{
-			System.out.println("there is no solution");
+			System.out.println("the tab is null");
 			}
 		}
 	}

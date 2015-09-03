@@ -419,8 +419,10 @@ public class Log implements Serializable
 									//Cherche le pivot
 									i++;
 									}
+								i--;
 								if (i != j) //si le pivot n'est pas à sa place il faut le swap
 									{
+									System.out.println("("+i+","+j+")");
 									matrix.swapRows(i, j);
 									swapRowsCoeficientMatrix(currentRow, j);
 									stringBuilder.append("L");
@@ -521,7 +523,6 @@ public class Log implements Serializable
 		{
 		int zeroCount = 0;
 		for(int i = 0; i < rows; ++i)// pour chaque ligne
-
 			{
 			if (!MathTools.isEquals(matrix.get(i, cols - 1), 0))//Si la valeur du vecteur b à la ligne actuelle est non-null
 				{
