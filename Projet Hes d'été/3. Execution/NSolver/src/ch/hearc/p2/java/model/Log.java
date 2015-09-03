@@ -19,7 +19,7 @@ public class Log implements Serializable
 	/*------------------------------------------------------------------*\
 	|*							Constructeurs							*|
 	\*------------------------------------------------------------------*/
-	public Log(Matrix matrix, boolean isGauss)
+	public Log(Matrix matrix, boolean isGauss, int varStyle)
 		{
 		this.matrix = matrix.cloneOf();
 		listMapNameToCoeficient = new ArrayList<Map<String, Matrix>>();
@@ -365,7 +365,7 @@ public class Log implements Serializable
 		int currentRow;
 		StringBuilder stringBuilder = new StringBuilder();
 		Boolean[] flagPivot = new Boolean[cols - 1];//cols-1 because we don't look at the augmented part of the matrix
-		String[] tabVarStyle = IndependentVar.getTabVar(cols);
+		String[] tabVarStyle = IndependentVar.getTabVar(cols, varStyle);
 
 		//rempli le tableau de boolean
 		for(int i = 0; i < cols - 1; i++)
@@ -703,5 +703,6 @@ public class Log implements Serializable
 	private List<Map<String, Matrix>> listMapNameToCoeficient;
 	private int rows;
 	private int cols;
+	private int varStyle;
 
 	}
