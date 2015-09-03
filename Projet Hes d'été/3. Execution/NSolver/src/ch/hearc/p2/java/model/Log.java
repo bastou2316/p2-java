@@ -95,7 +95,7 @@ public class Log implements Serializable
 		double[][] tabCoeficient = null;
 		if (solution.equals("Cette équation possède une unique solution."))
 			{
-			tabCoeficient = new double[cols][1];
+			tabCoeficient = new double[cols - 1][1];
 			for(int i = 0; i < cols - 1; ++i)
 				{
 				tabCoeficient[i][0] = listMatrix.get(listMatrix.size() - 1).get(i, cols - 1);
@@ -103,7 +103,7 @@ public class Log implements Serializable
 			}
 		else if (solution.equals("Cette équation possède une infinité de solutions."))
 			{
-			tabCoeficient = new double[cols - 1][cols];
+			tabCoeficient = new double[cols - 1][cols - 1];
 			for(int i = 0; i < cols - 1; ++i)
 				{
 				tabCoeficient[i][0] = listMatrix.get(listMatrix.size() - 1).get(i, cols - 1);
@@ -300,7 +300,6 @@ public class Log implements Serializable
 		double factorBackup;
 		StringBuilder stringBuilder = new StringBuilder();
 		DecimalFormat formatter = new DecimalFormat("0.##");
-
 		// Compute reduced row echelon form (RREF)
 		for(int i = cols - 2; i >= 0; i--)
 			{
@@ -363,6 +362,7 @@ public class Log implements Serializable
 		boolean isPivotFound = false;
 		int currentCol = 0;
 		int currentRow;
+		StringBuilder stringBuilder = new StringBuilder();
 		Boolean[] flagPivot = new Boolean[cols - 1];//cols-1 because we don't look at the augmented part of the matrix
 
 		//rempli le tableau de boolean
@@ -399,25 +399,52 @@ public class Log implements Serializable
 						updateListMapNameToCoefiecient(freeVariableIndex, currentRow, cols - 1);//add and save
 						isPivotFound = true; //permet de sortir de la boucle
 						flagPivot[currentCol] = true;//marquage de l'injection d'une variable libre
-
 						//create a new step
 						listOperation.add("v" + (currentCol + 1) + " est libre donc on a v" + (currentCol + 1) + " = u" + freeVariableIndex);
 						matrix.set(currentRow, currentCol, 1); //set the free variable in the matrice
 						listMatrix.add(matrix.cloneOf());//save
 
-						freeVariableIndex++;
+						//Gestion de la place du pivot
+						if (currentRow != currentCol)
+							{
+							for(int j = 0; j < cols - 1; j++)//parcours les colonnes
+								{
+								int i = j;
+								while(i < rows && matrix.get(i, j) != 1)
+									{
+									//Cherche le pivot
+									i++;
+									}
+								if (i != j) //si le pivot n'est pas à sa place il faut le swap
+									{
+									matrix.swapRows(i, j);
+									swapRowsCoeficientMatrix(currentRow, j);
+									stringBuilder.append("L");
+									stringBuilder.append(i + 1);
+									stringBuilder.append(" <=> L");
+									stringBuilder.append(j + 1);
+									listOperation.add(stringBuilder.toString());
+									stringBuilder = new StringBuilder();
+									listMatrix.add(matrix.cloneOf());
+									updateListMapNameToCoefiecient();
+									}
+								}
 
+							}
+
+						freeVariableIndex++;
 						}
 					currentCol++;
 					} while(currentCol < cols - 1 && !isPivotFound);
 				}
 			}
+
 		//manage the case where there is more variable than equation
 
 		//we scale the matrix of the coeficient to their final size
 		int m = 1;
 		Matrix matrixTemp = null;
-		while(m < cols)
+		while(m < cols - rows)
 			{
 			if (listMapNameToCoeficient.get(listMapNameToCoeficient.size() - 1).containsKey("u" + m))
 				{
@@ -470,7 +497,7 @@ public class Log implements Serializable
 			}
 		//fin du traitement des variables libres.
 
-		if (freeVariableIndex == 0)
+		if (freeVariableIndex == 1)
 			{
 			return false;
 			}
@@ -555,6 +582,20 @@ public class Log implements Serializable
 			}
 		}
 
+	private void swapRowsCoeficientMatrix(int currentRow, int currentCol)
+		{
+		int k = 1;
+		while(k < cols)
+			{
+			if (listMapNameToCoeficient.get(listMapNameToCoeficient.size() - 1).containsKey("u" + k))
+				{
+				listMapNameToCoeficient.get(listMapNameToCoeficient.size() - 1).get("u" + k).swapRows(currentRow, currentCol);
+				}
+			k++;
+			}
+
+		}
+
 	private boolean isEqual(Matrix matrix1, Matrix matrix2)
 		{
 		//If array shape is equals, then check the elements inside it
@@ -597,23 +638,24 @@ public class Log implements Serializable
 							if (!MathTools.isEquals(coeficient, 0))
 								{
 								//efface le 0
-								if (MathTools.isEquals(matrix.get(i, j), 0))
+								if (MathTools.isEquals(matrix.get(i, j), 0) && isFirst)
 									{
 									stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+									isFirst = false;
 									}
 								if (coeficient > 0)
 									{
 									if (!MathTools.isEquals(coeficient, 1))
 										{
 										//gère le +
-										if (!MathTools.isEquals(matrix.get(i, j), 0) || !isFirst)
+										if (isFirst)
 											{
 											stringBuilder.append("+");
 											}
 										stringBuilder.append(formatter.format(coeficient));
 										isFirst = false;
 										}
-									else if (!isFirst)
+									else if (isFirst)
 										{
 										stringBuilder.append("+");
 										}
