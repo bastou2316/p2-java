@@ -90,6 +90,35 @@ public class Log implements Serializable
 		return this.solution;
 		}
 
+	public double[][] getParametricEquations()
+		{
+		double[][] tabCoeficient = null;
+		if (solution.equals("Cette équation possède une unique solution."))
+			{
+			tabCoeficient = new double[cols][1];
+			for(int i = 0; i < cols - 1; ++i)
+				{
+				tabCoeficient[i][0] = listMatrix.get(listMatrix.size() - 1).get(i, cols - 1);
+				}
+			}
+		else if (solution.equals("Cette équation possède une infinité de solutions."))
+			{
+			tabCoeficient = new double[cols - 1][cols];
+			for(int i = 0; i < cols - 1; ++i)
+				{
+				tabCoeficient[i][0] = listMatrix.get(listMatrix.size() - 1).get(i, cols - 1);
+				for(int j = 1; j < cols - 1; ++j)
+					{
+					if (listMapNameToCoeficient.get(listMapNameToCoeficient.size() - 1).containsKey(("u" + j)))
+						{
+						tabCoeficient[i][j] = listMapNameToCoeficient.get(listMapNameToCoeficient.size() - 1).get("u" + j).get(i, cols - 1);
+						}
+					}
+				}
+			}
+		return tabCoeficient;
+		}
+
 	/*------------------------------------------------------------------*\
 	|*							Methodes Private						*|
 	\*------------------------------------------------------------------*/
@@ -193,9 +222,9 @@ public class Log implements Serializable
 					}
 				}
 			}
+
 		if (hasSolution())
 			{
-
 			// Compute reduced row echelon form (RREF)
 			for(int i = rows - 1; i >= 0; i--)
 				{
@@ -251,62 +280,7 @@ public class Log implements Serializable
 
 			if (findDependentVariables())
 				{
-				//substitution arrière algébrique
-
-				// Compute reduced row echelon form (RREF)
-				for(int i = rows - 1; i >= 0; i--)
-					{
-					// Find pivot
-					int pivotCol = 0;
-					while(pivotCol < cols && MathTools.isEquals(matrix.get(i, pivotCol), 0))
-						{
-						pivotCol++;
-						}
-					if (pivotCol == cols)
-						{
-						continue; // Skip this all-zero row
-						}
-
-					// Eliminate rows above
-					for(int j = i - 1; j >= 0; j--)
-						{
-						factorBackup = -matrix.get(j, pivotCol);
-						matrix.addRows(i, j, -matrix.get(j, pivotCol));
-
-						if (!isEqual(listMatrix.get(listMatrix.size() - 1), matrix))
-							{
-							updateListMapNameToCoefiecient();
-							addRowsCoeficientMatrix(i, j, factorBackup);
-							stringBuilder.append("L");
-							stringBuilder.append(j + 1);
-							stringBuilder.append(" = L");
-							stringBuilder.append(j + 1);
-							if (factorBackup > 0)
-								{
-								stringBuilder.append(" + ");
-								if (!MathTools.isEquals(factorBackup, 1))
-									{
-									stringBuilder.append(formatter.format(factorBackup));
-									}
-								stringBuilder.append("L");
-								stringBuilder.append(pivotCol + 1);
-								}
-							else
-								{
-								stringBuilder.append(" - ");
-								if (!MathTools.isEquals(factorBackup, -1))
-									{
-									stringBuilder.append(formatter.format(-factorBackup));
-									}
-								stringBuilder.append("L");
-								stringBuilder.append(pivotCol + 1);
-								}
-							listOperation.add(stringBuilder.toString());
-							stringBuilder = new StringBuilder();
-							listMatrix.add(matrix.cloneOf());
-							}
-						}
-					}
+				algebricBackSubstitution();
 				solution = "Cette équation possède une infinité de solutions.";
 				}
 			else
@@ -317,6 +291,69 @@ public class Log implements Serializable
 		else
 			{
 			solution = "Cette équation n'a pas de solution réelle.";
+			}
+		}
+
+	private void algebricBackSubstitution()
+		{
+		//substitution arrière algébrique
+		double factorBackup;
+		StringBuilder stringBuilder = new StringBuilder();
+		DecimalFormat formatter = new DecimalFormat("0.##");
+
+		// Compute reduced row echelon form (RREF)
+		for(int i = cols - 2; i >= 0; i--)
+			{
+			// Find pivot
+			int pivotCol = 0;
+			while(pivotCol < cols && MathTools.isEquals(matrix.get(i, pivotCol), 0))
+				{
+				pivotCol++;
+				}
+			if (pivotCol == cols)
+				{
+				continue; // Skip this all-zero row
+				}
+				{
+				for(int j = i - 1; j >= 0; j--)
+					{
+					factorBackup = -matrix.get(j, pivotCol);
+					matrix.addRows(i, j, -matrix.get(j, pivotCol));
+
+					if (!isEqual(listMatrix.get(listMatrix.size() - 1), matrix))
+						{
+						updateListMapNameToCoefiecient();
+						addRowsCoeficientMatrix(i, j, factorBackup);
+						stringBuilder.append("L");
+						stringBuilder.append(j + 1);
+						stringBuilder.append(" = L");
+						stringBuilder.append(j + 1);
+						if (factorBackup > 0)
+							{
+							stringBuilder.append(" + ");
+							if (!MathTools.isEquals(factorBackup, 1))
+								{
+								stringBuilder.append(formatter.format(factorBackup));
+								}
+							stringBuilder.append("L");
+							stringBuilder.append(pivotCol + 1);
+							}
+						else
+							{
+							stringBuilder.append(" - ");
+							if (!MathTools.isEquals(factorBackup, -1))
+								{
+								stringBuilder.append(formatter.format(-factorBackup));
+								}
+							stringBuilder.append("L");
+							stringBuilder.append(pivotCol + 1);
+							}
+						listOperation.add(stringBuilder.toString());
+						stringBuilder = new StringBuilder();
+						listMatrix.add(matrix.cloneOf());
+						}
+					}
+				}
 			}
 		}
 
@@ -374,6 +411,62 @@ public class Log implements Serializable
 					currentCol++;
 					} while(currentCol < cols - 1 && !isPivotFound);
 				}
+			}
+		//manage the case where there is more variable than equation
+
+		//we scale the matrix of the coeficient to their final size
+		int m = 1;
+		Matrix matrixTemp = null;
+		while(m < cols)
+			{
+			if (listMapNameToCoeficient.get(listMapNameToCoeficient.size() - 1).containsKey("u" + m))
+				{
+				matrixTemp = listMapNameToCoeficient.get(listMapNameToCoeficient.size() - 1).get("u" + m);
+				matrix = new Matrix(cols - 1, cols);
+				//we copy the values of the last matrix into the new one
+				for(int j = 0; j < cols - 2; j++)
+					{
+					for(int k = 0; k < cols; k++)
+						{
+						matrix.set(j, k, matrixTemp.get(j, k));
+						}
+					}
+				listMapNameToCoeficient.get(listMapNameToCoeficient.size() - 1).replace("u" + m, matrix.cloneOf());
+				}
+			m++;
+			}
+
+		//we then go over each colomn
+		for(int i = 0; i < cols - rows - 1; ++i)
+			{
+			//we create a square matrix
+			matrix = new Matrix(rows + i + 1, cols);
+			//we copy the values of the last matrix into the new one
+			for(int j = 0; j < rows + i; j++)
+				{
+				for(int k = 0; k < cols - 1; k++)
+					{
+					matrix.set(j, k, listMatrix.get(listMatrix.size() - 1).get(j, k));
+					}
+				}
+
+			//we set the value of the new free variable
+			listMapNameToCoeficient.get(listMapNameToCoeficient.size() - 1).put("u" + freeVariableIndex, new Matrix(rows + i + 1, cols));
+			listMapNameToCoeficient.get(listMapNameToCoeficient.size() - 1).get("u" + freeVariableIndex).set(rows + i, cols - 1, 1);
+			updateListMapNameToCoefiecient();//save
+
+			//create a new step
+			currentCol = 0;
+			while(flagPivot[currentCol] == true)
+				{
+				currentCol++;
+				}
+			flagPivot[currentCol] = true;//marquage de l'injection d'une variable libre
+			matrix.set(rows + i, currentCol, 1); //set the free variable in the matrice
+			listMatrix.add(matrix.cloneOf());//save
+			listOperation.add("v" + (rows + i + 1) + " est libre donc on a v" + (rows + i + 1) + " = u" + freeVariableIndex);
+
+			freeVariableIndex++;
 			}
 		//fin du traitement des variables libres.
 
@@ -448,6 +541,7 @@ public class Log implements Serializable
 		listMapNameToCoeficient.get(listMapNameToCoeficient.size() - 1).get("u" + freeVariableIndex).set(row, col, 1);
 		}
 
+	//used when we need to add a new row to the matrix
 	private void addRowsCoeficientMatrix(int srcRow, int destRow, double factor)
 		{
 		int k = 1;
@@ -484,14 +578,15 @@ public class Log implements Serializable
 
 		for(int step = 0; step < listMatrix.size(); step++)
 			{
-			listTabMatrix.add(new String[rows][cols]);
+			listTabMatrix.add(new String[listMatrix.get(step).rowCount()][cols]);
 			matrix = listMatrix.get(step);
-			for(int i = 0; i < rows; i++)
+			for(int i = 0; i < listMatrix.get(step).rowCount(); i++)
 				{
 				for(int j = 0; j < cols; j++)
 					{
 					stringBuilder = new StringBuilder();
 					stringBuilder.append(formatter.format(matrix.get(i, j)));
+					boolean isFirst = true;
 					int k = 1;
 					//manage the free variable
 					while(k < cols)
@@ -511,25 +606,33 @@ public class Log implements Serializable
 									if (!MathTools.isEquals(coeficient, 1))
 										{
 										//gère le +
-										if (!MathTools.isEquals(matrix.get(i, j), 0))
+										if (!MathTools.isEquals(matrix.get(i, j), 0) || !isFirst)
 											{
-											stringBuilder.append(" +");
+											stringBuilder.append("+");
 											}
 										stringBuilder.append(formatter.format(coeficient));
+										isFirst = false;
+										}
+									else if (!isFirst)
+										{
+										stringBuilder.append("+");
 										}
 									stringBuilder.append("u" + k);
+									isFirst = false;
 									}
 								else
 									{
 									if (!MathTools.isEquals(coeficient, -1))
 										{
 										stringBuilder.append(formatter.format(coeficient));
+										isFirst = false;
 										}
 									else
 										{
-										stringBuilder.append(" -");
+										stringBuilder.append("-");
 										}
 									stringBuilder.append("u" + k);
+									isFirst = false;
 									}
 								}
 							}
