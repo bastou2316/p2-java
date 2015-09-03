@@ -2,6 +2,8 @@
 package ch.hearc.p2.java.view.jpanel;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -114,6 +116,16 @@ public class JPanelResultStep extends JPanel
 	/*------------------------------------------------------------------*\
 	|*							Methodes Private						*|
 	\*------------------------------------------------------------------*/
+
+	 private void changeFont(Component component, int fontSize) {
+	    Font f = component.getFont();
+	    component.setFont(new Font(f.getName(),f.getStyle(),f.getSize() + fontSize));
+	    if (component instanceof Container) {
+	        for (Component child : ((Container) component).getComponents()) {
+	            changeFont(child, fontSize);
+	        }
+	    }
+	}
 
 	private void sleep(long delayMS)
 		{
@@ -302,6 +314,23 @@ public class JPanelResultStep extends JPanel
 					updateZoom(e);
 					}
 			});
+
+		MouseWheelListener zoom = new MouseWheelListener()
+			{
+
+				@Override
+				public void mouseWheelMoved(MouseWheelEvent e)
+					{
+					changeFont(panelMatrix, e.getWheelRotation());
+					changeFont(panelMatrixPrev, e.getWheelRotation());
+					changeFont(scrollPaneList, e.getWheelRotation());
+
+					}
+			};
+
+		panelMatrix.addMouseWheelListener(zoom);
+		panelMatrixPrev.addMouseWheelListener(zoom);
+		scrollPaneList.addMouseWheelListener(zoom);
 		}
 
 	private void appearance()
