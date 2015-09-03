@@ -21,17 +21,17 @@ public class Log implements Serializable
 	\*------------------------------------------------------------------*/
 	public Log(Matrix matrix, boolean isGauss, int varStyle)
 		{
+		this.varStyle=varStyle;
 		this.matrix = matrix.cloneOf();
 		listMapNameToCoeficient = new ArrayList<Map<String, Matrix>>();
 		listMapNameToCoeficient.add(new HashMap<String, Matrix>());
-
 		listTabMatrix = new ArrayList<String[][]>();
 		listMatrix = new ArrayList<Matrix>();
 		listMatrix.add(matrix);
 		rows = matrix.rowCount();
 		cols = matrix.columnCount();
 		listOperation = new ArrayList<String>();
-		listOperation.add("Origin");
+		listOperation.add("Origine");
 
 		if (isGauss)
 			{
@@ -698,11 +698,13 @@ public class Log implements Serializable
 	private String solution;//Donne une information sur le nombre de solution
 
 	// tools
-	private Matrix matrix;
 	private List<Matrix> listMatrix;
 	private List<Map<String, Matrix>> listMapNameToCoeficient;
 	private int rows;
 	private int cols;
+
+	//input
 	private int varStyle;
+	private Matrix matrix;
 
 	}
