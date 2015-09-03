@@ -33,12 +33,12 @@ public class JPanelMatrix extends JPanel
 
 	public void updateLabels(String[][] matrix)
 		{
-		String[] tabVar = IndependentVar.getTabVar(cols+1, varStyle);//voir dans le constr
+		String[] tabVar = IndependentVar.getTabVar(cols + 1, varStyle);//voir dans le constr
 
 		for(int i = 0; i < rows; i++)
 			{
 			StringBuilder builder = new StringBuilder();
-			for(int j = 0; j < matrix.length - 1; j++)
+			for(int j = 0; j < matrix.length; j++)
 				{
 				if (!matrix[i][j].equals("0")) //0 => Rien a afficher
 					{
@@ -47,13 +47,17 @@ public class JPanelMatrix extends JPanel
 						builder.append(matrix[i][j]);//Autres => on affiche le coefficient
 						}
 					builder.append(tabVar[j]);
-					builder.append("\t");
+
+					if (j != matrix.length - 1)	//sauf dernière variable
+						{
+						builder.append(" + ");
+						}
 					}
 				}
 
 			//On sort de la boucle 1 avant pour placer le =
 			builder.append(" = ");
-			builder.append(matrix[i][matrix.length - 1]);
+			builder.append(matrix[i][matrix.length]);
 
 			//Application du textes au labels
 			labels.get(i).setText(builder.toString());
