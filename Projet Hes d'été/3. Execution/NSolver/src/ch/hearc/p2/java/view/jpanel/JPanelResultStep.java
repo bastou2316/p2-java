@@ -119,15 +119,18 @@ public class JPanelResultStep extends JPanel
 	|*							Methodes Private						*|
 	\*------------------------------------------------------------------*/
 
-	 private void changeFont(Component component, int fontSize) {
-	    Font f = component.getFont();
-	    component.setFont(new Font(f.getName(),f.getStyle(),f.getSize() + fontSize));
-	    if (component instanceof Container) {
-	        for (Component child : ((Container) component).getComponents()) {
-	            changeFont(child, fontSize);
-	        }
-	    }
-	}
+	private void changeFont(Component component, int fontSize)
+		{
+		Font f = component.getFont();
+		component.setFont(new Font(f.getName(), f.getStyle(), f.getSize() + fontSize));
+		if (component instanceof Container)
+			{
+			for(Component child:((Container)component).getComponents())
+				{
+				changeFont(child, fontSize);
+				}
+			}
+		}
 
 	private void sleep(long delayMS)
 		{
@@ -171,8 +174,8 @@ public class JPanelResultStep extends JPanel
 		buttonNext.setEnabled(true);
 		buttonPrevious.setEnabled(true);
 
-		panelMatrix = new JPanelMatrix(equation.getMatrixNumberEquation(), equation.getMatrixNumberVariable(), equation.getVariableStyle());
-		panelMatrixPrev = new JPanelMatrix(equation.getMatrixNumberEquation(), equation.getMatrixNumberVariable(), equation.getVariableStyle());
+		panelMatrix = new JPanelMatrix(equation.getMatrixNumberEquation(), equation.getVariableStyle());
+		panelMatrixPrev = new JPanelMatrix(equation.getMatrixNumberEquation(), equation.getVariableStyle());
 
 		JScrollPane scrollPaneMatrix = new JScrollPane(panelMatrix, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		scrollPaneMatrix.setMinimumSize(new Dimension(10, 10));
@@ -341,16 +344,28 @@ public class JPanelResultStep extends JPanel
 		{
 		//Affichage de la matrix en fonction de l'étape
 		Set<Integer> setDifference = null;
+		boolean notFirst = actualStep > 0;
+		boolean notLast = actualStep < tabHistory.length - 1;
 
-		//Maj des labels en fonc de la matrix
-		if (actualStep > 0)//matrix précédente affichage slmt a partir de étape "2"
+		//Maj des labels en fonc de la matrix et de l'étape
+		if (notFirst)
 			{
-			setDifference = Matrix.isEquals(equation.getMatrix(actualStep), equation.getMatrix(actualStep-1));//Comparaison des lignes de la matrix
-			panelMatrixPrev.updateLabels(equation.getMatrix(actualStep-1), null);
+			if (notLast)//pas de difference vers texte de solution
+				{
+				setDifference = Matrix.isEquals(equation.getMatrix(actualStep), equation.getMatrix(actualStep - 1));//Comparaison des lignes de la matrix
+				}
+			panelMatrixPrev.updateLabels(equation.getMatrix(actualStep - 1), null);//matrix précédente affichage slmt a partir de étape "2"
 			}
 
-		jPanelPreviousStep.setVisible(actualStep > 0);
-		panelMatrix.updateLabels(equation.getMatrix(actualStep), setDifference);
+		if (notLast)
+			{
+			panelMatrix.updateLabels(equation.getMatrix(actualStep), setDifference);
+			}
+		else
+			{
+			panelMatrix.updateSolution(equation.getSolution());
+			}
+		jPanelPreviousStep.setVisible(notFirst);//&& notLast
 
 		graphicListHistory.setSelectedIndex(actualStep);
 

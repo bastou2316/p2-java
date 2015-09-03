@@ -3,6 +3,7 @@ package ch.hearc.p2.java.view.jpanel;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Label;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -19,10 +20,9 @@ public class JPanelMatrix extends JPanel
 	/*------------------------------------------------------------------*\
 	|*							Constructeurs							*|
 	\*------------------------------------------------------------------*/
-	public JPanelMatrix(int rows, int cols, int varStyle)
+	public JPanelMatrix(int rows, int varStyle)
 		{
 		this.rows = rows;
-		this.cols = cols;
 		this.varStyle = varStyle;
 
 		variableDisplay = true;
@@ -53,6 +53,20 @@ public class JPanelMatrix extends JPanel
 			{
 			matrixDisplay(matrix, setDifference, tabVar);
 			}
+		}
+
+	public void updateSolution(String solution)
+		{
+		if (boxSolution != getComponent(0))
+			{
+			removeAll();
+
+			labelSolution.setText(solution);
+			add(boxSolution, BorderLayout.CENTER);
+			}
+
+		revalidate();
+		repaint();
 		}
 
 	private void equationDisplay(String[][] matrix, Set<Integer> setDifference, String[] tabVar)
@@ -130,8 +144,17 @@ public class JPanelMatrix extends JPanel
 	|*							Methodes Private						*|
 	\*------------------------------------------------------------------*/
 
-	private void updateGeometry(int rows)//a verifier
+	private void updateGeometry(int rows)
 		{
+		if (boxV != getComponent(0))
+			{
+			removeAll();
+			add(boxV, BorderLayout.CENTER);
+
+			revalidate();
+			repaint();
+			}
+
 		while(labels.size() < rows)
 			{
 			JLabel label = new JLabel("N/A");
@@ -157,9 +180,12 @@ public class JPanelMatrix extends JPanel
 			{
 			labels.add(new JLabel("N/A"));
 			}
+		labelSolution = new Label("N/A");//utilisé plus tard
+//		labelSolution.setFont(new Font("Sans-Serif", Font.PLAIN, 25));
 
 		//Layout
 		boxV = Box.createVerticalBox();
+		boxSolution = Box.createHorizontalBox();//utilisé plus tard
 		setLayout(new BorderLayout());
 
 		//Ajout
@@ -167,6 +193,7 @@ public class JPanelMatrix extends JPanel
 			{
 			boxV.add(labels.get(i));
 			}
+		boxSolution.add(labelSolution);
 		add(boxV, BorderLayout.CENTER);
 		}
 
@@ -181,12 +208,13 @@ public class JPanelMatrix extends JPanel
 
 	//Inputs
 	private int rows;
-	private int cols;
 	private int varStyle;
 
 	//Tools
 	private List<JLabel> labels;
+	private Label labelSolution;
 	private Box boxV;
+	private Box boxSolution;
 	private String space;
 	private boolean variableDisplay;
 
