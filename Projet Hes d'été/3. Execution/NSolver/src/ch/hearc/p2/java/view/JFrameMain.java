@@ -73,7 +73,12 @@ public class JFrameMain extends JFrame
 
 	public void setPanel(String title, JPanel jpanel)
 		{
-		setPanel(title, jpanel, 600, 400);
+		setTitle(title);
+//		setLocationRelativeTo(null);
+
+		setContentPane(jpanel);
+
+		revalidate();
 		}
 
 	public void setPanel(String title, JPanel jpanel, int sizeX, int sizeY)

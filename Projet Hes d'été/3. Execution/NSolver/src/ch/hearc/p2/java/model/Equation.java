@@ -18,15 +18,16 @@ public class Equation implements Serializable
 
 	public Equation()
 		{
-		this("Name", 3, 3, 1, true);
+		this("Name", 3, 3, 0, 1, true);
 		}
 
-	public Equation(String name, int numberVar, int numberEquation, int speedSec, boolean modeStep)
+	public Equation(String name, int numberVar, int numberEquation, int varStyle, int speedSec, boolean modeStep)
 		{
 		this.name = name;
 		this.numberVar = numberVar;
 		this.numberEquation = numberEquation;
 
+		this.varStyle = varStyle;
 		this.speedMs = speedSec * 1000;
 		this.modeStep = modeStep;
 
@@ -36,7 +37,7 @@ public class Equation implements Serializable
 
 	public Equation(Equation source)
 		{
-		this(source.getName(), source.getMatrixNumberVariable(), source.getMatrixNumberEquation(), source.getSpeedSec(), source.isStepMode());
+		this(source.getName(), source.getMatrixNumberVariable(), source.getMatrixNumberEquation(), source.getVariableStyle(), source.getSpeedSec(), source.isStepMode());
 		setMatrix(source.getMatrix(), source.isStepMode());
 		}
 
@@ -48,9 +49,9 @@ public class Equation implements Serializable
 	|*				Get				*|
 	\*------------------------------*/
 
-	public String getVariableName()
+	public int getVariableStyle()
 		{
-		return variableName;
+		return varStyle;
 		}
 
 	public String getName()
@@ -133,9 +134,19 @@ public class Equation implements Serializable
 		this.modeStep = modeStep;
 		}
 
+	public void setVarNameMethod(int method)
+		{
+		this.varStyle = method;
+		}
+
 	public void setSaved()
 		{
 		saved = true;
+		}
+
+	public void setUnsolved()
+		{
+		solved = false;
 		}
 
 	/*------------------------------*\
@@ -157,13 +168,18 @@ public class Equation implements Serializable
 		return solved;
 		}
 
+	public boolean isSaved()
+		{
+		return saved;
+		}
+
 	/*------------------------------------------------------------------*\
 	|*							Attributs Private						*|
 	\*------------------------------------------------------------------*/
 
 	//Inputs
 	private String name;
-	public String variableName;
+	private int varStyle;
 	private int numberVar;
 	private int numberEquation;
 

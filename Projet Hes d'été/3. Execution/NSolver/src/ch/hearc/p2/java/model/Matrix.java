@@ -14,7 +14,7 @@ public final class Matrix implements Serializable
 	\*------------------------------------------------------------------*/
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 6886752129112591743L;
 
@@ -81,7 +81,7 @@ public final class Matrix implements Serializable
 		{
 		for(int j = 0, cols = columnCount(); j < cols; j++)
 			{
-			set(row, j, get(row, j) * factor);
+			set(row, j, get(row, j) * factor + 0.0);
 			}
 		}
 
@@ -89,7 +89,7 @@ public final class Matrix implements Serializable
 		{
 		for(int j = 0, cols = columnCount(); j < cols; j++)
 			{
-			set(destRow, j, get(destRow, j) + get(srcRow, j) * factor);
+			set(destRow, j, (get(destRow, j) + get(srcRow, j) * factor) + 0.0);
 			}
 		}
 
@@ -118,7 +118,7 @@ public final class Matrix implements Serializable
 	public void set(int row, int col, double val)
 		{
 		if (row < 0 || row >= values.length || col < 0 || col >= values[0].length) { throw new IndexOutOfBoundsException("Row or column index out of bounds"); }
-		values[row][col] = val;
+		values[row][col] = val + 0.0;
 		}
 
 	public void set(double[][] src)
@@ -231,47 +231,6 @@ public final class Matrix implements Serializable
 			}
 		return tabCopie;
 		}
-
-	/*------------------------------------------------------------------*\
-	|*							Methodes Private						*|
-	\*------------------------------------------------------------------*/
-
-	/*------------------------------------------------------------------*\
-	|*							Methode Private	Static					*|
-	\*------------------------------------------------------------------*/
-
-	//	private void fillVariableNameStructures()
-	//		{
-	//		boolean isVariableCount = false;
-	//		int tokenStartIndex = 97;
-	//		//Fill the list of name for the variable.
-	//		if (variableName.equals("a"))
-	//			{
-	//			tokenStartIndex = 97; //a,b,c
-	//			}
-	//		else if (variableName.equals("x"))
-	//			{
-	//			tokenStartIndex = 120; //x,y,z
-	//			}
-	//		else
-	//			{
-	//			tokenStartIndex = 120; //x1,x2,x3
-	//			isVariableCount = true;
-	//			}
-	//		for(int i = 0; i < columnCount(); ++i)
-	//			{
-	//			if (isVariableCount)
-	//				{
-	//				mapIndexVariableName.put(i, String.valueOf(Character.toChars(tokenStartIndex))+(i+1));
-	//				listVariableName.add(String.valueOf(Character.toChars(tokenStartIndex))+(i+1));
-	//				}
-	//			else
-	//				{
-	//				mapIndexVariableName.put(i, String.valueOf(Character.toChars(tokenStartIndex + i)));
-	//				listVariableName.add(String.valueOf(Character.toChars(tokenStartIndex + i)));
-	//				}
-	//			}
-	//		}
 
 	/*------------------------------------------------------------------*\
 	|*							Attributs Private						*|

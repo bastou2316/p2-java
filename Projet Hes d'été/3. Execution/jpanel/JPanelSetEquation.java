@@ -1,5 +1,5 @@
 
-package ch.hearc.p2.java.view.jpanel.dialog;
+package ch.hearc.p2.java.view.jpanel;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -18,44 +18,34 @@ import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
+import ch.hearc.p2.java.controller.ControllerEquation;
+import ch.hearc.p2.java.controller.ControllerMain;
+import ch.hearc.p2.java.controller.ControllerMain.DIALOG;
 import ch.hearc.p2.java.model.Equation;
-import ch.hearc.p2.java.view.dialog.JDialogSetEquation;
 
-public class JPanelSetEquation extends JPanelDialog
+public class JPanelSetEquation extends JPanel
 	{
 
 	/*------------------------------------------------------------------*\
 	|*							Constructeurs							*|
 	\*------------------------------------------------------------------*/
 
-	public JPanelSetEquation(Equation equation, int numbVar, int numbEqu)
+	public JPanelSetEquation(ControllerMain controllerMain, ControllerEquation controllerEquation)
 		{
 		super();
 
-		this.equation = equation;
-		this.numbVar = numbVar;
-		this.numbEqu = numbEqu;
+		this.controllerMain = controllerMain;
+		this.controllerEquation = controllerEquation;
+
+		equation = controllerEquation.getEquation();
 
 		// Composition du panel
 		geometry();
 		control();
 		appearance();
 
-		//Update du bouton
-		updateButtonText();
 		}
-
-	public JPanelSetEquation(Equation equation)
-		{
-		this(equation, equation.getMatrixNumberVariable(), equation.getMatrixNumberEquation());
-		}
-
-	/*------------------------------------------------------------------*\
-	|*							Methodes Public							*|
-	\*------------------------------------------------------------------*/
 
 	/*------------------------------------------------------------------*\
 	|*							Methodes Private						*|
@@ -71,6 +61,8 @@ public class JPanelSetEquation extends JPanelDialog
 		jpanelMatrix.setBorder(titlesborder);
 
 		JPanel jpanelResolution = new JPanel();
+
+
 		JPanel jpanelControl = new JPanel();
 
 		labelName = new JLabel("Nom : ");
@@ -78,19 +70,19 @@ public class JPanelSetEquation extends JPanelDialog
 		textFieldName.setMinimumSize(new Dimension(100, 5));
 
 		labelNumberEquation = new JLabel("Nombre d'équations : ");
-		spinNumbEqu = new JSpinner();
-		spinNumbEqu.setValue(equation.getMatrixNumberEquation());
+		numberEquation = new JSpinner();
+		numberEquation.setValue(equation.getMatrixNumberEquation());
 
 		labelNumberVar = new JLabel("Nombre d'inconnues : ");
-		spinNumbVar = new JSpinner();
-		spinNumbVar.setValue(equation.getMatrixNumberVariable());
+		numberVar = new JSpinner();
+		numberVar.setValue(equation.getMatrixNumberVariable());
 
 		labelVarStyle = new JLabel("Style des variables : ");
-		comboVarStyle = new JComboBox<String>();
-		comboVarStyle.addItem("x, y, z (max 3)");
-		comboVarStyle.addItem("a, b, c, d, e, ...");
-		comboVarStyle.addItem("x1, x2, x3, x4, ...");
-		comboVarStyle.setSelectedIndex(equation.getVariableStyle());
+		varStyle = new JComboBox<String>();
+		varStyle.addItem("x1, x2, x3, x4, ...");
+		varStyle.addItem("a, b, c, d, e, ...");
+		varStyle.addItem("x, y, z (max 3)");
+		varStyle.setSelectedItem(0);
 
 		methodStep = new JRadioButton("étape par étape");
 		methodStep.setSelected(equation.isStepMode());
@@ -119,42 +111,74 @@ public class JPanelSetEquation extends JPanelDialog
 			}
 
 		// JComponent : add
-
+			
 		JPanel jpanelGauche = new JPanel();
 		JPanel jpanelDroite = new JPanel();
 		jpanelGauche.setLayout(new GridLayout(4, 1));
 		jpanelDroite.setLayout(new GridLayout(4, 1));
-
+			
+//		JPanel jPanelName = new JPanel();
+//		jPanelName.setLayout(new BorderLayout());
+//		jPanelName.add(labelName, BorderLayout.WEST);
+//		jPanelName.add(textFieldName,BorderLayout.CENTER);
+//		jpanelMatrix.add(jPanelName);
+		
 		jpanelGauche.add(labelName);
 		jpanelDroite.add(textFieldName);
+		
+		
+//		JPanel jPanelNumberEquation = new JPanel();
+//		jPanelNumberEquation.setLayout(new BorderLayout());
+//		jPanelNumberEquation.add(labelNumberEquation, BorderLayout.WEST);
+//		jPanelNumberEquation.add(numberEquation,BorderLayout.CENTER);
+//		jpanelMatrix.add(jPanelNumberEquation);
 
 		jpanelGauche.add(labelNumberEquation);
-		jpanelDroite.add(spinNumbEqu);
+		jpanelDroite.add(numberEquation);
+		
+		
+//		JPanel jPanelNumberVar = new JPanel();
+//		jPanelNumberVar.setLayout(new BorderLayout());
+//		jPanelNumberVar.add(labelNumberVar, BorderLayout.WEST);
+//		jPanelNumberVar.add(numberVar,BorderLayout.CENTER);
+//		jpanelMatrix.add(jPanelNumberVar);
 
 		jpanelGauche.add(labelNumberVar);
-		jpanelDroite.add(spinNumbVar);
-
+		jpanelDroite.add(numberVar);
+		
+		
+		
+		
+//		JPanel jPanelVarStyle = new JPanel();
+//		jPanelVarStyle.setLayout(new BorderLayout());
+//		jPanelVarStyle.add(labelVarStyle, BorderLayout.WEST);
+//		jPanelVarStyle.add(varStyle,BorderLayout.CENTER);
+//		jpanelMatrix.add(jPanelVarStyle);
+		
 		jpanelGauche.add(labelVarStyle);
-		jpanelDroite.add(comboVarStyle);
+		jpanelDroite.add(varStyle);
 
-		jpanelMatrix.add(jpanelGauche, BorderLayout.WEST);
-		jpanelMatrix.add(jpanelDroite, BorderLayout.CENTER);
-
+		
+		jpanelMatrix.add(jpanelGauche,BorderLayout.WEST);
+		jpanelMatrix.add(jpanelDroite,BorderLayout.CENTER);
+		
 		jpanelResolution.add(methodStep);
 		jpanelResolution.add(methodDirect);
-
+		
 		JPanel jpanelResolution2 = new JPanel();
 		jpanelResolution2.setLayout(new BorderLayout());
 
-		jpanelResolution2.add(labelSpeed, BorderLayout.WEST);
-		jpanelResolution2.add(spinSpeed, BorderLayout.CENTER);
-
+		jpanelResolution2.add(labelSpeed,BorderLayout.WEST);
+		jpanelResolution2.add(spinSpeed,BorderLayout.CENTER);
+		
+		
 		JPanel jpanelResoFinal = new JPanel();
-		jpanelResoFinal.setLayout(new GridLayout(2, 1));
+		jpanelResoFinal.setLayout(new GridLayout(2,1));
 		jpanelResoFinal.add(jpanelResolution);
 		jpanelResoFinal.add(jpanelResolution2);
 		TitledBorder panreso = BorderFactory.createTitledBorder("Résolution");
 		jpanelResoFinal.setBorder(panreso);
+		
 
 		jpanelCenter.add(jpanelMatrix);
 		jpanelCenter.add(jpanelResoFinal);
@@ -163,30 +187,11 @@ public class JPanelSetEquation extends JPanelDialog
 
 		add(jpanelCenter, BorderLayout.CENTER);
 		add(jpanelControl, BorderLayout.SOUTH);
+		
 		}
 
 	private void control()
 		{
-		spinNumbVar.addChangeListener(new ChangeListener()
-			{
-
-				@Override
-				public void stateChanged(ChangeEvent e)
-					{
-					updateButtonText();
-					}
-			});
-
-		spinNumbEqu.addChangeListener(new ChangeListener()
-			{
-
-				@Override
-				public void stateChanged(ChangeEvent e)
-					{
-					updateButtonText();
-					}
-			});
-
 		nextButton.addActionListener(new ActionListener()
 			{
 
@@ -195,15 +200,33 @@ public class JPanelSetEquation extends JPanelDialog
 					{
 					equation.setName(textFieldName.getText());
 					equation.setSpeed((Integer)spinSpeed.getValue());
-					equation.setNumberVar((Integer)spinNumbVar.getValue());
-					equation.setNumberEquation((Integer)spinNumbEqu.getValue());
-					equation.setModeStep(methodStep.isSelected());
-					equation.setVarNameMethod(comboVarStyle.getSelectedIndex());
 
-					choice = 1;
+					int newNumberEqu = (Integer)numberEquation.getValue();
+					int newNumberVar = (Integer)numberVar.getValue();
 
-					JDialogSetEquation jdialog = (JDialogSetEquation)getRootPane().getParent();
-					jdialog.close();
+					if (controllerEquation.isCreating() || !equation.isSolved() || newNumberVar != equation.getMatrixNumberVariable() || newNumberEqu != equation.getMatrixNumberEquation())
+						{
+						//Changement de matrix
+						equation.setNumberVar(newNumberVar);
+						equation.setNumberEquation(newNumberEqu);
+						equation.setModeStep(methodStep.isSelected());
+
+						controllerEquation.setEquation(equation);
+						controllerMain.showDialog(DIALOG.SET_MATRIX);
+						}
+					else if(equation.isStepMode() != methodStep.isSelected())
+						{
+						//Changement de mode
+						equation.setModeStep(methodStep.isSelected());
+						controllerEquation.reInitMatrix();//On reinitialise la matrix
+						controllerEquation.solveEquation();//On recalcule avec l'autre méthode
+						controllerMain.closeDialog();//On ferme aussi directement le dialogue
+						}
+					else
+						{
+						controllerEquation.setEquation(equation);
+						controllerMain.closeDialog();//On ferme aussi directement le dialogue
+						}
 					}
 			});
 		}
@@ -213,38 +236,21 @@ public class JPanelSetEquation extends JPanelDialog
 		// rien
 		}
 
-	private void updateButtonText()
-		{
-		//Adapte le texte du bouton en fonction du changement de matrice nécessaire
-		if (equation.isSolved())
-			{
-			String newText;
-			if (numbVar != (Integer)spinNumbVar.getValue() || numbEqu != (Integer)spinNumbEqu.getValue())//if (equation.getMatrixNumberEquation() != (Integer)spinNumbVar.getValue() || equation.getMatrixNumberVariable() != (Integer)spinNumbEqu.getValue())
-				{
-				newText = "Suivant";
-				}
-			else
-				{
-				newText = "Confirmer";
-				}
-			nextButton.setText(newText);
-			}
-		}
-
 	/*------------------------------------------------------------------*\
 	|*							Attributs Private						*|
 	\*------------------------------------------------------------------*/
 
 	// Inputs
-	private Equation equation;
-	private int numbVar;
-	private int numbEqu;
+	private ControllerMain controllerMain;
+	private ControllerEquation controllerEquation;
 
 	// Tools
+	Equation equation;
+
 	private JLabel labelName, labelNumberEquation, labelNumberVar, labelVarStyle, labelSpeed;
 	private JRadioButton methodStep, methodDirect;
-	private JComboBox<String> comboVarStyle;
-	private JSpinner spinNumbEqu, spinNumbVar, spinSpeed;
+	private JComboBox<String> varStyle;
+	private JSpinner numberEquation, numberVar, spinSpeed;
 	private JTextField textFieldName;
 	private JButton nextButton;
 

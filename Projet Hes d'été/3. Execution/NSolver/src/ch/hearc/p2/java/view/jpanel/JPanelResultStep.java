@@ -14,6 +14,7 @@ import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -25,6 +26,7 @@ import javax.swing.border.TitledBorder;
 
 import ch.hearc.p2.java.model.Equation;
 import ch.hearc.p2.java.tools.ListAction;
+import ch.hearc.p2.java.view.IndependentVar;
 
 public class JPanelResultStep extends JPanel
 	{
@@ -68,10 +70,11 @@ public class JPanelResultStep extends JPanel
 			updateDisplayedMatrix();
 			thread = new Thread(new Runnable()
 				{
+
 					@Override
 					public void run()
 						{
-						while(!isFini && equation.hasMatrixIndex(actualStep + 1))
+						while(!isFini && equation.hasMatrixIndex(actualStep))
 							{
 							equation.getMatrix(++actualStep);
 							updateDisplayedMatrix();
@@ -94,7 +97,7 @@ public class JPanelResultStep extends JPanel
 
 	public void next()
 		{
-		if (actualStep < tabHistory.length - 1)
+		if (actualStep < tabHistory.length)// - 1)
 			{
 			++actualStep;
 			}
@@ -114,20 +117,6 @@ public class JPanelResultStep extends JPanel
 	|*							Methodes Private						*|
 	\*------------------------------------------------------------------*/
 
-	private void updateDisplayedMatrix()
-		{
-		//Affichage de la matrix en fonction de l'étape
-		textMatrix.setText(stepToString(equation.getMatrix(actualStep), equation.getMatrixNumberEquation(), equation.getMatrixNumberVariable()+1));
-		graphicListHistory.setSelectedIndex(actualStep);
-
-		//Blocage et libération des boutons
-		graphicListHistory.setEnabled(!isRunning);
-		buttonStart.setEnabled(actualStep < tabHistory.length - 1 && !isRunning);
-		buttonStop.setEnabled(isRunning);
-		buttonNext.setEnabled(actualStep < tabHistory.length - 1 && !isRunning);
-		buttonPrevious.setEnabled(actualStep > 0 && !isRunning);
-		}
-
 	private void sleep(long delayMS)
 		{
 		try
@@ -143,17 +132,22 @@ public class JPanelResultStep extends JPanel
 	private void geometry()
 		{
 		// JComponent : Instanciation
-		// JPanel jPanelCenter = new JPanel();
+		//		JPanel jPanelCenter = new JPanel();
 
 		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 
 		JPanel jPanelOperation = new JPanel();
 		TitledBorder titlesborder = BorderFactory.createTitledBorder("Opérations");
 		jPanelOperation.setBorder(titlesborder);
+		jPanelOperation.setMinimumSize(new Dimension(100, 0));
 
 		JPanel jPanelMatrix = new JPanel();
 		TitledBorder titlematrix = BorderFactory.createTitledBorder("Matrice");
 		jPanelMatrix.setBorder(titlematrix);
+
+		jPanelPreviousStep = new JPanel();
+		TitledBorder titlePreviousStep = BorderFactory.createTitledBorder("Previous step");
+		jPanelPreviousStep.setBorder(titlePreviousStep);
 
 		JPanel jPanelButtons = new JPanel();
 
@@ -169,27 +163,27 @@ public class JPanelResultStep extends JPanel
 
 		textMatrix = new JTextArea();
 		textMatrix.setEditable(false);
-		textMatrix.setText(equation.getMatrix(0).toString());
+		//		textMatrix.setText(equation.getMatrix(0).toString());
 		//textMatrix.setColumns(controllerEquation.getEquation().getMatrixNumberVariable());
 		textMatrix.setRows(equation.getMatrixNumberEquation());
 
 		actualTextSize = textMatrix.getFont().getSize();
 
+		textMatrixPrev = new JTextArea();
+		textMatrixPrev.setEditable(false);
+		textMatrixPrev.setText(equation.getMatrix(0).toString());
+		//textMatrix.setColumns(controllerEquation.getEquation().getMatrixNumberVariable());
+		textMatrixPrev.setRows(equation.getMatrixNumberEquation());
+
 		//textMatrix.setMinimumSize(new Dimension(10, 10));
 
 		JScrollPane scrollPaneMatrix = new JScrollPane(textMatrix, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		scrollPaneMatrix.setMinimumSize(new Dimension(10, 10));
+
+		JScrollPane scrollPanePrevious = new JScrollPane(textMatrixPrev, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+		scrollPanePrevious.setMinimumSize(new Dimension(10, 10));
 		//scrollPaneMatrix.getHorizontalScrollBar().adda
 		//scrollPaneMatrix.setEnabled(true);
-
-		//		textPaneMatrix = new JTextPane();
-		//		textPaneMatrix.setEditable(false);
-		//		textPaneMatrix.setMinimumSize(new Dimension(10, 10));
-		//		StyledDocument doc = textPaneMatrix.getStyledDocument();
-		//		MutableAttributeSet center = new SimpleAttributeSet();
-		//		StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
-		//		doc.setParagraphAttributes(0, 0, center, true);
-		//		textPaneMatrix.setText(controllerEquation.getMatrix(0).toString());
 
 		graphicListHistory = new JList<String>(tabHistory);
 		graphicListHistory.setVisibleRowCount(5);
@@ -202,16 +196,21 @@ public class JPanelResultStep extends JPanel
 			setLayout(new BorderLayout());
 			jPanelOperation.setLayout(new BorderLayout(0, 0));
 			jPanelMatrix.setLayout(new BorderLayout(0, 0));
+			jPanelPreviousStep.setLayout(new BorderLayout(0, 0));
 			jPanelButtons.setLayout(new FlowLayout(FlowLayout.CENTER));
 			}
 
 		// JComponent : add
-		//scrollPaneMatrix.setViewportView(textMatrix);
 		jPanelMatrix.add(scrollPaneMatrix, BorderLayout.CENTER);
+		jPanelPreviousStep.add(scrollPanePrevious, BorderLayout.CENTER);
 		jPanelOperation.add(scrollPaneList);
 
+		Box boxV = Box.createVerticalBox();
+		boxV.add(jPanelPreviousStep);
+		boxV.add(jPanelMatrix);
+
 		splitPane.add(jPanelOperation, JSplitPane.LEFT);
-		splitPane.add(jPanelMatrix, JSplitPane.RIGHT);
+		splitPane.add(boxV, JSplitPane.RIGHT);
 
 		jPanelButtons.add(buttonStart);
 		jPanelButtons.add(buttonStop);
@@ -220,6 +219,8 @@ public class JPanelResultStep extends JPanel
 
 		add(splitPane, BorderLayout.CENTER);
 		add(jPanelButtons, BorderLayout.SOUTH);
+
+		updateDisplayedMatrix();
 		}
 
 	private void control()
@@ -232,7 +233,7 @@ public class JPanelResultStep extends JPanel
 				public void actionPerformed(ActionEvent e)
 					{
 					//Récupération de l'étape sélectionnée
-					JList<String> list = (JList<String>) e.getSource();
+					JList<String> list = (JList<String>)e.getSource();
 					actualStep = list.getSelectedIndex();
 					//System.out.println(idSelected);
 
@@ -288,22 +289,17 @@ public class JPanelResultStep extends JPanel
 				@Override
 				public void mouseWheelMoved(MouseWheelEvent e)
 					{
-//					if (actualTextSize > 0)
-//						{
-						actualTextSize += e.getWheelRotation();
-						//System.out.println(actualTextSize);
-						textMatrix.setFont(new Font("Sans-Serif", Font.PLAIN, actualTextSize));
-//						}
+					updateZoom(e);
 					}
 			});
 
-		graphicListHistory.addMouseWheelListener(new MouseWheelListener()
+		textMatrixPrev.addMouseWheelListener(new MouseWheelListener()
 			{
 
 				@Override
 				public void mouseWheelMoved(MouseWheelEvent e)
 					{
-
+					updateZoom(e);
 					}
 			});
 		}
@@ -313,16 +309,61 @@ public class JPanelResultStep extends JPanel
 		// rien
 		}
 
-	private static String stepToString(String[][] tabMatrix, int rowCount, int columnCount)
+	private void updateZoom(MouseWheelEvent e)
 		{
+		//	if (actualTextSize > 0)
+		//	{
+		actualTextSize += e.getWheelRotation();
+		textMatrix.setFont(new Font("Sans-Serif", Font.PLAIN, actualTextSize));
+		textMatrixPrev.setFont(new Font("Sans-Serif", Font.PLAIN, actualTextSize));
+		//	}
+		}
+
+	private void updateDisplayedMatrix()
+		{
+		//Affichage de la matrix en fonction de l'étape
+//		textMatrix.setText(stepToString(equation.getMatrix(actualStep), equation.getMatrixNumberEquation(), equation.getMatrixNumberVariable() + 1, equation.getVariableStyle()));
+		String[][] actualMatrix = equation.getMatrix(actualStep);
+		textMatrix.setText(stepToString(actualMatrix, actualMatrix.length, actualMatrix[0].length, equation.getVariableStyle()));
+
+		if (actualStep > 0)//matrix précédente affichage slmt a partir de étape "2"
+			{
+			textMatrixPrev.setText(stepToString(equation.getMatrix(actualStep - 1), equation.getMatrixNumberEquation(), equation.getMatrixNumberVariable() + 1, equation.getVariableStyle()));
+			}
+		jPanelPreviousStep.setVisible(actualStep > 0);
+
+		graphicListHistory.setSelectedIndex(actualStep);
+
+		//Blocage et libération des boutons
+		graphicListHistory.setEnabled(!isRunning);
+		buttonStart.setEnabled(actualStep < tabHistory.length - 1 && !isRunning);
+		buttonStop.setEnabled(isRunning);
+		buttonNext.setEnabled(actualStep < tabHistory.length - 1 && !isRunning);
+		buttonPrevious.setEnabled(actualStep > 0 && !isRunning);
+		}
+
+	private String stepToString(String[][] tabMatrix, int rowCount, int columnCount, int varStyle)
+		{
+		String[] tabVar = IndependentVar.getVarStyle(varStyle, rowCount, columnCount);
 		StringBuilder builder = new StringBuilder();
 		int rows = rowCount;
 		int cols = columnCount;
+
 		for(int i = 0; i < rows; i++)
 			{
 			for(int j = 0; j < cols - 1; j++)
 				{
-				builder.append(tabMatrix[i][j]);
+				if (!tabMatrix[i][j].equals("0")) //0 => Rien a afficher
+					{
+					if (!tabMatrix[i][j].equals("1")) //1 => On affiche uniquement la variable
+						{
+//						builder.append("<b>");
+						builder.append(tabMatrix[i][j]);//Autres => on affiche le coefficient
+//						builder.append("</b>");
+						}
+					builder.append(tabVar[j]);
+					}
+
 				builder.append("\t");
 				}
 			builder.append("= ");
@@ -354,8 +395,8 @@ public class JPanelResultStep extends JPanel
 	private JButton buttonPrevious;
 	private JScrollPane scrollPaneList;
 	private JList<String> graphicListHistory;
-	private JTextArea textMatrix;
+	private JTextArea textMatrix, textMatrixPrev;
+	JPanel jPanelPreviousStep;
 
 	private int actualTextSize;
-	//	private JTextPane textPaneMatrix;
 	}

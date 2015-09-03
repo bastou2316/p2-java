@@ -24,7 +24,7 @@ public class JDialogSetEquation extends JDialogMain
 	protected void appearance()
 		{
 		setTitle("Création de problème");
-		setSize(300, 300);
+		setSize(300, 350);
 		setLocationRelativeTo(null);
 		}
 
