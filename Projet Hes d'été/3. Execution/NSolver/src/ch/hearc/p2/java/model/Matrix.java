@@ -3,6 +3,8 @@ package ch.hearc.p2.java.model;
 
 import java.io.Serializable;
 import java.text.DecimalFormat;
+import java.util.Set;
+import java.util.TreeSet;
 
 import ch.hearc.p2.java.tools.MathTools;
 
@@ -109,6 +111,25 @@ public final class Matrix implements Serializable
 			}
 		//If each test has passed, then the arrays are equals
 		return true;
+		}
+
+	public static Set<Integer> isEquals(String[][] strings, String[][] strings2)
+		{
+		Set<Integer> setDifferentRow = new TreeSet<Integer>();
+
+		//If array shape is equals, then check the elements inside it
+		for(int i = 0; i < strings2.length; i++)
+			{
+			for(int j = 0; j < strings2[i].length; j++)
+				{
+				if (!strings2[i][j].equals(strings[i][j]))
+					{
+					setDifferentRow.add(i);
+					}
+				}
+			}
+		//If each test has passed, then the arrays are equals
+		return setDifferentRow;
 		}
 
 	/*------------------------------*\
