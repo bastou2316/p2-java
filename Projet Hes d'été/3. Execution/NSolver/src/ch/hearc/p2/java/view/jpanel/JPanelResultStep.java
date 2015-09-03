@@ -20,13 +20,11 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.TitledBorder;
 
 import ch.hearc.p2.java.model.Equation;
 import ch.hearc.p2.java.tools.ListAction;
-import ch.hearc.p2.java.view.IndependentVar;
 
 public class JPanelResultStep extends JPanel
 	{
@@ -161,26 +159,28 @@ public class JPanelResultStep extends JPanel
 		buttonNext.setEnabled(true);
 		buttonPrevious.setEnabled(true);
 
-		textMatrix = new JTextArea();
-		textMatrix.setEditable(false);
-		//		textMatrix.setText(equation.getMatrix(0).toString());
-		//textMatrix.setColumns(controllerEquation.getEquation().getMatrixNumberVariable());
-		textMatrix.setRows(equation.getMatrixNumberEquation());
+//		textMatrix = new JTextArea();
+//		textMatrix.setEditable(false);
+//		//		textMatrix.setText(equation.getMatrix(0).toString());
+//		//textMatrix.setColumns(controllerEquation.getEquation().getMatrixNumberVariable());
+//		textMatrix.setRows(equation.getMatrixNumberEquation());
+//
+//		actualTextSize = textMatrix.getFont().getSize();
+//
+//		textMatrixPrev = new JTextArea();
+//		textMatrixPrev.setEditable(false);
+//		textMatrixPrev.setText(equation.getMatrix(0).toString());
+//		//textMatrix.setColumns(controllerEquation.getEquation().getMatrixNumberVariable());
+//		textMatrixPrev.setRows(equation.getMatrixNumberEquation());
+//		//textMatrix.setMinimumSize(new Dimension(10, 10));
 
-		actualTextSize = textMatrix.getFont().getSize();
+		panelMatrix = new JPanelMatrix(equation.getMatrixNumberEquation(), equation.getMatrixNumberVariable(), equation.getVariableStyle());
+		panelMatrixPrev = new JPanelMatrix(equation.getMatrixNumberEquation(), equation.getMatrixNumberVariable(), equation.getVariableStyle());
 
-		textMatrixPrev = new JTextArea();
-		textMatrixPrev.setEditable(false);
-		textMatrixPrev.setText(equation.getMatrix(0).toString());
-		//textMatrix.setColumns(controllerEquation.getEquation().getMatrixNumberVariable());
-		textMatrixPrev.setRows(equation.getMatrixNumberEquation());
-
-		//textMatrix.setMinimumSize(new Dimension(10, 10));
-
-		JScrollPane scrollPaneMatrix = new JScrollPane(textMatrix, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+		JScrollPane scrollPaneMatrix = new JScrollPane(panelMatrix, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		scrollPaneMatrix.setMinimumSize(new Dimension(10, 10));
 
-		JScrollPane scrollPanePrevious = new JScrollPane(textMatrixPrev, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+		JScrollPane scrollPanePrevious = new JScrollPane(panelMatrixPrev, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		scrollPanePrevious.setMinimumSize(new Dimension(10, 10));
 		//scrollPaneMatrix.getHorizontalScrollBar().adda
 		//scrollPaneMatrix.setEnabled(true);
@@ -283,7 +283,7 @@ public class JPanelResultStep extends JPanel
 					}
 			});
 
-		textMatrix.addMouseWheelListener(new MouseWheelListener()
+		panelMatrix.addMouseWheelListener(new MouseWheelListener()
 			{
 
 				@Override
@@ -293,7 +293,7 @@ public class JPanelResultStep extends JPanel
 					}
 			});
 
-		textMatrixPrev.addMouseWheelListener(new MouseWheelListener()
+		panelMatrixPrev.addMouseWheelListener(new MouseWheelListener()
 			{
 
 				@Override
@@ -314,8 +314,10 @@ public class JPanelResultStep extends JPanel
 		//	if (actualTextSize > 0)
 		//	{
 		actualTextSize += e.getWheelRotation();
-		textMatrix.setFont(new Font("Sans-Serif", Font.PLAIN, actualTextSize));
-		textMatrixPrev.setFont(new Font("Sans-Serif", Font.PLAIN, actualTextSize));
+		panelMatrix.setFont(new Font("Sans-Serif", Font.PLAIN, actualTextSize));
+		panelMatrixPrev.setFont(new Font("Sans-Serif", Font.PLAIN, actualTextSize));
+//		textMatrix.setFont(new Font("Sans-Serif", Font.PLAIN, actualTextSize));
+//		textMatrixPrev.setFont(new Font("Sans-Serif", Font.PLAIN, actualTextSize));
 		//	}
 		}
 
@@ -323,14 +325,16 @@ public class JPanelResultStep extends JPanel
 		{
 		//Affichage de la matrix en fonction de l'étape
 //		textMatrix.setText(stepToString(equation.getMatrix(actualStep), equation.getMatrixNumberEquation(), equation.getMatrixNumberVariable() + 1, equation.getVariableStyle()));
-		String[][] actualMatrix = equation.getMatrix(actualStep);
-		textMatrix.setText(stepToString(actualMatrix, actualMatrix.length, actualMatrix[0].length, equation.getVariableStyle()));
+//		String[][] actualMatrix = equation.getMatrix(actualStep);
+//		textMatrix.setText(stepToString(actualMatrix, actualMatrix.length, actualMatrix[0].length, equation.getVariableStyle()));
+		panelMatrix.updateLabels(equation.getMatrix(actualStep));
 
 		if (actualStep > 0)//matrix précédente affichage slmt a partir de étape "2"
 			{
-			textMatrixPrev.setText(stepToString(equation.getMatrix(actualStep - 1), equation.getMatrixNumberEquation(), equation.getMatrixNumberVariable() + 1, equation.getVariableStyle()));
+//			textMatrixPrev.setText(stepToString(equation.getMatrix(actualStep - 1), equation.getMatrixNumberEquation(), equation.getMatrixNumberVariable() + 1, equation.getVariableStyle()));
+			panelMatrixPrev.updateLabels(equation.getMatrix(actualStep-1));
 			}
-		jPanelPreviousStep.setVisible(actualStep > 0);
+		panelMatrixPrev.setVisible(actualStep > 0);//jPanelPreviousStep.setVisible(actualStep > 0);
 
 		graphicListHistory.setSelectedIndex(actualStep);
 
@@ -342,36 +346,36 @@ public class JPanelResultStep extends JPanel
 		buttonPrevious.setEnabled(actualStep > 0 && !isRunning);
 		}
 
-	private String stepToString(String[][] tabMatrix, int rowCount, int columnCount, int varStyle)
-		{
-		String[] tabVar = IndependentVar.getVarStyle(varStyle, rowCount, columnCount);
-		StringBuilder builder = new StringBuilder();
-		int rows = rowCount;
-		int cols = columnCount;
-
-		for(int i = 0; i < rows; i++)
-			{
-			for(int j = 0; j < cols - 1; j++)
-				{
-				if (!tabMatrix[i][j].equals("0")) //0 => Rien a afficher
-					{
-					if (!tabMatrix[i][j].equals("1")) //1 => On affiche uniquement la variable
-						{
-//						builder.append("<b>");
-						builder.append(tabMatrix[i][j]);//Autres => on affiche le coefficient
-//						builder.append("</b>");
-						}
-					builder.append(tabVar[j]);
-					}
-
-				builder.append("\t");
-				}
-			builder.append("= ");
-			builder.append(tabMatrix[i][cols - 1]);
-			builder.append(System.getProperty("line.separator"));
-			}
-		return builder.toString();
-		}
+//	private String stepToString(String[][] tabMatrix, int rowCount, int columnCount, int varStyle)
+//		{
+//		String[] tabVar = IndependentVar.getVarStyle(varStyle, rowCount, columnCount);
+//		StringBuilder builder = new StringBuilder();
+//		int rows = rowCount;
+//		int cols = columnCount;
+//
+//		for(int i = 0; i < rows; i++)
+//			{
+//			for(int j = 0; j < cols - 1; j++)
+//				{
+//				if (!tabMatrix[i][j].equals("0")) //0 => Rien a afficher
+//					{
+//					if (!tabMatrix[i][j].equals("1")) //1 => On affiche uniquement la variable
+//						{
+////						builder.append("<b>");
+//						builder.append(tabMatrix[i][j]);//Autres => on affiche le coefficient
+////						builder.append("</b>");
+//						}
+//					builder.append(tabVar[j]);
+//					}
+//
+//				builder.append("\t");
+//				}
+//			builder.append("= ");
+//			builder.append(tabMatrix[i][cols - 1]);
+//			builder.append(System.getProperty("line.separator"));
+//			}
+//		return builder.toString();
+//		}
 
 	/*------------------------------------------------------------------*\
 	|*							Attributs Private						*|
@@ -395,7 +399,8 @@ public class JPanelResultStep extends JPanel
 	private JButton buttonPrevious;
 	private JScrollPane scrollPaneList;
 	private JList<String> graphicListHistory;
-	private JTextArea textMatrix, textMatrixPrev;
+//	private JTextArea textMatrix, textMatrixPrev;
+	private JPanelMatrix panelMatrix, panelMatrixPrev;
 	JPanel jPanelPreviousStep;
 
 	private int actualTextSize;
