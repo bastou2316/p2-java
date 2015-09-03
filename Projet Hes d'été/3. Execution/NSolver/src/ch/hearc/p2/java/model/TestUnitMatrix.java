@@ -10,78 +10,95 @@ public final class TestUnitMatrix
 
 	//private static Random random = new Random();
 
+//	@Test
+//	public void test3x3_Infinit_Line_V2()
+//		{
+//		double[][] in = { { 0, 1, 0, 1 }, { 0, 0, 1, 2 }, { 0, 0, 0, 0 } };
+//		double[][] out = { { 0, 1, 0, 1 }, { 0, 0, 1, 2 }, { 0, 0, 0, 0 } };
+//		testReduceMatrix(in, out);
+//		//testDecompositionQR(in, out);
+//		}
+//
+//	@Test
+//	public void test3x3_Unique()
+//		{
+//		double[][] in = { { 0, 1, 1, 4 }, { 2, 4, -2, 2 }, { 0, 3, 15, 36 } };
+//		double[][] out = { { 1, 0, 0, -1 }, { 0, 1, 0, 2 }, { 0, 0, 1, 2 } };
+//		testReduceMatrix(in, out);
+//		//testDecompositionQR(in, out);
+//		}
+//
+//	@Test
+//	public void test3x3_Infinit_Line()
+//		{
+//		double[][] in = { { 0, 1, 1, 4 }, { 2, 4, -2, 2 }, { 0, 1, 1, 4 } };
+//		double[][] out = { { 1, 0, -3, -7 }, { 0, 1, 1, 4 }, { 0, 0, 0, 0 } };
+//		testReduceMatrix(in, out);
+//		//testDecompositionQR(in, out);
+//		}
+//
+//	@Test
+//	public void test3x4_Impossible()
+//		{
+//		double[][] in = { { 0, 1, 1, 1, 4 }, { 2, 4, -2, 2, 2 }, { 0, 1, 1, 1, 5 } };
+//		double[][] out = { { 1, 2, -1, 1, 1 }, { 0, 1, 1, 1, 4 }, { 0, 0, 0, 0, 1 } };
+//		testReduceMatrix(in, out);
+//		//testDecompositionQR(in, out);
+//		}
+//
+//	@Test
+//	public void test3x4_Infinit_Line()
+//		{
+//		double[][] in = { { 0, 1, 1, 1, 4 }, { 2, 4, -2, 2, 2 }, { 0, 1, 1, 1, 4 } };
+//		double[][] out = { { 1, 0, -3, -1, -7 }, { 0, 1, 1, 1, 4 }, { 0, 0, 0, 0, 0 } };
+//		testReduceMatrix(in, out);
+//		//testDecompositionQR(in, out);
+//		}
+//
+//	@Test
+//	public void test4x3_Impossible()
+//		{
+//		double[][] in = { { 0, 1, 1, 1 }, { 2, 4, -2, 2 }, { 0, 1, 1, 2 }, { 0, 1, 1, 2 } };
+//		double[][] out = { { 1, 2, -1, 1 }, { 0, 1, 1, 1 }, { 0, 0, 0, 1 }, { 0, 0, 0, 0 } };
+//		testReduceMatrix(in, out);
+//		//testDecompositionQR(in, out);
+//		}
+//
+//	@Test
+//	public void test4x3_Unique()
+//		{
+//		double[][] in = { { 0, 1, 1, 1 }, { 2, 4, -2, 2 }, { 0, 1, 2, 2 }, { 0, 1, 2, 2 } };
+//		double[][] out = { { 1, 0, 0, 2 }, { 0, 1, 0, 0 }, { 0, 0, 1, 1 }, { 0, 0, 0, 0 } };
+//		testReduceMatrix(in, out);
+//		//testDecompositionQR(in, out);
+//		}
+//
+//	@Test
+//	public void test4x3_Infinit_Line()
+//		{
+//		double[][] in = { { 0, 1, 1, 1 }, { 2, 4, -2, 2 }, { 2, 4, -2, 2 }, { 2, 4, -2, 2 } };
+//		double[][] out = { { 1, 0, -3, -1 }, { 0, 1, 1, 1 }, { 0, 0, 0, 0 }, { 0, 0, 0, 0 } };
+//		testReduceMatrix(in, out);
+//		//testDecompositionQR(in, out);
+//		}
+//
+//	@Test
+//	public void test3x4_Infinit_Line_2()
+//		{
+//		double[][] in = { { 1, 0,0,0,0 }, { 0, 1, 0, 0,0 }, { 0, 0, 0, 0,0 } };
+//		double[][] out = { { 1, 0, -3, -1 }, { 0, 1, 1, 1 }, { 0, 0, 0, 0 }};
+//		testReduceMatrix(in, out);
+//		//testDecompositionQR(in, out);
+//		}
+//
 	@Test
-	public void test3x3_Infinit_Line_V2()
+	public void test3x6_Infinit_Line_()
 		{
-		double[][] in = { { 0, 1, 0, 1 }, { 0, 0, 1, 2 }, { 0, 0, 0, 0 } };
-		double[][] out = { { 0, 1, 0, 1 }, { 0, 0, 1, 2 }, { 0, 0, 0, 0 } };
+		double[][] in = { { 1, 0,0,0,0,0 }, { 0, 1, 0, 0,0,0 }, { 0, 0, 0, 0,0,0 } };
+		double[][] out = { { 1, 0, -3, -1 }, { 0, 1, 1, 1 }, { 0, 0, 0, 0 }};
 		testReduceMatrix(in, out);
 		//testDecompositionQR(in, out);
 		}
-
-	@Test
-	public void test3x3_Unique()
-		{
-		double[][] in = { { 0, 1, 1, 4 }, { 2, 4, -2, 2 }, { 0, 3, 15, 36 } };
-		double[][] out = { { 1, 0, 0, -1 }, { 0, 1, 0, 2 }, { 0, 0, 1, 2 } };
-		testReduceMatrix(in, out);
-		//testDecompositionQR(in, out);
-		}
-
-	@Test
-	public void test3x3_Infinit_Line()
-		{
-		double[][] in = { { 0, 1, 1, 4 }, { 2, 4, -2, 2 }, { 0, 1, 1, 4 } };
-		double[][] out = { { 1, 0, -3, -7 }, { 0, 1, 1, 4 }, { 0, 0, 0, 0 } };
-		testReduceMatrix(in, out);
-		//testDecompositionQR(in, out);
-		}
-
-	@Test
-	public void test3x4_Impossible()
-		{
-		double[][] in = { { 0, 1, 1, 1, 4 }, { 2, 4, -2, 2, 2 }, { 0, 1, 1, 1, 5 } };
-		double[][] out = { { 1, 2, -1, 1, 1 }, { 0, 1, 1, 1, 4 }, { 0, 0, 0, 0, 1 } };
-		testReduceMatrix(in, out);
-		//testDecompositionQR(in, out);
-		}
-
-	@Test
-	public void test3x4_Infinit_Line()
-		{
-		double[][] in = { { 0, 1, 1, 1, 4 }, { 2, 4, -2, 2, 2 }, { 0, 1, 1, 1, 4 } };
-		double[][] out = { { 1, 0, -3, -1, -7 }, { 0, 1, 1, 1, 4 }, { 0, 0, 0, 0, 0 } };
-		testReduceMatrix(in, out);
-		//testDecompositionQR(in, out);
-		}
-
-	@Test
-	public void test4x3_Impossible()
-		{
-		double[][] in = { { 0, 1, 1, 1 }, { 2, 4, -2, 2 }, { 0, 1, 1, 2 }, { 0, 1, 1, 2 } };
-		double[][] out = { { 1, 2, -1, 1 }, { 0, 1, 1, 1 }, { 0, 0, 0, 1 }, { 0, 0, 0, 0 } };
-		testReduceMatrix(in, out);
-		//testDecompositionQR(in, out);
-		}
-
-	@Test
-	public void test4x3_Unique()
-		{
-		double[][] in = { { 0, 1, 1, 1 }, { 2, 4, -2, 2 }, { 0, 1, 2, 2 }, { 0, 1, 2, 2 } };
-		double[][] out = { { 1, 0, 0, 2 }, { 0, 1, 0, 0 }, { 0, 0, 1, 1 }, { 0, 0, 0, 0 } };
-		testReduceMatrix(in, out);
-		//testDecompositionQR(in, out);
-		}
-
-	@Test
-	public void test4x3_Infinit_Line()
-		{
-		double[][] in = { { 0, 1, 1, 1 }, { 2, 4, -2, 2 }, { 2, 4, -2, 2 }, { 2, 4, -2, 2 } };
-		double[][] out = { { 1, 0, -3, -1 }, { 0, 1, 1, 1 }, { 0, 0, 0, 0 }, { 0, 0, 0, 0 } };
-		testReduceMatrix(in, out);
-		//testDecompositionQR(in, out);
-		}
-
 	private static void testReduceMatrix(double[][] in, double[][] out)
 		{
 		Matrix matIn = new Matrix(in.length, in[0].length);
