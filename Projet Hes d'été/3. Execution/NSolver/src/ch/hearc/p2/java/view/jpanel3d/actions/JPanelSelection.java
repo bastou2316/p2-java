@@ -91,6 +91,7 @@ public class JPanelSelection extends JPanel
 		String[] fcts_str = new String[nbEqu];
 		jCheckFct = new JCheckBox[nbEqu];
 
+		String signPlus;  
 		for(int i = 0; i < nbEqu; i++)
 			{
 			fcts_str[i] = "";
@@ -98,7 +99,13 @@ public class JPanelSelection extends JPanel
 				{
 				if (matrixValues[i][j] > 0)
 					{
-					fcts_str[i] += " + " + matrixValues[i][j] + "" + (char)(120 + j);
+					if(j == 0)
+						signPlus = "   "; 
+					else
+						signPlus =  " + ";
+							
+					
+					fcts_str[i] += signPlus+ matrixValues[i][j] + "" + (char)(120 + j);
 					}
 				else if (matrixValues[i][j] < 0)
 					{
@@ -106,7 +113,7 @@ public class JPanelSelection extends JPanel
 					}
 
 				}
-			fcts_str[i] = " " + fcts_str[i].substring(2) + " = " + matrixValues[i][nbVar];
+			fcts_str[i] += " = " + matrixValues[i][nbVar];
 			jCheckFct[i] = new JCheckBox(fcts_str[i], true);
 			}
 
