@@ -25,6 +25,7 @@ public class JPanelMatrix extends JPanel
 		this.cols = cols;
 		this.varStyle = varStyle;
 
+		variableDisplay = true;
 		space = " ";
 		labels = new LinkedList<JLabel>();
 
