@@ -211,7 +211,6 @@ public class JFrameMain extends JFrame
 		itemSetEquation = menuOption.add(new JMenuItem("Modifier l'équation"));
 		itemSetMatrix = menuOption.add(new JMenuItem("Modifier la matrice"));
 		itemShowGraphic = menuOption.add(new JMenuItem("Afficher le graphique"));
-
 		menuBar.add(menuOption);
 
 		menu = new JMenu("Aide");

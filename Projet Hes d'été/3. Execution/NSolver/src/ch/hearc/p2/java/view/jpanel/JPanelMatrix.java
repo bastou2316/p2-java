@@ -25,6 +25,7 @@ public class JPanelMatrix extends JPanel
 		this.cols = cols;
 		this.varStyle = varStyle;
 
+		space = " ";
 		labels = new LinkedList<JLabel>();
 
 		geometry();
@@ -42,8 +43,20 @@ public class JPanelMatrix extends JPanel
 
 		//Recuperation des variables et affichage
 		String[] tabVar = IndependentVar.getTabVar(matrix[0].length, varStyle);//voir dans le constr
-		int nbVar = 0;//Pour le blocage d'affichage du "+"
 
+		if (variableDisplay)
+			{
+			equationDisplay(matrix, setDifference, tabVar);
+			}
+		else
+			{
+			matrixDisplay(matrix, setDifference, tabVar);
+			}
+		}
+
+	private void equationDisplay(String[][] matrix, Set<Integer> setDifference, String[] tabVar)
+		{
+		int nbVar = 0;//Pour le blocage d'affichage du "+"
 		for(int i = 0; i < matrix.length; i++)//rows; i++)
 			{
 			nbVar = 0;
@@ -54,7 +67,7 @@ public class JPanelMatrix extends JPanel
 					{
 					if (nbVar != 0) //sauf dernière variable
 						{
-						builder.append(" + ");
+						builder.append(space + "+" + space);
 						}
 
 					if (!matrix[i][j].equals("1")) //1 => On affiche uniquement la variable
@@ -66,8 +79,13 @@ public class JPanelMatrix extends JPanel
 					}
 				}
 
+			if (nbVar == 0)//Pas de var
+				{
+				builder.append("0");
+				}
+
 			//On sort de la boucle 1 avant pour placer le =
-			builder.append(" = ");
+			builder.append(space + "=" + space);
 			builder.append(matrix[i][matrix[0].length - 1]);
 
 			//Application du textes au labels
@@ -82,9 +100,29 @@ public class JPanelMatrix extends JPanel
 				{
 				labels.get(i).setForeground(Color.BLACK);
 				}
-
 			}
+		}
 
+	public void matrixDisplay(String[][] matrix, Set<Integer> setDifference, String[] tabVar)
+		{
+		//TODO
+		}
+
+	public void setVariableDisplay(boolean variableDisplay)
+		{
+		this.variableDisplay = variableDisplay;
+		}
+
+	public void setSpaceDisplay(boolean spaceDisplay)
+		{
+		if (spaceDisplay)
+			{
+			space = " ";
+			}
+		else
+			{
+			space = "\t";
+			}
 		}
 
 	/*------------------------------------------------------------------*\
@@ -97,6 +135,7 @@ public class JPanelMatrix extends JPanel
 			{
 			JLabel label = new JLabel("N/A");
 			label.setForeground(Color.RED);
+			label.setFont(labels.get(0).getFont());
 			labels.add(label);
 			boxV.add(label);
 			}
@@ -107,7 +146,7 @@ public class JPanelMatrix extends JPanel
 			label = null;
 			}
 
-		repaint();//updateUI();
+		repaint();
 		}
 
 	private void geometry()
@@ -147,5 +186,7 @@ public class JPanelMatrix extends JPanel
 	//Tools
 	private List<JLabel> labels;
 	private Box boxV;
+	private String space;
+	private boolean variableDisplay;
 
 	}

@@ -144,8 +144,6 @@ public class JPanelResultStep extends JPanel
 	private void geometry()
 		{
 		// JComponent : Instanciation
-		//		JPanel jPanelCenter = new JPanel();
-
 		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 
 		JPanel jPanelOperation = new JPanel();
@@ -172,21 +170,6 @@ public class JPanelResultStep extends JPanel
 		buttonStop.setEnabled(false);
 		buttonNext.setEnabled(true);
 		buttonPrevious.setEnabled(true);
-
-//		textMatrix = new JTextArea();
-//		textMatrix.setEditable(false);
-//		//		textMatrix.setText(equation.getMatrix(0).toString());
-//		//textMatrix.setColumns(controllerEquation.getEquation().getMatrixNumberVariable());
-//		textMatrix.setRows(equation.getMatrixNumberEquation());
-//
-//		actualTextSize = textMatrix.getFont().getSize();
-//
-//		textMatrixPrev = new JTextArea();
-//		textMatrixPrev.setEditable(false);
-//		textMatrixPrev.setText(equation.getMatrix(0).toString());
-//		//textMatrix.setColumns(controllerEquation.getEquation().getMatrixNumberVariable());
-//		textMatrixPrev.setRows(equation.getMatrixNumberEquation());
-//		//textMatrix.setMinimumSize(new Dimension(10, 10));
 
 		panelMatrix = new JPanelMatrix(equation.getMatrixNumberEquation(), equation.getMatrixNumberVariable(), equation.getVariableStyle());
 		panelMatrixPrev = new JPanelMatrix(equation.getMatrixNumberEquation(), equation.getMatrixNumberVariable(), equation.getVariableStyle());
@@ -249,7 +232,6 @@ public class JPanelResultStep extends JPanel
 					//Récupération de l'étape sélectionnée
 					JList<String> list = (JList<String>)e.getSource();
 					actualStep = list.getSelectedIndex();
-					//System.out.println(idSelected);
 
 					//Maj de la page des résultats
 					updateDisplayedMatrix();
@@ -350,14 +332,9 @@ public class JPanelResultStep extends JPanel
 
 	private void updateZoom(MouseWheelEvent e)
 		{
-		//	if (actualTextSize > 0)
-		//	{
 		actualTextSize += e.getWheelRotation();
 		panelMatrix.setFont(new Font("Sans-Serif", Font.PLAIN, actualTextSize));
 		panelMatrixPrev.setFont(new Font("Sans-Serif", Font.PLAIN, actualTextSize));
-//		textMatrix.setFont(new Font("Sans-Serif", Font.PLAIN, actualTextSize));
-//		textMatrixPrev.setFont(new Font("Sans-Serif", Font.PLAIN, actualTextSize));
-		//	}
 		}
 
 	private void updateDisplayedMatrix()
@@ -385,37 +362,6 @@ public class JPanelResultStep extends JPanel
 		buttonPrevious.setEnabled(actualStep > 0 && !isRunning);
 		}
 
-//	private String stepToString(String[][] tabMatrix, int rowCount, int columnCount, int varStyle)
-//		{
-//		String[] tabVar = IndependentVar.getVarStyle(varStyle, rowCount, columnCount);
-//		StringBuilder builder = new StringBuilder();
-//		int rows = rowCount;
-//		int cols = columnCount;
-//
-//		for(int i = 0; i < rows; i++)
-//			{
-//			for(int j = 0; j < cols - 1; j++)
-//				{
-//				if (!tabMatrix[i][j].equals("0")) //0 => Rien a afficher
-//					{
-//					if (!tabMatrix[i][j].equals("1")) //1 => On affiche uniquement la variable
-//						{
-////						builder.append("<b>");
-//						builder.append(tabMatrix[i][j]);//Autres => on affiche le coefficient
-////						builder.append("</b>");
-//						}
-//					builder.append(tabVar[j]);
-//					}
-//
-//				builder.append("\t");
-//				}
-//			builder.append("= ");
-//			builder.append(tabMatrix[i][cols - 1]);
-//			builder.append(System.getProperty("line.separator"));
-//			}
-//		return builder.toString();
-//		}
-
 	/*------------------------------------------------------------------*\
 	|*							Attributs Private						*|
 	\*------------------------------------------------------------------*/
@@ -438,7 +384,6 @@ public class JPanelResultStep extends JPanel
 	private JButton buttonPrevious;
 	private JScrollPane scrollPaneList;
 	private JList<String> graphicListHistory;
-//	private JTextArea textMatrix, textMatrixPrev;
 	private JPanelMatrix panelMatrix, panelMatrixPrev;
 	JPanel jPanelPreviousStep;
 

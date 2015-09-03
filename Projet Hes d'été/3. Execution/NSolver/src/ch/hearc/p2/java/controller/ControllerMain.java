@@ -114,7 +114,6 @@ public class ControllerMain
 		jfilechooser.setDialogTitle("Choisissez un emplacement de sauvegarde");
 		jfilechooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 
-		//jfilechooser.setSelectedFile(controller)
 		jfilechooser.setFileFilter(new FileNameExtensionFilter("NSolver extension", "nso"));
 		int returnOption = jfilechooser.showSaveDialog(jFrame);
 
