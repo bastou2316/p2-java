@@ -33,7 +33,7 @@ public class JPanelMatrix extends JPanel
 
 	public void updateLabels(String[][] matrix)
 		{
-		String[] tabVar = IndependentVar.getTabVar(cols, varStyle);//voir dans le constr
+		String[] tabVar = IndependentVar.getTabVar(cols+1, varStyle);//voir dans le constr
 
 		for(int i = 0; i < rows; i++)
 			{
@@ -52,7 +52,7 @@ public class JPanelMatrix extends JPanel
 				}
 
 			//On sort de la boucle 1 avant pour placer le =
-			builder.append("= ");
+			builder.append(" = ");
 			builder.append(matrix[i][matrix.length - 1]);
 
 			//Application du textes au labels

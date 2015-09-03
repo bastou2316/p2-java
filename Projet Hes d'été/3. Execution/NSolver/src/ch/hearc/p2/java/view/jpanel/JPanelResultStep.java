@@ -334,7 +334,7 @@ public class JPanelResultStep extends JPanel
 //			textMatrixPrev.setText(stepToString(equation.getMatrix(actualStep - 1), equation.getMatrixNumberEquation(), equation.getMatrixNumberVariable() + 1, equation.getVariableStyle()));
 			panelMatrixPrev.updateLabels(equation.getMatrix(actualStep-1));
 			}
-		panelMatrixPrev.setVisible(actualStep > 0);//jPanelPreviousStep.setVisible(actualStep > 0);
+		jPanelPreviousStep.setVisible(actualStep > 0);
 
 		graphicListHistory.setSelectedIndex(actualStep);
 

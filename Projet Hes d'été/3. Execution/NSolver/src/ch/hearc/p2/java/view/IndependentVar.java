@@ -31,6 +31,7 @@ public class IndependentVar
 
 	public static String[] getTabVar(int cols, VARSTYLE varStyle)
 		{
+		cols = cols - 1;
 		String[] tabString = new String[cols];
 
 		switch(varStyle)
@@ -39,7 +40,7 @@ public class IndependentVar
 			case X:
 				if (cols > 3)
 					{
-					getTabVar(cols, varStyle);
+					getTabVar(cols, VARSTYLE.X1);
 					}
 				else
 					{
@@ -53,7 +54,7 @@ public class IndependentVar
 			case A:
 				if (cols > 26)
 					{
-					getTabVar(cols, varStyle);
+					getTabVar(cols, VARSTYLE.X1);
 					}
 				else
 					{
