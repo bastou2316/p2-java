@@ -36,7 +36,7 @@ public class JPanelHelp extends JPanel {
 				BoxLayout.Y_AXIS));
 
 		TitledBorder tBorderHelp = BorderFactory
-				.createTitledBorder("Aide");
+				.createTitledBorder("Aide naviguation");
 		tBorderHelp.setTitleFont(font);
 		tBorderHelp.setTitleColor(titleColor);
 		// tBorderProjection.setBorder(BorderFactory.createLineBorder(bgColor));

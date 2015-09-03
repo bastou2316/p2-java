@@ -60,8 +60,7 @@ public class JPanelSolutionHighlight extends JPanel{
 			cb.setText(text);
 		}
 		else{ //solution multiple
-			cb.setText("Solutions multiples");
-			cb.setEnabled(false);
+			cb.setText("Infinité de solutions");
 		}
 
 		jPanelSolution.add(cb);
