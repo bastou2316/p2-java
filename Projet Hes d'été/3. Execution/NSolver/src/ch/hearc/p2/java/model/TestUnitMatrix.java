@@ -103,8 +103,8 @@ public final class TestUnitMatrix
 	@Test
 	public void test_Mathieu()
 		{
-		double[][] in = { { 1, 1, 1, 3,}, { 1, -1, 0, 0} };
-		double[][] out = { { 1, 0, -3, -1 }, { 0, 1, 1, 1 }};
+		double[][] in = { { 2, 1, 1}, { 1, 2, -3} };
+		double[][] out = { { 1, 0, -3}, { 0, 1, 1}};
 		testReduceMatrix(in, out);
 		//testDecompositionQR(in, out);
 		}
