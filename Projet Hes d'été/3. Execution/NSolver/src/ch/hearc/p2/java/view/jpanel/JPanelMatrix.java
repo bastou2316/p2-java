@@ -244,7 +244,7 @@ public class JPanelMatrix extends JPanel
 
 	private void appareance()
 		{
-		//Rien
+		setBackground(Color.WHITE);
 		}
 
 	/*------------------------------------------------------------------*\

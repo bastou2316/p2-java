@@ -22,6 +22,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -92,12 +93,10 @@ public class JPanelSetEquation extends JPanelDialog
 		textFieldName.setMinimumSize(new Dimension(100, 5));
 
 		labelNumberEquation = new JLabel("Nombre d'équations : ");
-		spinNumbEqu = new JSpinner();
-		spinNumbEqu.setValue(equation.getMatrixNumberEquation());
+		spinNumbEqu = new JSpinner(new SpinnerNumberModel(equation.getMatrixNumberEquation(), 1, 100, 1));
 
 		labelNumberVar = new JLabel("Nombre d'inconnues : ");
-		spinNumbVar = new JSpinner();
-		spinNumbVar.setValue(equation.getMatrixNumberVariable());
+		spinNumbVar = new JSpinner(new SpinnerNumberModel(equation.getMatrixNumberVariable(), 1, 100, 1));
 
 		labelVarStyle = new JLabel("Style des variables : ");
 		comboVarStyle = new JComboBox<String>();
@@ -115,8 +114,7 @@ public class JPanelSetEquation extends JPanelDialog
 		bg.add(methodDirect);
 
 		labelSpeed = new JLabel("Vitesse (en seconde) : ");
-		spinSpeed = new JSpinner();
-		spinSpeed.setValue(equation.getSpeedSec());
+		spinSpeed = new JSpinner(new SpinnerNumberModel(equation.getSpeedSec(), 0.1, 10, 0.1));
 
 		nextButton = new JButton("Suivant");
 
@@ -208,7 +206,7 @@ public class JPanelSetEquation extends JPanelDialog
 				public void actionPerformed(ActionEvent e)
 					{
 					equation.setName(textFieldName.getText());
-					equation.setSpeed((Integer)spinSpeed.getValue());
+					equation.setSpeed(Double.parseDouble(spinSpeed.getValue().toString()));
 					equation.setNumberVar((Integer)spinNumbVar.getValue());
 					equation.setNumberEquation((Integer)spinNumbEqu.getValue());
 					equation.setModeStep(methodStep.isSelected());
@@ -236,7 +234,7 @@ public class JPanelSetEquation extends JPanelDialog
 
 	private void appearance()
 		{
-		// rien
+		changeFont(this, 10);
 		}
 
 	private void updateButtonText()

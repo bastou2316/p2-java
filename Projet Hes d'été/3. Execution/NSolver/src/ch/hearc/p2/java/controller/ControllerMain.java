@@ -53,20 +53,19 @@ public class ControllerMain
 				{
 				case MENU:
 					currentPanel = new JPanelMenu(this);
-					jFrame.setPanel("Menu", currentPanel, 600, 400);
+					jFrame.setPanel("Menu", currentPanel, 1000, 600);
 					jFrame.enableAlternativeMenu(false);
 					break;
 
 				case RESULT:
 					currentPanel = new JPanelResultStep(equation);
-					jFrame.setPanel("Résolution directe", currentPanel, 600, 600);
+					jFrame.setPanel("Résolution directe", currentPanel, 1100, 700);
 					jFrame.enableAlternativeMenu(true);
 					break;
 
 				case RESULT_STEP:
 					currentPanel = new JPanelResultStep(equation);
-					jFrame.setPanel("Résolution étape par étape", currentPanel, 600, 600);
-//					jFrame.pack();
+					jFrame.setPanel("Résolution étape par étape", currentPanel, 1100, 700);
 					jFrame.enableAlternativeMenu(true);
 					break;
 

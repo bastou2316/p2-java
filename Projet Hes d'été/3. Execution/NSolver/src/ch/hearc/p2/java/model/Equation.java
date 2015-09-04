@@ -21,7 +21,7 @@ public class Equation implements Serializable
 		this("Name", 3, 3, 0, 1, true);
 		}
 
-	public Equation(String name, int numberVar, int numberEquation, int varStyle, int speedSec, boolean modeStep)
+	public Equation(String name, int numberVar, int numberEquation, int varStyle, double speedSec, boolean modeStep)
 		{
 		this.name = name;
 		this.numberVar = numberVar;
@@ -69,12 +69,12 @@ public class Equation implements Serializable
 		return numberVar;
 		}
 
-	public int getSpeedSec()
+	public double getSpeedSec()
 		{
 		return speedMs / 1000;
 		}
 
-	public long getSpeedMs()
+	public double getSpeedMs()
 		{
 		return speedMs;
 		}
@@ -134,7 +134,7 @@ public class Equation implements Serializable
 		this.numberEquation = numberEquation;
 		}
 
-	public void setSpeed(int speedSec)
+	public void setSpeed(double speedSec)
 		{
 		this.speedMs = speedSec * 1000;
 		}
@@ -193,7 +193,7 @@ public class Equation implements Serializable
 	private int numberVar;
 	private int numberEquation;
 
-	private int speedMs;
+	private double speedMs;
 	private boolean modeStep;
 
 	// Tools

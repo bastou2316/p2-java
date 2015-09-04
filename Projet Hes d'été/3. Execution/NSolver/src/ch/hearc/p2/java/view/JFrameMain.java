@@ -187,7 +187,6 @@ public class JFrameMain extends JFrame
 
 	protected void appearance()
 		{
-		//setSize(600, 400);
 		setLocationRelativeTo(null);
 		setVisible(true);
 		}

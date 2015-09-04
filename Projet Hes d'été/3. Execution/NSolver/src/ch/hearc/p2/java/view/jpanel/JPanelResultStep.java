@@ -83,7 +83,7 @@ public class JPanelResultStep extends JPanel
 							{
 							equation.getMatrix(++actualStep);
 							updateDisplayedMatrix();
-							sleep(equation.getSpeedMs());
+							sleep((long) equation.getSpeedMs());
 							}
 						isRunning = false;
 						stop();
@@ -162,7 +162,7 @@ public class JPanelResultStep extends JPanel
 		jPanelMatrix.setBorder(titlematrix);
 
 		jPanelPreviousStep = new JPanel();
-		TitledBorder titlePreviousStep = BorderFactory.createTitledBorder("Previous step");
+		TitledBorder titlePreviousStep = BorderFactory.createTitledBorder("Étape précédente");
 		jPanelPreviousStep.setBorder(titlePreviousStep);
 
 		JPanel jPanelButtons = new JPanel();
@@ -209,8 +209,8 @@ public class JPanelResultStep extends JPanel
 		jPanelOperation.add(scrollPaneList);
 
 		Box boxV = Box.createVerticalBox();
-		boxV.add(jPanelPreviousStep);
 		boxV.add(jPanelMatrix);
+		boxV.add(jPanelPreviousStep);
 
 		JPanel panelLeft = new JPanel();
 		panelLeft.setLayout(new BorderLayout());
@@ -218,7 +218,7 @@ public class JPanelResultStep extends JPanel
 		Box boxcomb = Box.createVerticalBox();
 		cbxVar = new JCheckBox("Affichage des variables");
 		cbxVar.setSelected(true);
-		cbxSpace = new JCheckBox("Alignement");
+		cbxSpace = new JCheckBox("Espacement");
 		cbxSpace.setSelected(false);
 		boxcomb.add(cbxVar);
 		boxcomb.add(cbxSpace);
@@ -372,7 +372,9 @@ public class JPanelResultStep extends JPanel
 
 	private void appearance()
 		{
-		// rien
+//		changeFont(panelMatrix, 15);
+//		changeFont(panelMatrixPrev, 15);
+		changeFont(this, 12);
 		}
 
 	private void updateZoom(MouseWheelEvent e)
