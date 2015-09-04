@@ -1,0 +1,79 @@
+
+
+
+ETAT DE L'ART
+
+- mathematica								(plusieurs surfaces mais pas simple)
+- http://www.wolframalpha.com/input/?i=2x-3y%2B4z%3D5&lk=4		(une seule surface à la fois)
+- surfer : http://imaginary.org/program/surfer				(une seule surface à la fois)
+
+
+
+
+
+Objectifs CdC
+
+- Spécialisation		ok
+- Système 1-4 équ. 2/3 inc	ok		ok pour 2 et 3 inconnues pour 1 à 4 équations (étendre à 5?)
+- Bug d'affichage		ok
+- schéma souris <-> fonctions	ok		A la place du menu d'aide
+
+- Mise en évidence		OK
+	affichage équ para	ok
+	affichage sol unique	ok
+	solution unique(3D)	ok
+	solution droite(3D)	ok
+	solution plan (3D)	ok
+	solution unique (2D)	ok
+	solution droite (2D)	ok
+
+
+
+Objectifs supplémentaires
+
+- recherche d'exemples 2D/3D	ok
+
+- nom des variables dynamique	ok
+
+- améliorer la lisibilité
+	aligner actions		ok
+	transparance plans	nope (on ne voit plus les intersections)
+	couleur plans adoucies	ok
+	vue de départ		ok
+	labels axe près des flèches ok
+	axes décorés		ok
+	raccourcissement axes	ok
+	plans boxed 3d		ok
+	lignes squared 2d	todo?
+	
+
+
+
+
+
+2 - 18.8 midi		code :
+		 * spécialisation de la classe graphique en 2 classes pour clarifier le code  
+
+1 - 			Mise en évidence de la solution :
+    19.8 midi	 * création d'un menu avec case à cocher et texte de l'équation de la 
+		droite des solutions, du plan des solutions, ou des coordonnées de la solution unique
+    20.8 midi	 * dessin de la solution avec nombres fictifs 
+    21.8 	 * intégration des fonctions de la classe Matrix
+
+2 - 24.8 		correction du bug d'affichage pour plans verticaux
+			(probablement problème de signe)
+
+2 - 26.8		étendre l'affichage à des systèmes à 2 équations à 2 inconnus
+			1/2 journée	:	créer une fonction d'affichage pour 2 inconnues et une pour 3 inconnues
+			1/2 journée	:	tests d'affichage en interne
+			1/2 journée	:	intégration avec fonctions de la classe Matrix, autoriser l'affichage de 2 équations à 2 inconnues
+			1/2 journée	:	tests d'affichage finaux
+
+2 - 27.8		affichage si nombre d'équations différent de 2 (pour 2 inconnues) ou 3 (pour 3 inconnues),  (min 1 équation, max 4 équations) 
+			1/2 journée	:	codage, autoriser les nouveaux types de système pour l'afichage graphique
+			1/2 journée	:	débogage
+
+3 - 27.8 midi		ajouter un menu d'aide pour expliquer comment utiliser la souris pour la naviguation 3d
+
+
+
