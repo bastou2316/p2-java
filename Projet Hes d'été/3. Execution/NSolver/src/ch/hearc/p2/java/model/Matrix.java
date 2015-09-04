@@ -162,7 +162,11 @@ public final class Matrix implements Serializable
 	public void set(int row, int col, double val)
 		{
 		if (row < 0 || row >= values.length || col < 0 || col >= values[0].length) { throw new IndexOutOfBoundsException("Row or column index out of bounds"); }
-		values[row][col] = val + 0.0;
+		values[row][col] = val+ 0.0;
+		if(MathTools.isEquals(values[row][col],0))
+			{
+				values[row][col]=0;
+				}
 		}
 
 	public void set(double[][] src)
