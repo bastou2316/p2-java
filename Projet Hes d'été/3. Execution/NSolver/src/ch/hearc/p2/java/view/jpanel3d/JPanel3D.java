@@ -6,7 +6,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GraphicsConfiguration;
 import java.awt.Toolkit;
-import java.util.Arrays;
 
 import javax.media.j3d.Appearance;
 import javax.media.j3d.Background;
@@ -21,7 +20,6 @@ import javax.media.j3d.LineArray;
 import javax.media.j3d.LineAttributes;
 import javax.media.j3d.PickInfo;
 import javax.media.j3d.PolygonAttributes;
-import javax.media.j3d.QuadArray;
 import javax.media.j3d.Shape3D;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
@@ -37,9 +35,9 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
 
-import ch.hearc.p2.java.model.Log;
 import ch.hearc.p2.java.model.Matrix;
 import ch.hearc.p2.java.tools.Graphics3DTools;
+import ch.hearc.p2.java.view.IndependentVar;
 import ch.hearc.p2.java.view.jpanel.dialog.JPanelDialog;
 import ch.hearc.p2.java.view.jpanel3d.actions.JPanelHelp;
 import ch.hearc.p2.java.view.jpanel3d.actions.JPanelHomeTransform;
@@ -49,7 +47,6 @@ import ch.hearc.p2.java.view.jpanel3d.actions.JPanelSelection;
 import ch.hearc.p2.java.view.jpanel3d.actions.JPanelSolutionHighlight;
 import ch.hearc.p2.java.view.jpanel3d.canvasControl.OrbitBehaviorInterim;
 
-import com.sun.j3d.utils.geometry.GeometryInfo;
 import com.sun.j3d.utils.geometry.Text2D;
 import com.sun.j3d.utils.pickfast.PickCanvas;
 import com.sun.j3d.utils.universe.SimpleUniverse;
@@ -98,21 +95,23 @@ final public class JPanel3D extends JPanelDialog {
 	private Color solutionColor;
 	private Color[] plansColor;
 
-	private float scaleFactor;
+	
 	private double[][] matrixValues;
 	private double[][] solution;
+	private int varStyle;
+	
+	private float scaleFactor;
 
 	private JPanelSelection jPanelSelection;
 	private JPanelSolutionHighlight jPanelSolution;
 
-	private float space;
+	private float space;	
 
-	
-
-	public JPanel3D(Matrix mat, double[][] solution) {
+	public JPanel3D(Matrix mat, double[][] solution, int varStyle) {
 		super();
 		matrixValues = mat.getValuesCopy();
 		this.solution = solution;
+		this.varStyle = varStyle;
 		scaleFactor = 10f;
 		space = 1f;
 		fontsize = 40;
@@ -293,7 +292,7 @@ final public class JPanel3D extends JPanelDialog {
 
 		// création des labels des axes
 		// Axe X
-		Text2D textObject = new Text2D("X", new Color3f(0.2f, 0.2f, 0.2f),
+		Text2D textObject = new Text2D(IndependentVar.getTabVar(3, varStyle)[0], new Color3f(0.2f, 0.2f, 0.2f),
 				"Serif", 90, Font.BOLD);
 		Transform3D textTranslation = new Transform3D();
 		textTranslation.setTranslation(new Vector3f(-0.3f, 0f, 3.0f));
@@ -312,7 +311,7 @@ final public class JPanel3D extends JPanelDialog {
 			app.setPolygonAttributes(pa);
 
 		/* Axe Y */
-		textObject = new Text2D("Y", new Color3f(0.2f, 0.2f, 0.2f), "Serif",
+		textObject = new Text2D(IndependentVar.getTabVar(3, varStyle)[1], new Color3f(0.2f, 0.2f, 0.2f), "Serif",
 				90, Font.BOLD);
 		textTranslation = new Transform3D();
 		textTranslation.setTranslation(new Vector3f(3.0f, 0f, 0f));
@@ -368,7 +367,7 @@ final public class JPanel3D extends JPanelDialog {
 			arrowRightZ.setColor(1, new Color3f(0.2f, 0.2f, 0.2f));
 			TG1.addChild(new Shape3D(arrowRightZ, lineApp));
 
-			textObject = new Text2D("Z", new Color3f(0.2f, 0.2f, 0.2f),
+			textObject = new Text2D(IndependentVar.getTabVar(3, varStyle)[2], new Color3f(0.2f, 0.2f, 0.2f),
 					"Serif", 90, Font.BOLD);
 			textTranslation = new Transform3D();
 			textTranslation.setTranslation(new Vector3f(-0.3f, 2.8f, 0f));
@@ -655,6 +654,14 @@ final public class JPanel3D extends JPanelDialog {
 	private void drawSolution2D() {
 		solutionBranch = new BranchGroup();
 		solutionBranch.setCapability(BranchGroup.ALLOW_DETACH);
+		if(solution != null){
+			for (int i = 0; i < solution.length; i++) {
+				System.out.println();
+				for (int j = 0; j < solution[0].length; j++) {
+					System.out.print(solution[i][j]+"  ");
+				}
+			}
+		}
 		if (solution == null) { // pas de solution
 
 		} else if (solution[0].length == 1) { // unique
@@ -714,32 +721,24 @@ final public class JPanel3D extends JPanelDialog {
 			LineAttributes lineAttr = new LineAttributes(2f, 0, true);
 			Appearance app = new Appearance();
 			app.setLineAttributes(lineAttr);
-//			app.setColoringAttributes(new ColoringAttributes(new Color3f(
-//					solutionColor), ColoringAttributes.SHADE_GOURAUD));
 			app.setTransparencyAttributes(new TransparencyAttributes(
 					TransparencyAttributes.NONE, 0.5f));
 			app.setPolygonAttributes(polyAttr);
 	
-		
-	
-			LineArray line;
-	
+			LineArray line;	
 			line = createLine((float) matrixValues[0][0],
 						(float) matrixValues[0][1], (float) matrixValues[0][2]);
 			line.setColor(0, new Color3f(solutionColor));
 			line.setColor(1, new Color3f(solutionColor));
 	
 			solutionBranch.addChild(new Shape3D(line, app));
-		}
-
-		
+		}	
 
 		TG1.addChild(solutionBranch);
 		if (jPanelSolution != null) {
 			if (!jPanelSolution.isCheckBoxSelected())
 				TG1.removeChild(solutionBranch);
 		}
-
 	}
 
 	private boolean solutionInSquare() {
@@ -750,6 +749,7 @@ final public class JPanel3D extends JPanelDialog {
 		return max <= scaleFactor;
 	}
 
+	
 	/*
 	 * 3D
 	 */
@@ -1066,7 +1066,7 @@ final public class JPanel3D extends JPanelDialog {
 	private void drawSolution3D() {
 		solutionBranch = new BranchGroup();
 		solutionBranch.setCapability(BranchGroup.ALLOW_DETACH);
-		System.out.println(solution.length + "  " + solution[0].length);
+		
 		if(solution == null){ //pas de solution
 			
 		}
@@ -1123,12 +1123,10 @@ final public class JPanel3D extends JPanelDialog {
 			if(solution[0][2] == 0 && solution[1][2] == 0 && solution[2][2] == 0){
 				int i = 0;
 				Point3f[] pts = new Point3f[2];
-				System.out.println("hey");
 				//On a :
 				// x = a1 + b1*t
 				// y = a2 + b2*t
-				// z = a3 + b3*t
-				
+				// z = a3 + b3*t				
 				
 				for(int j = 0; j<3; j++){
 					if(solution[j][1] != 0){
@@ -1207,6 +1205,7 @@ final public class JPanel3D extends JPanelDialog {
 					line.setColor(2, new Color3f(0f, 0f, 0f));
 					line.setColor(3, new Color3f(solutionColor));
 					solutionBranch.addChild(new Shape3D(line, lineApp));
+					System.out.println();
 				}
 			}
 			else{
@@ -1320,14 +1319,14 @@ final public class JPanel3D extends JPanelDialog {
 		jPanelActions.add(Box.createHorizontalStrut(10));
 
 		// Functions Selection
-		jPanelSelection = new JPanelSelection(font, titleColor, matrixValues,
+		jPanelSelection = new JPanelSelection(font, titleColor, matrixValues, varStyle,
 				this);
 		jPanelActions.add(jPanelSelection);
 		jPanelActions.add(Box.createHorizontalStrut(10));
 
 		// Solution Highlight
 		jPanelSolution = new JPanelSolutionHighlight(font, titleColor,
-				solution, this);
+				solution, varStyle, this);
 		jPanelActions.add(jPanelSolution);
 		jPanelActions.add(Box.createHorizontalStrut(10));
 

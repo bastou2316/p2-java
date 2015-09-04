@@ -13,14 +13,15 @@ import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
+import ch.hearc.p2.java.view.IndependentVar;
 import ch.hearc.p2.java.view.jpanel3d.JPanel3D;
 
 public class JPanelSelection extends JPanel
 	{
 
-	public JPanelSelection(Font font, Color titleColor, final double[][] matrixValues, final JPanel3D jPanel3d)
+	public JPanelSelection(Font font, Color titleColor, final double[][] matrixValues, int varStyle, final JPanel3D jPanel3d)
 		{
-		initCheckBoxes(matrixValues);
+		initCheckBoxes(matrixValues, varStyle);
 
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
@@ -84,7 +85,7 @@ public class JPanelSelection extends JPanel
 		return jCheckFct[index].isSelected();
 		}
 
-	private void initCheckBoxes(double[][] matrixValues)
+	private void initCheckBoxes(double[][] matrixValues, int varStyle)
 		{
 		int nbEqu = matrixValues.length;
 		int nbVar = matrixValues[0].length - 1;
@@ -105,11 +106,11 @@ public class JPanelSelection extends JPanel
 						signPlus =  " + ";
 							
 					
-					fcts_str[i] += signPlus+ matrixValues[i][j] + "" + (char)(120 + j);
+					fcts_str[i] += signPlus+ matrixValues[i][j] + "" + IndependentVar.getTabVar(3, varStyle)[j];//(char)(120 + j);
 					}
 				else if (matrixValues[i][j] < 0)
 					{
-					fcts_str[i] += " - " + (-matrixValues[i][j]) + "" + (char)(120 + j);
+					fcts_str[i] += " - " + (-matrixValues[i][j]) + "" + IndependentVar.getTabVar(3, varStyle)[j];//(char)(120 + j);
 					}
 
 				}
