@@ -3,6 +3,7 @@ package ch.hearc.p2.java.view.jpanel;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Label;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -19,14 +20,14 @@ public class JPanelMatrix extends JPanel
 	/*------------------------------------------------------------------*\
 	|*							Constructeurs							*|
 	\*------------------------------------------------------------------*/
-	public JPanelMatrix(int rows, int cols, int varStyle)
+	public JPanelMatrix(int rows, int varStyle)
 		{
 		this.rows = rows;
-		this.cols = cols;
 		this.varStyle = varStyle;
 
 		variableDisplay = true;
 		space = " ";
+		symbol = "+";
 		labels = new LinkedList<JLabel>();
 
 		geometry();
@@ -55,6 +56,20 @@ public class JPanelMatrix extends JPanel
 			}
 		}
 
+	public void updateSolution(String solution)
+		{
+		if (boxSolution != getComponent(0))
+			{
+			removeAll();
+
+			labelSolution.setText(solution);
+			add(boxSolution, BorderLayout.CENTER);
+			}
+
+		revalidate();
+		repaint();
+		}
+
 	private void equationDisplay(String[][] matrix, Set<Integer> setDifference, String[] tabVar)
 		{
 		int nbVar = 0;//Pour le blocage d'affichage du "+"
@@ -64,17 +79,35 @@ public class JPanelMatrix extends JPanel
 			StringBuilder builder = new StringBuilder();
 			for(int j = 0; j < matrix[0].length - 1; j++) //verifier -1
 				{
-				if (!matrix[i][j].equals("0")) //0 => Rien a afficher
+				String value = matrix[i][j];
+				if (!value.equals("0")) //0 => Rien a afficher
 					{
-					if (nbVar != 0) //sauf dernière variable
+					if (value.substring(0, 1).equals("-"))
 						{
-						builder.append(space + "+" + space);
+						symbol = "-";
+						}
+					else
+						{
+						symbol = "+";
 						}
 
-					if (!matrix[i][j].equals("1")) //1 => On affiche uniquement la variable
+					if (nbVar != 0) //sauf première variable
 						{
-						builder.append(matrix[i][j]);//Autres => on affiche le coefficient
+						builder.append(space + symbol + space);
 						}
+
+					if (!value.equals("1")) //1 => On affiche uniquement la variable
+						{
+						if (symbol.equals("-"))
+							{
+							builder.append(value.substring(1, value.length()-1));//Autres => on affiche le coefficient
+							}
+						else
+							{
+							builder.append(value);
+							}
+						}
+
 					builder.append(tabVar[j]);
 					nbVar++;
 					}
@@ -130,8 +163,17 @@ public class JPanelMatrix extends JPanel
 	|*							Methodes Private						*|
 	\*------------------------------------------------------------------*/
 
-	private void updateGeometry(int rows)//a verifier
+	private void updateGeometry(int rows)
 		{
+		if (boxV != getComponent(0))
+			{
+			removeAll();
+			add(boxV, BorderLayout.CENTER);
+
+			revalidate();
+			repaint();
+			}
+
 		while(labels.size() < rows)
 			{
 			JLabel label = new JLabel("N/A");
@@ -157,9 +199,12 @@ public class JPanelMatrix extends JPanel
 			{
 			labels.add(new JLabel("N/A"));
 			}
+		labelSolution = new Label("N/A");//utilisé plus tard
+		//		labelSolution.setFont(new Font("Sans-Serif", Font.PLAIN, 25));
 
 		//Layout
 		boxV = Box.createVerticalBox();
+		boxSolution = Box.createHorizontalBox();//utilisé plus tard
 		setLayout(new BorderLayout());
 
 		//Ajout
@@ -167,6 +212,7 @@ public class JPanelMatrix extends JPanel
 			{
 			boxV.add(labels.get(i));
 			}
+		boxSolution.add(labelSolution);
 		add(boxV, BorderLayout.CENTER);
 		}
 
@@ -181,13 +227,15 @@ public class JPanelMatrix extends JPanel
 
 	//Inputs
 	private int rows;
-	private int cols;
 	private int varStyle;
 
 	//Tools
 	private List<JLabel> labels;
+	private Label labelSolution;
 	private Box boxV;
+	private Box boxSolution;
 	private String space;
+	private String symbol;
 	private boolean variableDisplay;
 
 	}

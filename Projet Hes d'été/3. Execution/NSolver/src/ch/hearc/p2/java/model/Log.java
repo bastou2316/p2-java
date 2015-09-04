@@ -95,13 +95,12 @@ public class Log implements Serializable
 	public double[][] getParametricEquations()
 		{
 		double[][] tabCoeficient = null;
-		System.out.println(solution);
 		if (solution.equals("Ce système d'équations possède une solution unique."))
 			{
 			tabCoeficient = new double[cols - 1][1];
 			for(int i = 0; i < cols - 1; ++i)
 				{
-				tabCoeficient[i][0] = listMatrix.get(listMatrix.size() - 1).get(i, cols - 1);
+				tabCoeficient[i][0] = MathTools.round(listMatrix.get(listMatrix.size() - 1).get(i, cols - 1), 3);
 				}
 			}
 		else if (solution.equals("Ce système d'équations possède une infinité de solutions."))
@@ -110,12 +109,12 @@ public class Log implements Serializable
 			tabCoeficient = new double[cols - 1][cols - 1];
 			for(int i = 0; i < cols - 1; ++i)
 				{
-				tabCoeficient[i][0] = listMatrix.get(listMatrix.size() - 1).get(i, cols - 1);
+				tabCoeficient[i][0] = MathTools.round(listMatrix.get(listMatrix.size() - 1).get(i, cols - 1), 3);
 				for(int j = 1; j < cols - 1; ++j)
 					{
 					if (listMapNameToCoeficient.get(listMapNameToCoeficient.size() - 1).containsKey(("u" + j)))
 						{
-						tabCoeficient[i][j] = listMapNameToCoeficient.get(listMapNameToCoeficient.size() - 1).get("u" + j).get(i, cols - 1);
+						tabCoeficient[i][j] = MathTools.round(listMapNameToCoeficient.get(listMapNameToCoeficient.size() - 1).get("u" + j).get(i, cols - 1), 3);
 						}
 					}
 				}
@@ -135,6 +134,7 @@ public class Log implements Serializable
 		double factorBackup;
 		StringBuilder stringBuilder = new StringBuilder();
 		DecimalFormat formatter = new DecimalFormat("0.##");
+
 		// Compute row echelon form (REF)
 		int numPivots = 0;
 
@@ -422,7 +422,7 @@ public class Log implements Serializable
 								i--;
 								if (i != j) //si le pivot n'est pas à sa place il faut le swap
 									{
-									System.out.println("("+i+","+j+")");
+									System.out.println("(" + i + "," + j + ")");
 									matrix.swapRows(i, j);
 									swapRowsCoeficientMatrix(currentRow, j);
 									stringBuilder.append("L");
@@ -478,7 +478,7 @@ public class Log implements Serializable
 			//we copy the values of the last matrix into the new one
 			for(int j = 0; j < rows + i; j++)
 				{
-				for(int k = 0; k < cols - 1; k++)
+				for(int k = 0; k < cols; k++)
 					{
 					matrix.set(j, k, listMatrix.get(listMatrix.size() - 1).get(j, k));
 					}

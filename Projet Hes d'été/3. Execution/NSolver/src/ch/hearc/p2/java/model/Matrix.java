@@ -113,22 +113,45 @@ public final class Matrix implements Serializable
 		return true;
 		}
 
-	public static Set<Integer> isEquals(String[][] strings, String[][] strings2)
+	public static Set<Integer> isEquals(String[][] matrix, String[][] matrix2)
 		{
 		Set<Integer> setDifferentRow = new TreeSet<Integer>();
+		String[][] biggerMatrix = matrix;
+		String[][] smallerMatrix = matrix2;
 
-		//If array shape is equals, then check the elements inside it
-		for(int i = 0; i < strings2.length; i++)
+		if(matrix.length >= matrix2.length)
 			{
-			for(int j = 0; j < strings2[i].length; j++)
+			biggerMatrix = matrix;
+			smallerMatrix = matrix2;
+			}
+		else
+			{
+			biggerMatrix = matrix2;
+			smallerMatrix = matrix;
+			}
+
+		//Boucle de comptage des différences des colonnes
+		int i;
+		int j;
+		//Differences dans les lignes
+		for(i = 0; i < smallerMatrix.length; i++)
+			{
+			for(j = 0; j < smallerMatrix[i].length; j++)
 				{
-				if (!strings2[i][j].equals(strings[i][j]))
+				if (!matrix2[i][j].equals(matrix[i][j]))
 					{
 					setDifferentRow.add(i);
 					}
 				}
 			}
-		//If each test has passed, then the arrays are equals
+
+		//Difference du nombre de colonnes
+		while(i < biggerMatrix.length)
+			{
+			setDifferentRow.add(i);
+			i++;
+			}
+
 		return setDifferentRow;
 		}
 
