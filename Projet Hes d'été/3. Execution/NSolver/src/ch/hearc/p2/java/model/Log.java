@@ -422,7 +422,6 @@ public class Log implements Serializable
 								i--;
 								if (i != j) //si le pivot n'est pas à sa place il faut le swap
 									{
-									System.out.println("(" + i + "," + j + ")");
 									matrix.swapRows(i, j);
 									swapRowsCoeficientMatrix(currentRow, j);
 									stringBuilder.append("L");
