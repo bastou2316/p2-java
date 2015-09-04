@@ -12,11 +12,11 @@ public class MathTools
 		{
 		if (a == 0 || b == 0)
 			{
-			return Math.abs(a - b) <= 1E-6;
+			return Math.abs(a - b) <= 1E-8;
 			}
 		else
 			{
-			return Math.abs((a - b) / a) <= 1E-6;
+			return Math.abs((a - b) / a) <= 1E-8;
 			}
 		}
 

@@ -101,10 +101,10 @@ public final class TestUnitMatrix
 //		}
 
 	@Test
-	public void test_Mathieu()
+	public void big_number_2()
 		{
-		double[][] in = { { 2, 1, 1}, { 1, 2, -3} };
-		double[][] out = { { 1, 0, -3}, { 0, 1, 1}};
+		double[][] in = { { 65412355, 0, 10,400},{44,1,1,10},{50,1,1,1} };
+		double[][] out = { { 1, 0, -3,1}};
 		testReduceMatrix(in, out);
 		//testDecompositionQR(in, out);
 		}
@@ -112,14 +112,13 @@ public final class TestUnitMatrix
 	private static void testReduceMatrix(double[][] in, double[][] out)
 		{
 		Matrix matIn = new Matrix(in.length, in[0].length);
-		for(int i = 0; i < out.length; i++)
+		for(int i = 0; i < in.length; i++)
 			{
-			for(int j = 0; j < out[i].length; j++)
+			for(int j = 0; j < in[i].length; ++j)
 				{
 				matIn.set(i, j, in[i][j]);
 				}
 			}
-
 		Log log = new Log(matIn, true, 0);
 		//		System.out.println("Initial matrix");
 		//		stepToString(log.getMatrix(0), log.getRows(), log.getCols());
