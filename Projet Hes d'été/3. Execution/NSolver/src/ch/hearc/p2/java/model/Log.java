@@ -95,7 +95,6 @@ public class Log implements Serializable
 	public double[][] getParametricEquations()
 		{
 		double[][] tabCoeficient = null;
-		System.out.println(solution);
 		if (solution.equals("Ce système d'équations possède une solution unique."))
 			{
 			tabCoeficient = new double[cols - 1][1];
