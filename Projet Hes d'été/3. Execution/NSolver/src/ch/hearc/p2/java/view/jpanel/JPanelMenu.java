@@ -33,11 +33,6 @@ public class JPanelMenu extends JPanel
 		{
 		this.controllerMain = controllerMain;
 
-
-
-
-
-
 		geometry();
 		control();
 		appearance();
@@ -79,7 +74,7 @@ public class JPanelMenu extends JPanel
 		JLabel lblexplication = new JLabel("\t Vous avez la possibilit\u00E9e de cr\u00E9er une nouvelle \u00E9quation.");
 		lblexplication.setFont(new Font("Courier New", Font.PLAIN, 11));
 		lblexplication.setForeground(Color.BLACK);
-		JLabel lblexplication2 = new JLabel("\t Vous pouvez \u00E9gallement charger une \u00E9quation de l'historique.");
+		JLabel lblexplication2 = new JLabel("\t Vous pouvez \u00E9galement charger une \u00E9quation déjà sauvegardée.");
 		lblexplication2.setFont(new Font("Courier New", Font.PLAIN, 11));
 		lblexplication2.setForeground(Color.BLACK);
 		Box boxExplain = Box.createVerticalBox();
@@ -95,7 +90,7 @@ public class JPanelMenu extends JPanel
 		lblNouvellequation.setFont(new Font("Courier New", Font.PLAIN, 11));
 
 		panelHistory.setForeground(Color.BLACK);
-		TitledBorder border = new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Logs", TitledBorder.LEADING, TitledBorder.TOP, null, Color.BLACK);
+		TitledBorder border = new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Equation", TitledBorder.LEADING, TitledBorder.TOP, null, Color.BLACK);
 		//		border.setTitleFont( border.getTitleFont().deriveFont(Font.BOLD + Font.ITALIC) );
 		panelHistory.setBorder(border);
 
@@ -124,8 +119,8 @@ public class JPanelMenu extends JPanel
 
 		Box boxV = Box.createVerticalBox();
 		boxV.add(panelWelcome);
-		boxV.add(panelFile);
 		boxV.add(panelHistory);
+		boxV.add(panelFile);
 		panelContent.add(boxV);
 		add(boxV, BorderLayout.CENTER);
 		}
@@ -167,7 +162,7 @@ public class JPanelMenu extends JPanel
 
 	private void appearance()
 		{
-		// rien
+		changeFont(this, 2);
 		}
 
 	/*------------------------------------------------------------------*\

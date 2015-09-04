@@ -10,6 +10,8 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 
@@ -32,7 +34,6 @@ public class JPanelSetMatrix extends JPanelDialog
 	|*							Constructeurs							*|
 	\*------------------------------------------------------------------*/
 
-
 	public JPanelSetMatrix(Matrix matrix, int varStyle, boolean solved)
 		{
 		super();
@@ -52,15 +53,18 @@ public class JPanelSetMatrix extends JPanelDialog
 	/*------------------------------------------------------------------*\
 	|*							Methodes Private						*|
 	\*------------------------------------------------------------------*/
-	 private void changeFont(Component component, int fontSize) {
-	    Font f = component.getFont();
-	    component.setFont(new Font(f.getName(),f.getStyle(),f.getSize() + fontSize));
-	    if (component instanceof Container) {
-	        for (Component child : ((Container) component).getComponents()) {
-	            changeFont(child, fontSize);
-	        }
-	    }
-	}
+	private void changeFont(Component component, int fontSize)
+		{
+		Font f = component.getFont();
+		component.setFont(new Font(f.getName(), f.getStyle(), f.getSize() + fontSize));
+		if (component instanceof Container)
+			{
+			for(Component child:((Container)component).getComponents())
+				{
+				changeFont(child, fontSize);
+				}
+			}
+		}
 
 	private void geometry()
 		{
@@ -75,20 +79,20 @@ public class JPanelSetMatrix extends JPanelDialog
 		previousButton = new JButton("Précédent");
 
 		tabTextField = new JTextField[rows][];
-		String[] tabString = IndependentVar.getTabVar(cols-1, varStyle);
+		String[] tabString = IndependentVar.getTabVar(cols - 1, varStyle);
 
 		for(int i = 1; i <= rows; i++)
 			{
 			tabTextField[i - 1] = new JTextField[cols];
-			for(int j = 1; j <= cols ; j++)
+			for(int j = 1; j <= cols; j++)
 				{
 				Box panMatrice = Box.createHorizontalBox();
 
 				String string;
 
-				if (j == cols-1)
+				if (j == cols - 1)
 					{
-					string = tabString[j-1] + "=";
+					string = tabString[j - 1] + "=";
 					}
 				else
 					{
@@ -98,12 +102,15 @@ public class JPanelSetMatrix extends JPanelDialog
 						}
 					else
 						{
-						string = tabString[j-1]  + "+";
+						string = tabString[j - 1] + "+";
 						}
 					}
 				JLabel label = new JLabel(string);
 				label.setHorizontalAlignment(SwingConstants.CENTER);
-				JTextField textfield = new JTextField();
+				JTextField textfield = new JTextField("0");
+				textfield.getFont().deriveFont(Font.ITALIC);
+				textfield.setForeground(Color.gray);
+
 				tabTextField[i - 1][j - 1] = textfield;
 				textfield.setPreferredSize(new Dimension(50, 30));
 
@@ -138,6 +145,60 @@ public class JPanelSetMatrix extends JPanelDialog
 
 	private void control()
 		{
+
+		for(JTextField[] line : tabTextField)
+			{
+			for(JTextField textField : line)
+				{
+//				textField.addMouseListener(new MouseAdapter()
+//					{
+//
+//						@Override
+//						public void mousePressed(MouseEvent e)
+//							{
+//							JTextField texteField = ((JTextField)e.getSource());
+//							texteField.setText("");
+//							texteField.getFont().deriveFont(Font.PLAIN);
+//							texteField.setForeground(Color.black);
+//							texteField.removeMouseListener(this);
+//
+//							texteField.repaint();
+//							}
+//					});
+
+				textField.addFocusListener(new FocusListener()
+					{
+
+						@Override
+						public void focusLost(FocusEvent e)
+							{
+							JTextField texteField = ((JTextField)e.getSource());
+							if(texteField.getText().isEmpty())
+								{
+									texteField.setText(textTemp);//"0");		//Affichage de l'ancienne valeure
+									texteField.getFont().deriveFont(Font.ITALIC);
+									texteField.setForeground(Color.gray);
+								}
+							}
+
+						@Override
+						public void focusGained(FocusEvent e)
+							{
+							JTextField texteField = ((JTextField)e.getSource());
+
+							textTemp = texteField.getText();
+
+							texteField.setText("");
+							texteField.getFont().deriveFont(Font.PLAIN);
+							texteField.setForeground(Color.black);
+
+							texteField.repaint();
+							}
+					});
+				}
+
+			}
+
 		solveButton.addActionListener(new ActionListener()
 			{
 
@@ -158,7 +219,7 @@ public class JPanelSetMatrix extends JPanelDialog
 						}
 
 					choice = 1;
-					JDialogSetMatrix jdialog = (JDialogSetMatrix) getRootPane().getParent();
+					JDialogSetMatrix jdialog = (JDialogSetMatrix)getRootPane().getParent();
 					jdialog.close();
 					}
 			});
@@ -170,21 +231,19 @@ public class JPanelSetMatrix extends JPanelDialog
 				public void actionPerformed(ActionEvent e)
 					{
 					choice = 2;
-					JDialogSetMatrix jdialog = (JDialogSetMatrix) getRootPane().getParent();
+					JDialogSetMatrix jdialog = (JDialogSetMatrix)getRootPane().getParent();
 					jdialog.close();
-//					controllerMain.showDialog(DIALOG.SET_EQUATION);
+					//					controllerMain.showDialog(DIALOG.SET_EQUATION);
 					}
 			});
 
 		this.addMouseWheelListener(new MouseWheelListener()
 			{
-
 				@Override
 				public void mouseWheelMoved(MouseWheelEvent e)
 					{
 					// TODO Auto-generated method stub
 					changeFont(JPanelSetMatrix.this, e.getWheelRotation());
-
 					}
 			});
 		}
@@ -206,6 +265,7 @@ public class JPanelSetMatrix extends JPanelDialog
 	// Tools
 	private JButton solveButton, previousButton;
 	private JTextField[][] tabTextField;
+	private String textTemp;
 	private int rows;
 	private int cols;
 
