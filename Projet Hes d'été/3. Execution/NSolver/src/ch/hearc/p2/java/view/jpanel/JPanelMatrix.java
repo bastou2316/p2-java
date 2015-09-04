@@ -45,7 +45,7 @@ public class JPanelMatrix extends JPanel
 		updateGeometry(matrix.length);
 
 		//Recuperation des variables et affichage
-		String[] tabVar = IndependentVar.getTabVar(matrix[0].length, varStyle);//voir dans le constr
+		String[] tabVar = IndependentVar.getTabVar(matrix[0].length - 1, varStyle);//sans le -1 normalement
 
 		if (variableDisplay)
 			{
@@ -186,6 +186,11 @@ public class JPanelMatrix extends JPanel
 			{
 			space = " ";
 			}
+		}
+
+	public void setVarStyle(int varStyle)
+		{
+		this.varStyle = varStyle;
 		}
 
 	/*------------------------------------------------------------------*\

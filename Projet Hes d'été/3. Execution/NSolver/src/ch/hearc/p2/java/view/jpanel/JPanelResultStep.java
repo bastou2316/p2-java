@@ -123,6 +123,14 @@ public class JPanelResultStep extends JPanel
 		updateDisplayedMatrix();
 		}
 
+
+	public void updateVarStyle()
+		{
+		panelMatrix.setVarStyle(equation.getVariableStyle());
+		panelMatrixPrev.setVarStyle(equation.getVariableStyle());
+		updateDisplayedMatrix();
+		}
+
 	/*------------------------------------------------------------------*\
 	|*							Methodes Private						*|
 	\*------------------------------------------------------------------*/
