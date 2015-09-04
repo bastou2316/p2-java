@@ -58,32 +58,32 @@ public class IndependentVar
 				else
 					{
 					tabString = new String[26];
-					tabString[0] = "A";
-					tabString[1] = "B";
-					tabString[2] = "C";
-					tabString[3] = "D";
-					tabString[4] = "E";
-					tabString[5] = "F";
-					tabString[6] = "G";
-					tabString[7] = "H";
-					tabString[8] = "I";
-					tabString[9] = "J";
-					tabString[10] = "K";
-					tabString[11] = "L";
-					tabString[12] = "M";
-					tabString[13] = "N";
-					tabString[14] = "O";
-					tabString[15] = "P";
-					tabString[16] = "Q";
-					tabString[17] = "R";
-					tabString[18] = "S";
-					tabString[19] = "T";
-					tabString[20] = "U";
-					tabString[21] = "V";
-					tabString[22] = "W";
-					tabString[23] = "X";
-					tabString[24] = "Y";
-					tabString[25] = "Z";
+					tabString[0] = "a";
+					tabString[1] = "b";
+					tabString[2] = "c";
+					tabString[3] = "d";
+					tabString[4] = "e";
+					tabString[5] = "f";
+					tabString[6] = "g";
+					tabString[7] = "h";
+					tabString[8] = "i";
+					tabString[9] = "j";
+					tabString[10] = "k";
+					tabString[11] = "l";
+					tabString[12] = "m";
+					tabString[13] = "n";
+					tabString[14] = "o";
+					tabString[15] = "p";
+					tabString[16] = "q";
+					tabString[17] = "r";
+					tabString[18] = "s";
+					tabString[19] = "t";
+					tabString[20] = "u";
+					tabString[21] = "v";
+					tabString[22] = "w";
+					tabString[23] = "x";
+					tabString[24] = "y";
+					tabString[25] = "z";
 					}
 				break;
 

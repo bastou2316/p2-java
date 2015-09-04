@@ -179,7 +179,7 @@ public class ControllerMain
 		//Traitement du résultat
 		if (result == 1)//Suivant
 			{
-			showNewMatrixDialog();	//showDialog(DIALOG.NEW_MATRIX);
+			showNewMatrixDialog(); //showDialog(DIALOG.NEW_MATRIX);
 			}
 		else
 			{
@@ -213,11 +213,11 @@ public class ControllerMain
 			{
 			if (equationTemp.isSolved())
 				{
-				showSetEquationDialog();	//A deja été résolu, donc modif
+				showSetEquationDialog(); //A deja été résolu, donc modif
 				}
 			else
 				{
-				showNewEquationDialog();	//N'a pas été résolu, donc création
+				showNewEquationDialog(); //N'a pas été résolu, donc création
 				}
 			}
 		else
@@ -249,12 +249,18 @@ public class ControllerMain
 				equationTemp = null;
 
 				//Maj de la fenetre principale
-//				jFrame.revalidate();
-//				jFrame.repaint();
+				JPanelResultStep panelResult = (JPanelResultStep)currentPanel;
+				panelResult.updateVarStyle();
 
-				currentPanel.revalidate();
-				currentPanel.repaint();
-//				currentPanel.updateUI();
+				if (equation.isStepMode())
+					{
+					changeView(PANEL.RESULT_STEP);
+					}
+				else
+					{
+					changeView(PANEL.RESULT);
+					}
+
 				}
 			else
 				{
@@ -262,7 +268,8 @@ public class ControllerMain
 				showNewMatrixDialog();//On reste dans le temporaire
 				}
 			}
-		else//Annulé
+		else
+			//Annulé
 			{
 			equationTemp = null;
 			}

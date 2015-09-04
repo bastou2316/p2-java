@@ -13,7 +13,6 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import ch.hearc.p2.java.controller.ControllerMain;
@@ -164,15 +163,15 @@ public class JFrameMain extends JFrame
 					}
 			});
 
-		itemHelp.addActionListener(new ActionListener()
-			{
-
-				@Override
-				public void actionPerformed(ActionEvent e)
-					{
-					JOptionPane.showMessageDialog(JFrameMain.this, "Explications : en image", "Aide", JOptionPane.INFORMATION_MESSAGE);
-					}
-			});
+//		itemHelp.addActionListener(new ActionListener()
+//			{
+//
+//				@Override
+//				public void actionPerformed(ActionEvent e)
+//					{
+//					JOptionPane.showMessageDialog(JFrameMain.this, "Explications : en image", "Aide", JOptionPane.INFORMATION_MESSAGE);
+//					}
+//			});
 
 		itemShowGraphic.addActionListener(new ActionListener()
 			{
@@ -214,7 +213,7 @@ public class JFrameMain extends JFrame
 
 		menu = new JMenu("Aide");
 
-		itemHelp = menu.add("Comment utiliser NSolver");
+//		itemHelp = menu.add("Comment utiliser NSolver");
 
 		menuBar.add(menu);
 
@@ -235,6 +234,6 @@ public class JFrameMain extends JFrame
 	private JMenuItem itemSetEquation;
 	private JMenuItem itemSetMatrix;
 	private JMenuItem itemShowGraphic;
-	private JMenuItem itemHelp;
+//	private JMenuItem itemHelp;
 
 	}
