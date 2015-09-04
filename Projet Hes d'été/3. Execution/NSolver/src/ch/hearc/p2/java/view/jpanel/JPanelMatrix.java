@@ -151,7 +151,6 @@ public class JPanelMatrix extends JPanel
 				builder.append(matrix[i][j]);
 				int lengh = matrix[i][j].length();
 				builder.append(spaces(lengh));
-				System.out.println(lengh);
 			//	builder.append(space);
 				}
 
