@@ -3,6 +3,7 @@ package ch.hearc.p2.java.view.jpanel;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Label;
 import java.util.LinkedList;
 import java.util.List;
@@ -60,9 +61,11 @@ public class JPanelMatrix extends JPanel
 		{
 		if (boxSolution != getComponent(0))
 			{
+			Font font = getComponent(0).getFont();
 			removeAll();
 
 			labelSolution.setText(solution);
+			labelSolution.setFont(font);
 			add(boxSolution, BorderLayout.CENTER);
 			}
 
@@ -193,7 +196,13 @@ public class JPanelMatrix extends JPanel
 		{
 		if (boxV != getComponent(0))
 			{
+			Font font = getComponent(0).getFont();
 			removeAll();
+
+			for(JLabel label:labels)
+				{
+				label.setFont(font);
+				}
 			add(boxV, BorderLayout.CENTER);
 
 			revalidate();
@@ -226,7 +235,6 @@ public class JPanelMatrix extends JPanel
 			labels.add(new JLabel("N/A"));
 			}
 		labelSolution = new Label("N/A");//utilisé plus tard
-		//		labelSolution.setFont(new Font("Sans-Serif", Font.PLAIN, 25));
 
 		//Layout
 		boxV = Box.createVerticalBox();

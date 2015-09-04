@@ -165,7 +165,7 @@ public class Equation implements Serializable
 
 	public boolean hasMatrixIndex(int index)
 		{
-		return index < log.getNbStep() - 1;
+		return index < log.getNbStep()-1;
 		}
 
 	public boolean isStepMode()

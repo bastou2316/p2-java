@@ -83,8 +83,13 @@ public class JPanelResultStep extends JPanel
 							{
 							equation.getMatrix(++actualStep);
 							updateDisplayedMatrix();
-							sleep((long) equation.getSpeedMs());
+							sleep((long)equation.getSpeedMs());
 							}
+
+						//finale
+						++actualStep;
+						updateDisplayedMatrix();
+
 						isRunning = false;
 						stop();
 						}
@@ -131,6 +136,18 @@ public class JPanelResultStep extends JPanel
 			for(Component child:((Container)component).getComponents())
 				{
 				changeFont(child, fontSize);
+				}
+			}
+		}
+
+	private void changeFont(Component component, Font f)
+		{
+		component.setFont(new Font(f.getName(), f.getStyle(), f.getSize()));
+		if (component instanceof Container)
+			{
+			for(Component child:((Container)component).getComponents())
+				{
+				changeFont(child, f);
 				}
 			}
 		}
@@ -297,7 +314,6 @@ public class JPanelResultStep extends JPanel
 					}
 			});
 
-
 		cbxSpace.addItemListener(new ItemListener()
 			{
 
@@ -309,7 +325,6 @@ public class JPanelResultStep extends JPanel
 					updateDisplayedMatrix();
 					}
 			});
-
 
 		cbxVar.addItemListener(new ItemListener()
 			{
@@ -324,40 +339,19 @@ public class JPanelResultStep extends JPanel
 			});
 
 		//Zoom
-		panelMatrix.addMouseWheelListener(new MouseWheelListener()
-			{
-
-				@Override
-				public void mouseWheelMoved(MouseWheelEvent e)
-					{
-					updateZoom(e);
-					}
-			});
-
-		panelMatrixPrev.addMouseWheelListener(new MouseWheelListener()
-			{
-
-				@Override
-				public void mouseWheelMoved(MouseWheelEvent e)
-					{
-					updateZoom(e);
-					}
-			});
-
 		MouseWheelListener zoom = new MouseWheelListener()
 			{
 
 				@Override
 				public void mouseWheelMoved(MouseWheelEvent e)
 					{
-					changeFont(panelMatrix, e.getWheelRotation());
-					changeFont(panelMatrixPrev, e.getWheelRotation());
-
+					updateZoom(e);
 					}
 			};
 
 		panelMatrix.addMouseWheelListener(zoom);
 		panelMatrixPrev.addMouseWheelListener(zoom);
+
 		scrollPaneList.addMouseWheelListener(new MouseWheelListener()
 			{
 
@@ -365,23 +359,20 @@ public class JPanelResultStep extends JPanel
 				public void mouseWheelMoved(MouseWheelEvent e)
 					{
 					changeFont(scrollPaneList, e.getWheelRotation());
-
 					}
 			});
 		}
 
 	private void appearance()
 		{
-//		changeFont(panelMatrix, 15);
-//		changeFont(panelMatrixPrev, 15);
 		changeFont(this, 12);
 		}
 
 	private void updateZoom(MouseWheelEvent e)
 		{
-		actualTextSize += e.getWheelRotation();
-		panelMatrix.setFont(new Font("Sans-Serif", Font.PLAIN, actualTextSize));
-		panelMatrixPrev.setFont(new Font("Sans-Serif", Font.PLAIN, actualTextSize));
+		//		changeFont(panelMatrix, e.getWheelRotation());
+		changeFont(panelMatrixPrev, e.getWheelRotation());
+		changeFont(panelMatrix, panelMatrixPrev.getFont());
 		}
 
 	private void updateDisplayedMatrix()
@@ -409,7 +400,7 @@ public class JPanelResultStep extends JPanel
 			{
 			panelMatrix.updateSolution(equation.getSolution());
 			}
-		jPanelPreviousStep.setVisible(notFirst);//&& notLast
+		jPanelPreviousStep.setVisible(notFirst);
 
 		graphicListHistory.setSelectedIndex(actualStep);
 
@@ -447,6 +438,4 @@ public class JPanelResultStep extends JPanel
 	private JPanel jPanelPreviousStep;
 	private JCheckBox cbxVar;
 	private JCheckBox cbxSpace;
-
-	private int actualTextSize;
 	}
