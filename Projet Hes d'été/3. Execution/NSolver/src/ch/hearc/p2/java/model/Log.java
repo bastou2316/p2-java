@@ -630,59 +630,75 @@ public class Log implements Serializable
 				for(int j = 0; j < cols; j++)
 					{
 					stringBuilder = new StringBuilder();
-					stringBuilder.append(formatter.format(matrix.get(i, j)));
-					boolean isFirst = true;
+					if (MathTools.isEquals(matrix.get(i, j), 0))
+						{
+						stringBuilder.append(formatter.format(matrix.get(i, j)));
+						}
+					else if (matrix.get(i, j) < 0)
+						{
+						stringBuilder.append("- ");
+						stringBuilder.append(formatter.format(-matrix.get(i, j)));
+						}
+					else
+						{
+						stringBuilder.append(formatter.format(matrix.get(i, j)));
+						}
+
+					boolean isFirst = false;
+					boolean isNonZeroVariable = false;
 					int k = 1;
 					//manage the free variable
-					while(k < cols)
+					if (j == cols - 1)
 						{
-						if (listMapNameToCoeficient.get(step).containsKey("u" + k))
+						while(k < cols)
 							{
-							coeficient = listMapNameToCoeficient.get(step).get("u" + k).get(i, j);
-							if (!MathTools.isEquals(coeficient, 0))
+							if (listMapNameToCoeficient.get(step).containsKey("u" + k))
 								{
+								coeficient = listMapNameToCoeficient.get(step).get("u" + k).get(i, j);
 								//efface le 0
-								if (MathTools.isEquals(matrix.get(i, j), 0) && isFirst)
+
+								if (!MathTools.isEquals(coeficient, 0))
 									{
-									stringBuilder.deleteCharAt(stringBuilder.length() - 1);
-									isFirst = false;
-									}
-								if (coeficient > 0)
-									{
-									if (!MathTools.isEquals(coeficient, 1))
+									if (!isNonZeroVariable && MathTools.isEquals(matrix.get(i, j), 0))
 										{
-										//gère le +
-										if (isFirst)
+										stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+										isFirst = true;
+										isNonZeroVariable = true;
+										}
+									if (coeficient > 0)
+										{
+										if (!MathTools.isEquals(coeficient, 1))
 											{
-											stringBuilder.append("+");
+											//gère le +
+											if (!isFirst)
+												{
+												stringBuilder.append(" + ");
+												}
+											stringBuilder.append(formatter.format(coeficient));
+											isFirst = false;
 											}
-										stringBuilder.append(formatter.format(coeficient));
-										isFirst = false;
-										}
-									else if (isFirst)
-										{
-										stringBuilder.append("+");
-										}
-									stringBuilder.append("u" + k);
-									isFirst = false;
-									}
-								else
-									{
-									if (!MathTools.isEquals(coeficient, -1))
-										{
-										stringBuilder.append(formatter.format(coeficient));
+										else if (!isFirst)
+											{
+											stringBuilder.append(" + ");
+											}
+										stringBuilder.append("u" + k);
 										isFirst = false;
 										}
 									else
 										{
-										stringBuilder.append("-");
+										stringBuilder.append(" - ");
+										if (!MathTools.isEquals(coeficient, -1))
+											{
+											stringBuilder.append(formatter.format(-coeficient));
+											isFirst = false;
+											}
+										stringBuilder.append("u" + k);
+										isFirst = false;
 										}
-									stringBuilder.append("u" + k);
-									isFirst = false;
 									}
 								}
+							k++;
 							}
-						k++;
 						}
 					listTabMatrix.get(step)[i][j] = stringBuilder.toString();
 					}
