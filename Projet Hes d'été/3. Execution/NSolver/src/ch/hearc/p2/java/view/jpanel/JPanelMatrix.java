@@ -98,12 +98,19 @@ public class JPanelMatrix extends JPanel
 						{
 						builder.append(space + symbol + space);
 						}
+					else
+						{
+						if(symbol.equals("-"))//on commence par un -
+							{
+							builder.append(symbol);
+							}
+						}
 
 					if (!value.equals("1")) //1 => On affiche uniquement la variable
 						{
 						if (symbol.equals("-"))
 							{
-							builder.append(value.substring(1, value.length() - 1));//Autres => on affiche le coefficient
+							builder.append(value.substring(1, value.length()));//Autres => on affiche le coefficient
 							}
 						else
 							{
