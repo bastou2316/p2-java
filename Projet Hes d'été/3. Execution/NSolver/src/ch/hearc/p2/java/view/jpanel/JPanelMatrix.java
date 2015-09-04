@@ -156,7 +156,9 @@ public class JPanelMatrix extends JPanel
 			for(int j = 0; j < matrix[0].length - 1; j++)
 				{
 				builder.append(matrix[i][j]);
-				builder.append(space);
+				int lengh = matrix[i][j].length();
+				builder.append(spaces(lengh));
+			//	builder.append(space);
 				}
 
 			//On sort de la boucle 1 avant pour placer le =
@@ -182,6 +184,16 @@ public class JPanelMatrix extends JPanel
 		{
 		this.variableDisplay = variableDisplay;
 		}
+	
+	public StringBuilder spaces(int nbSpaces)
+	{
+		StringBuilder str = new StringBuilder();
+	 for(int i=0;i<5-nbSpaces;i++)
+	 {
+		 str.append("  ");
+	 }
+	 return str;
+	}
 
 	public void setSpaceDisplay(boolean spaceDisplay)
 		{
