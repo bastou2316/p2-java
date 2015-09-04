@@ -52,7 +52,7 @@ public class JPanelMatrix extends JPanel
 			}
 		else
 			{
-			matrixDisplay(matrix, setDifference, tabVar);
+			matrixDisplay(matrix, setDifference);
 			}
 		}
 
@@ -100,7 +100,7 @@ public class JPanelMatrix extends JPanel
 						{
 						if (symbol.equals("-"))
 							{
-							builder.append(value.substring(1, value.length()-1));//Autres => on affiche le coefficient
+							builder.append(value.substring(1, value.length() - 1));//Autres => on affiche le coefficient
 							}
 						else
 							{
@@ -137,9 +137,35 @@ public class JPanelMatrix extends JPanel
 			}
 		}
 
-	public void matrixDisplay(String[][] matrix, Set<Integer> setDifference, String[] tabVar)
+	public void matrixDisplay(String[][] matrix, Set<Integer> setDifference)
 		{
-		//TODO
+		for(int i = 0; i < matrix.length; i++)
+			{
+			StringBuilder builder = new StringBuilder();
+
+			for(int j = 0; j < matrix[0].length - 1; j++)
+				{
+				builder.append(matrix[i][j]);
+				builder.append(space);
+				}
+
+			//On sort de la boucle 1 avant pour placer le =
+			builder.append(space + "=" + space);
+			builder.append(matrix[i][matrix[0].length - 1]);
+
+			//Application du textes au labels
+			labels.get(i).setText(builder.toString());
+
+			//Mise en evidence
+			if (setDifference != null && setDifference.contains(i))
+				{
+				labels.get(i).setForeground(Color.RED);
+				}
+			else
+				{
+				labels.get(i).setForeground(Color.BLACK);
+				}
+			}
 		}
 
 	public void setVariableDisplay(boolean variableDisplay)
@@ -151,11 +177,11 @@ public class JPanelMatrix extends JPanel
 		{
 		if (spaceDisplay)
 			{
-			space = " ";
+			space = "   ";
 			}
 		else
 			{
-			space = "\t";
+			space = " ";
 			}
 		}
 

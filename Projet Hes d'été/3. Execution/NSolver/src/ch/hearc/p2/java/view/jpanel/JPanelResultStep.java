@@ -9,6 +9,8 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.util.List;
@@ -19,6 +21,7 @@ import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -209,7 +212,19 @@ public class JPanelResultStep extends JPanel
 		boxV.add(jPanelPreviousStep);
 		boxV.add(jPanelMatrix);
 
-		splitPane.add(jPanelOperation, JSplitPane.LEFT);
+		JPanel panelLeft = new JPanel();
+		panelLeft.setLayout(new BorderLayout());
+		panelLeft.add(jPanelOperation, BorderLayout.CENTER);
+		Box boxcomb = Box.createVerticalBox();
+		cbxVar = new JCheckBox("Affichage des variables");
+		cbxVar.setSelected(true);
+		cbxSpace = new JCheckBox("Alignement");
+		cbxSpace.setSelected(false);
+		boxcomb.add(cbxVar);
+		boxcomb.add(cbxSpace);
+		panelLeft.add(boxcomb, BorderLayout.SOUTH);
+
+		splitPane.add(panelLeft, JSplitPane.LEFT);
 		splitPane.add(boxV, JSplitPane.RIGHT);
 
 		jPanelButtons.add(buttonStart);
@@ -282,6 +297,33 @@ public class JPanelResultStep extends JPanel
 					}
 			});
 
+
+		cbxSpace.addItemListener(new ItemListener()
+			{
+
+				@Override
+				public void itemStateChanged(ItemEvent e)
+					{
+					panelMatrix.setSpaceDisplay(cbxSpace.isSelected());
+					panelMatrixPrev.setSpaceDisplay(cbxSpace.isSelected());
+					updateDisplayedMatrix();
+					}
+			});
+
+
+		cbxVar.addItemListener(new ItemListener()
+			{
+
+				@Override
+				public void itemStateChanged(ItemEvent e)
+					{
+					panelMatrix.setVariableDisplay(cbxVar.isSelected());
+					panelMatrixPrev.setVariableDisplay(cbxVar.isSelected());
+					updateDisplayedMatrix();
+					}
+			});
+
+		//Zoom
 		panelMatrix.addMouseWheelListener(new MouseWheelListener()
 			{
 
@@ -400,7 +442,9 @@ public class JPanelResultStep extends JPanel
 	private JScrollPane scrollPaneList;
 	private JList<String> graphicListHistory;
 	private JPanelMatrix panelMatrix, panelMatrixPrev;
-	JPanel jPanelPreviousStep;
+	private JPanel jPanelPreviousStep;
+	private JCheckBox cbxVar;
+	private JCheckBox cbxSpace;
 
 	private int actualTextSize;
 	}
