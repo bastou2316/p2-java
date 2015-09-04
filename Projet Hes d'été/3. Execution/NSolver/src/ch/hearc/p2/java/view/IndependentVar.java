@@ -51,7 +51,7 @@ public class IndependentVar
 				break;
 
 			case A:
-				if (cols > 26)
+				if (cols > 27)
 					{
 					return getTabVar(cols, VARSTYLE.X1);
 					}
