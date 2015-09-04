@@ -24,7 +24,7 @@ public class JDialogSetMatrix extends JDialogMain
 	protected void appearance()
 		{
 		setTitle("Remplissage de la matrice");
-		setSize(500, 300);
+		setSize(500, 350);
 		setLocationRelativeTo(null);
 		}
 

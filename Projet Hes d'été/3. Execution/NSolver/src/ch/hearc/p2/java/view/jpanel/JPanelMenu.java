@@ -37,15 +37,7 @@ public class JPanelMenu extends JPanel
 		control();
 		appearance();
 		changeFont(this, 1);
-
 		}
-
-	/*------------------------------------------------------------------*\
-	|*							Methodes Public							*|
-	\*------------------------------------------------------------------*/
-
-
-
 
 	/*------------------------------------------------------------------*\
 	|*							Methodes Private						*|
@@ -162,7 +154,7 @@ public class JPanelMenu extends JPanel
 
 	private void appearance()
 		{
-		changeFont(this, 2);
+		changeFont(this, 12);
 		}
 
 	/*------------------------------------------------------------------*\

@@ -150,22 +150,6 @@ public class JPanelSetMatrix extends JPanelDialog
 			{
 			for(JTextField textField : line)
 				{
-//				textField.addMouseListener(new MouseAdapter()
-//					{
-//
-//						@Override
-//						public void mousePressed(MouseEvent e)
-//							{
-//							JTextField texteField = ((JTextField)e.getSource());
-//							texteField.setText("");
-//							texteField.getFont().deriveFont(Font.PLAIN);
-//							texteField.setForeground(Color.black);
-//							texteField.removeMouseListener(this);
-//
-//							texteField.repaint();
-//							}
-//					});
-
 				textField.addFocusListener(new FocusListener()
 					{
 
@@ -250,7 +234,7 @@ public class JPanelSetMatrix extends JPanelDialog
 
 	private void appearance()
 		{
-		// rien
+		changeFont(this, 10);
 		}
 
 	/*------------------------------------------------------------------*\
